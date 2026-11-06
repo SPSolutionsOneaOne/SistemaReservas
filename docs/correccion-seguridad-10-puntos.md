@@ -440,7 +440,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 
 ## 7. Riesgos residuales y recomendaciones
 
-1. **RLS pendiente de ejecución.** Hasta correr los scripts, la base no tiene la segunda barrera. Es el paso más importante antes de producción.
+1. **RLS aplicado, pero debe replicarse en cada entorno.** Los scripts se ejecutaron en Supabase el 6 de noviembre de 2026. Al crear un entorno nuevo (staging, otra instancia) hay que volver a ejecutarlos; sin RLS, la base pierde la segunda barrera de defensa.
 2. **Rate limiting en PostgreSQL.** El contador es compartido entre instancias y persiste entre despliegues. Si el volumen de login crece mucho, evaluar Redis/Upstash para reducir latencia y carga sobre la base. La tabla requiere limpieza periódica de registros antiguos (ver el script SQL).
 3. **Bloqueo por cuenta y denegación de servicio.** Un atacante podría bloquear una cuenta con 5 fallos. Ajustar umbral/ventana o combinar con CAPTCHA.
 4. **Sesión stateless sin revocación inmediata.** El logout borra la cookie, pero un token robado sigue siendo válido hasta su `exp` (8 h). Considerar una lista de revocación o `token_version` en base de datos.
@@ -457,26 +457,94 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 
 ## 8. Checklist de despliegue
 
-- [ ] Configurar `SESSION_SECRET` aleatorio de 64 caracteres en Vercel.
-- [ ] Configurar las dos URLs y las dos claves `service_role`.
-- [ ] Confirmar que no exista ninguna variable `NEXT_PUBLIC_*SERVICE_ROLE*`.
+- [x] Configurar `SESSION_SECRET` aleatorio de 64 caracteres en Vercel (Production y Preview).
+- [x] Configurar las dos URLs y las dos claves `service_role` en Vercel.
+- [x] Confirmar que no exista ninguna variable `NEXT_PUBLIC_*SERVICE_ROLE*`.
 - [x] Ejecutar `docs/sql/db-reservas-rls.sql` en DB-Reservas.
 - [x] Ejecutar `docs/sql/db-institucional-rls.sql` en DB-Institucional.
 - [x] Ejecutar `docs/sql/db-reservas-rate-limit.sql` en DB-Reservas (rate limiting compartido).
 - [x] Verificar que una clave pública no puede leer `usuarios_institucion` (`401`).
-- [ ] Confirmar en DB-Reservas que `salas`, `reservas`, `historial_penalizaciones` y `bitacora_administrativa` tienen `relrowsecurity = true`.
-- [ ] Verificar que `GET /api/salas` funciona sin sesión.
-- [ ] Verificar que `GET /api/reservas` sin sesión devuelve `401`.
-- [ ] Verificar login, logout y expiración de cookie.
-- [ ] Verificar que un alumno no puede reservar para otro RUT.
-- [ ] Verificar que un alumno no puede crear salas ni registrar bitácora.
-- [ ] Verificar que el check-in de una reserva ajena devuelve `403`.
-- [ ] Confirmar HTTPS en producción (la cookie usa `Secure`).
+- [x] Confirmar en DB-Reservas que `salas`, `reservas`, `historial_penalizaciones` y `bitacora_administrativa` tienen `relrowsecurity = true`.
+- [x] Verificar que `GET /api/salas` funciona sin sesión.
+- [x] Verificar que `GET /api/reservas` sin sesión devuelve `401`.
+- [x] Verificar login, logout y expiración de cookie.
+- [x] Verificar que un alumno no puede reservar para otro RUT.
+- [x] Verificar que un alumno no puede crear salas ni registrar bitácora.
+- [x] Verificar que el check-in de una reserva ajena devuelve `403`.
+- [x] Confirmar HTTPS en producción (la cookie usa `Secure`).
 - [ ] Revisar logs y activar monitoreo de errores/429.
 
 ---
 
-## 9. Archivos principales modificados
+## 9. Despliegue en producción (Vercel)
+
+**URL:** https://sistema-reservas-lac.vercel.app
+**Repositorio:** https://github.com/SPSolutionsOneaOne/SistemaReservas (rama `master`)
+**Proyecto Vercel:** `spsolutions-projects/sistema-reservas`
+
+### Variables de entorno (Production y Preview)
+
+| Variable | Estado |
+| --- | --- |
+| `SESSION_SECRET` | Configurada (64 caracteres, marcada como sensible) |
+| `NEXT_PUBLIC_SUPABASE_INSTITUCIONAL_URL` | Configurada |
+| `SUPABASE_INSTITUCIONAL_SERVICE_ROLE_KEY` | Configurada (41 caracteres, `sb_secret_...`) |
+| `NEXT_PUBLIC_SUPABASE_RESERVAS_URL` | Configurada |
+| `SUPABASE_RESERVAS_SERVICE_ROLE_KEY` | Configurada (41 caracteres, `sb_secret_...`) |
+
+Las claves `service_role` no llevan prefijo `NEXT_PUBLIC_` y están marcadas como sensibles en Vercel, por lo que no se pueden leer de vuelta desde el panel ni desde `vercel env pull`.
+
+### Ajuste necesario para `argon2` en Vercel
+
+`argon2` es un módulo nativo que carga su binario desde `node_modules/argon2/prebuilds` de forma dinámica. El trazado de archivos de Next.js no incluía esa carpeta y el login fallaba con `500` y el error:
+
+```
+No native build was found for platform=linux arch=x64 runtime=node abi=147 ...
+```
+
+La solución fue declarar la inclusión explícita en `next.config.js`:
+
+```js
+experimental: {
+  outputFileTracingIncludes: {
+    '/api/**/*': ['./node_modules/argon2/prebuilds/**/*'],
+  },
+}
+```
+
+Vercel ejecuta Node 26 y `argon2@0.45.2` usa binarios N-API, por lo que basta con que la carpeta viaje en el bundle.
+
+### Verificación end-to-end en producción
+
+Se ejecutó una prueba contra `https://sistema-reservas-lac.vercel.app` con un usuario temporal Argon2id creado en DB-Institucional. Resultado: **21/21 pruebas aprobadas**.
+
+| Prueba | Resultado |
+| --- | --- |
+| `GET /` | `200` |
+| `GET /api/salas` sin sesión | `200` |
+| `GET /api/reservas` sin sesión | `401` |
+| Login real | `200` |
+| Respuesta de login sin `password_hash` | ✅ |
+| `Cache-Control: no-store` en login y validar | ✅ |
+| Cookie `HttpOnly`, `Secure`, `SameSite=Lax` | ✅ |
+| Cookie firmada accede a `/api/reservas` | `200` |
+| Token alterado | `401` |
+| `POST /api/usuarios/validar` como alumno | `200` + `{ "valido": true }` sin PII |
+| `GET /api/bitacora` como alumno | `403` |
+| `POST /api/salas` como alumno | `403` |
+| Rate limiting por cuenta | `401, 401, 401, 401, 401, 429, 429` |
+| Contador persistido en `intentos_login` | ✅ |
+| Logout | `200` y cookie expirada |
+
+Los datos temporales se eliminaron: `usuarios_institucion` quedó sin usuarios de prueba y `intentos_login` con `0` filas.
+
+### Estado de datos
+
+La tabla `public.salas` de DB-Reservas está vacía (`0` filas). El catálogo público responde `200` con un arreglo vacío; las salas deben crearse desde el rol administrador o cargarse con un script de datos iniciales.
+
+---
+
+## 10. Archivos principales modificados
 
 ### Nuevos
 
@@ -504,6 +572,8 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 - `src/app/page.tsx`
 - `.env.example`
 - `.env.local` (no versionado)
+- `next.config.js`
+- `.gitignore`
 - `docs/capitulo-arquitectura-tecnologica.md`
 
 ### Eliminados (código legacy sin uso)
@@ -516,8 +586,10 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 
 ---
 
-## 10. Conclusión
+## 11. Conclusión
 
 Los diez puntos quedaron corregidos y verificados. Los puntos 1 a 8 y 10 se resolvieron en el código; el punto 9 (RLS) se aplicó en Supabase el 6 de noviembre de 2026. La verificación confirmó que `service_role` mantiene la operación del servidor y que una clave pública ya no puede leer `usuarios_institucion` (`401 permission denied`). Con esto, la base cuenta con defensa en profundidad y la aplicación sigue protegida por autenticación firmada, autorización server-side y uso exclusivo de claves secretas en el servidor.
+
+El despliegue de producción quedó operativo en `https://sistema-reservas-lac.vercel.app`, con las cinco variables configuradas, `argon2` funcionando en Node 26 y una verificación end-to-end de **21/21 pruebas aprobadas**. El rate limiting se confirmó persistente en PostgreSQL y los datos temporales de prueba se eliminaron.
 
 > Este resultado representa alineación técnica con controles de ISO/IEC 27002:2022. No constituye una certificación ISO 27001.
