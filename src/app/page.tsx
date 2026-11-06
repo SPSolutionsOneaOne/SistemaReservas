@@ -66,7 +66,7 @@ const PURPOSES = [
 ];
 
 interface ReservaVisual {
-  id: number;
+  id: string | number;
   code: string;
   room: string;
   dateStr: string;
@@ -75,6 +75,11 @@ interface ReservaVisual {
   attendees: string[];
   purpose: string;
   attended: string | null;
+}
+
+interface OcupacionItem {
+  id_sala: string;
+  bloque_horario: number;
 }
 
 function fmtRut(v: string) {
@@ -90,6 +95,21 @@ function hashCode(str: string): number {
     hash = Math.imul(hash, 16777619);
   }
   return (hash >>> 0) / 4294967296;
+}
+
+/**
+ * Fecha local en formato YYYY-MM-DD.
+ * No usar toISOString(): convierte a UTC y puede desplazar el día.
+ */
+function toLocalDateStr(date: Date): string {
+  const anio = date.getFullYear();
+  const mes = String(date.getMonth() + 1).padStart(2, '0');
+  const dia = String(date.getDate()).padStart(2, '0');
+  return `${anio}-${mes}-${dia}`;
+}
+
+function claveOcupacion(fecha: string, idSala: string, bloque: number): string {
+  return `${fecha}|${idSala}|${bloque}`;
 }
 
 export default function ReservaPage() {
@@ -127,6 +147,8 @@ export default function ReservaPage() {
   // Salas & Reservas
   const [salas, setSalas] = useState<SalaVisual[]>(SALAS_INICIALES);
   const [reservas, setReservas] = useState<ReservaVisual[]>([]);
+  const [ocupacion, setOcupacion] = useState<Record<string, true>>({});
+  const [ocupacionCargando, setOcupacionCargando] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   // Asistencia (Check-in)
@@ -182,6 +204,94 @@ export default function ReservaPage() {
       })
       .catch(() => {});
   }, []);
+
+  // Cargar las reservas del usuario autenticado (no solo las creadas en esta sesión).
+  useEffect(() => {
+    if (!currentUser) {
+      setReservas([]);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    fetch('/api/reservas', { signal: controller.signal })
+      .then((resp) => (resp.ok ? resp.json() : null))
+      .then((data) => {
+        if (!Array.isArray(data)) return;
+        const mapeadas: ReservaVisual[] = data.map(
+          (r: {
+            id_reserva?: string;
+            codigo_reserva?: string;
+            id_sala?: string;
+            fecha?: string;
+            bloque_horario?: number;
+            usuario_rut?: string;
+            proposito?: string;
+            asistencia_registrada_en?: string | null;
+          }) => ({
+            id: r.id_reserva || `${r.id_sala}-${r.fecha}-${r.bloque_horario}`,
+            code: r.codigo_reserva || '',
+            room: r.id_sala || '',
+            dateStr: r.fecha || '',
+            block: r.bloque_horario ?? 0,
+            userRut: r.usuario_rut || '',
+            attendees: [],
+            purpose: r.proposito || '',
+            attended: r.asistencia_registrada_en || null,
+          })
+        );
+        setReservas(mapeadas);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        // Silencioso: la vista de reservas mostrará el estado vacío.
+      });
+
+    return () => controller.abort();
+  }, [currentUser]);
+
+  // Disponibilidad real: consulta la ocupación registrada para la fecha seleccionada.
+  useEffect(() => {
+    if (!currentUser) {
+      setOcupacion({});
+      return;
+    }
+
+    const day = days[selectedDayIdx];
+    if (!day) return;
+
+    const fecha = toLocalDateStr(day);
+    const controller = new AbortController();
+    setOcupacionCargando(true);
+
+    fetch(`/api/reservas/ocupacion?fecha=${encodeURIComponent(fecha)}`, {
+      signal: controller.signal,
+    })
+      .then((resp) => {
+        if (!resp.ok) throw new Error('No fue posible cargar la disponibilidad');
+        return resp.json() as Promise<{ ocupacion?: OcupacionItem[] }>;
+      })
+      .then((data) => {
+        const next: Record<string, true> = {};
+        for (const item of data.ocupacion ?? []) {
+          if (item && typeof item.id_sala === 'string' && Number.isInteger(item.bloque_horario)) {
+            next[claveOcupacion(fecha, item.id_sala, item.bloque_horario)] = true;
+          }
+        }
+        setOcupacion(next);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        // Ante un error no se inventa ocupación: el servidor seguirá rechazando
+        // cualquier solape real con un 409.
+        setOcupacion({});
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setOcupacionCargando(false);
+      });
+
+    return () => controller.abort();
+  }, [currentUser, days, selectedDayIdx]);
 
   const toggleTheme = () => {
     const next = theme === 'light' ? 'dark' : 'light';
@@ -284,17 +394,13 @@ export default function ReservaPage() {
 
   const isRoomFree = useCallback(
     (room: SalaVisual, day: Date, blk: number) => {
+      // Los domingos no hay atención (regla institucional).
       if (day.getDay() === 0) return false;
-      const dStr = day.toISOString().split('T')[0];
-      const ocupada = reservas.some(
-        (res) => res.room === room.code && res.dateStr === dStr && res.block === blk
-      );
-      if (ocupada) return false;
-      const pseudoHash = hashCode(room.code + dStr + Math.floor(blk / 2));
-      const threshold = room.type === 'bib' ? 0.3 : room.type === 'aud' ? 0.2 : 0.4;
-      return pseudoHash >= threshold;
+      const dStr = toLocalDateStr(day);
+      // Solo está ocupada si existe una reserva confirmada/completada real.
+      return !ocupacion[claveOcupacion(dStr, room.code, blk)];
     },
-    [reservas]
+    [ocupacion]
   );
 
   const freeRooms = useMemo(() => {
@@ -385,7 +491,7 @@ export default function ReservaPage() {
 
     const rutTitular = esTercero && estudianteValido ? estudianteValido.rut : (currentUser.rut || '12.345.678-5');
     const day = days[selectedDayIdx];
-    const dateStr = day.toISOString().split('T')[0];
+    const dateStr = toLocalDateStr(day);
     const nextId = reservas.length + 1;
     const generatedCode = 'RES-' + Math.floor(1000 + Math.random() * 8999);
 
@@ -419,6 +525,7 @@ export default function ReservaPage() {
       const data = (await resp.json().catch(() => null)) as
         | {
             error?: string;
+            id_reserva?: string;
             id_sala?: string;
             codigo_reserva?: string;
             fecha?: string;
@@ -436,6 +543,7 @@ export default function ReservaPage() {
       // Usa los identificadores generados por el servidor (código real de reserva).
       const reservaConfirmada: ReservaVisual = {
         ...nuevaReserva,
+        id: data?.id_reserva || nuevaReserva.id,
         code: data?.codigo_reserva || nuevaReserva.code,
         room: data?.id_sala || nuevaReserva.room,
         dateStr: data?.fecha || nuevaReserva.dateStr,
@@ -443,6 +551,16 @@ export default function ReservaPage() {
         userRut: data?.usuario_rut || nuevaReserva.userRut,
         purpose: data?.proposito || nuevaReserva.purpose,
       };
+
+      // Refleja la ocupación de inmediato, sin esperar a recargar la fecha.
+      setOcupacion((prev) => ({
+        ...prev,
+        [claveOcupacion(
+          reservaConfirmada.dateStr,
+          reservaConfirmada.room,
+          reservaConfirmada.block
+        )]: true,
+      }));
 
       setReservas([reservaConfirmada, ...reservas]);
       setLastBooking(reservaConfirmada);
@@ -906,6 +1024,11 @@ export default function ReservaPage() {
                         </div>
 
                         <span className="label">Hora (14 Bloques de 45 min)</span>
+                        {ocupacionCargando && (
+                          <p className="center" style={{ color: 'var(--muted)', margin: '0 0 12px' }}>
+                            Cargando disponibilidad…
+                          </p>
+                        )}
                         {GRUPOS.map(([name, start, end]) => (
                           <div key={name} className="group">
                             <h3>{name}</h3>
@@ -923,7 +1046,7 @@ export default function ReservaPage() {
                                       type="button"
                                       className="blk"
                                       aria-pressed={selectedBlock === blk}
-                                      disabled={!hayLibres}
+                                      disabled={ocupacionCargando || !hayLibres}
                                       onClick={() => handleSelectBlock(blk)}
                                     >
                                       {bInfo.inicio} – {bInfo.fin}

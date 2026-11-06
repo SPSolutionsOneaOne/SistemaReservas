@@ -56,6 +56,7 @@ flowchart LR
 | `GET /api/salas` | ✅ | ✅ | ✅ | ✅ |
 | `POST /api/salas` | ❌ | ❌ | ❌ | ✅ |
 | `GET /api/reservas` | ❌ | Solo propias | Todas | Todas |
+| `GET /api/reservas/ocupacion` | ❌ | ✅ | ✅ | ✅ |
 | `POST /api/reservas` | ❌ | Solo para sí mismo | Propias o de terceros | Propias o de terceros |
 | `PATCH /api/reservas` | ❌ | Solo propias | Todas | Todas |
 | `POST /api/reservas/check-in` | ❌ | Solo propias | Todas | Todas |
@@ -545,6 +546,28 @@ Las 12 salas que la aplicación definía por defecto en `SALAS_INICIALES` (`src/
 
 La carga es reproducible con `docs/sql/db-reservas-salas-iniciales.sql`, que usa `on conflict do nothing` para no duplicar ni sobrescribir cambios manuales.
 
+### Disponibilidad real de horarios
+
+La vista de reserva calculaba la ocupación con un hash pseudoaleatorio sobre `sala + fecha + bloque` (`isRoomFree` en `src/app/page.tsx`). Ese hash marcaba bloques como ocupados aunque `public.reservas` estuviera vacía, por lo que había días y horas sin ninguna sala disponible sin que existiera una reserva real.
+
+La corrección elimina el hash y usa la base de datos como única fuente de verdad:
+
+1. Nuevo endpoint `GET /api/reservas/ocupacion?fecha=YYYY-MM-DD[&id_sala=AAA-00]`.
+   - Requiere sesión válida (`authorize`).
+   - Valida que la fecha exista realmente en el calendario.
+   - Consulta `public.reservas` filtrando por fecha y excluyendo `estado = 'cancelada'`.
+   - Devuelve solo `{ id_sala, bloque_horario }`; no expone RUT, propósito ni asistentes.
+   - Responde con `Cache-Control: no-store`.
+2. `src/app/page.tsx` consulta ese endpoint cada vez que cambia el día seleccionado o la sesión.
+   - Mientras carga, los bloques se deshabilitan y se muestra “Cargando disponibilidad…”.
+   - Una sala/bloque solo se considera ocupado si existe una reserva real.
+   - Al confirmar una reserva, el bloque se marca ocupado de inmediato en el estado local.
+3. Las fechas se construyen con `toLocalDateStr()` en lugar de `toISOString()`, para evitar desplazamientos de día por zona horaria.
+4. Al iniciar sesión se cargan las reservas del usuario con `GET /api/reservas`, de modo que “Mis reservas” refleja la base de datos y no solo las reservas creadas durante la sesión actual.
+5. La regla de negocio de domingo sin atención se mantiene explícita en la UI.
+
+La validación de conflictos sigue siendo server-side: la restricción `UNIQUE(id_sala, fecha, bloque_horario)` devuelve `409` si dos usuarios intentan reservar el mismo bloque, incluso si la UI quedó desactualizada.
+
 ---
 
 ## 10. Archivos principales modificados
@@ -557,6 +580,7 @@ La carga es reproducible con `docs/sql/db-reservas-salas-iniciales.sql`, que usa
 - `src/lib/supabaseInstitucionalAdmin.ts`
 - `src/lib/supabaseReservasAdmin.ts`
 - `src/app/api/auth/logout/route.ts`
+- `src/app/api/reservas/ocupacion/route.ts`
 - `docs/sql/db-reservas-rls.sql`
 - `docs/sql/db-institucional-rls.sql`
 - `docs/sql/db-reservas-rate-limit.sql`
