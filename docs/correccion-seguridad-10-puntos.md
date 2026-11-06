@@ -463,6 +463,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 - [x] Ejecutar `docs/sql/db-reservas-rls.sql` en DB-Reservas.
 - [x] Ejecutar `docs/sql/db-institucional-rls.sql` en DB-Institucional.
 - [x] Ejecutar `docs/sql/db-reservas-rate-limit.sql` en DB-Reservas (rate limiting compartido).
+- [x] Cargar las 12 salas iniciales en DB-Reservas (`docs/sql/db-reservas-salas-iniciales.sql`).
 - [x] Verificar que una clave pública no puede leer `usuarios_institucion` (`401`).
 - [x] Confirmar en DB-Reservas que `salas`, `reservas`, `historial_penalizaciones` y `bitacora_administrativa` tienen `relrowsecurity = true`.
 - [x] Verificar que `GET /api/salas` funciona sin sesión.
@@ -538,9 +539,11 @@ Se ejecutó una prueba contra `https://sistema-reservas-lac.vercel.app` con un u
 
 Los datos temporales se eliminaron: `usuarios_institucion` quedó sin usuarios de prueba y `intentos_login` con `0` filas.
 
-### Estado de datos
+### Salas iniciales
 
-La tabla `public.salas` de DB-Reservas está vacía (`0` filas). El catálogo público responde `200` con un arreglo vacío; las salas deben crearse desde el rol administrador o cargarse con un script de datos iniciales.
+Las 12 salas que la aplicación definía por defecto en `SALAS_INICIALES` (`src/app/page.tsx`) quedaron persistidas en `public.salas` de DB-Reservas: 3 laboratorios, 3 salas de clases, 1 auditorio, 2 salas de reuniones y 3 estudios de biblioteca. El catálogo público `GET /api/salas` devuelve `200` con las 12 salas ordenadas por `id_sala`.
+
+La carga es reproducible con `docs/sql/db-reservas-salas-iniciales.sql`, que usa `on conflict do nothing` para no duplicar ni sobrescribir cambios manuales.
 
 ---
 
@@ -557,6 +560,7 @@ La tabla `public.salas` de DB-Reservas está vacía (`0` filas). El catálogo p�
 - `docs/sql/db-reservas-rls.sql`
 - `docs/sql/db-institucional-rls.sql`
 - `docs/sql/db-reservas-rate-limit.sql`
+- `docs/sql/db-reservas-salas-iniciales.sql`
 - `docs/correccion-seguridad-10-puntos.md`
 
 ### Modificados
