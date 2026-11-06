@@ -724,15 +724,15 @@ export default function ReservaPage() {
         {/* MODAL DE LOGIN SI NO HAY SESIÓN ACTIVA */}
         {/* ============================================================== */}
         {!currentUser && (
-          <div style={{ maxWidth: 440, margin: '40px auto', paddingBottom: 40 }}>
-            <div className="card">
-              <div className="text-center mb-4">
+          <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-10 px-4">
+            <div className="card shadow-lg w-full max-w-md p-8 border border-slate-200/80">
+              <div className="text-center mb-6">
                 <span className="inline-block bg-red-600 text-white font-extrabold px-3 py-1 rounded text-lg tracking-wider mb-2">
                   INACAP
                 </span>
-                <h1 className="title" style={{ margin: '4px 0' }}>Acceso Institucional</h1>
-                <p style={{ color: 'var(--muted)', fontSize: 13, margin: 0 }}>
-                  Autenticación contra padrón institucional (DB-Institucional)
+                <h1 className="title" style={{ margin: '4px 0 6px', fontSize: 28 }}>Acceso Institucional</h1>
+                <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>
+                  Portal Integrado de Reservas e Infraestructura
                 </p>
               </div>
 
@@ -750,7 +750,7 @@ export default function ReservaPage() {
                 />
 
                 <label className="label" htmlFor="logPass">
-                  Contraseña (Argon2id)
+                  Contraseña
                 </label>
                 <input
                   id="logPass"
@@ -767,18 +767,18 @@ export default function ReservaPage() {
                 <button
                   className="btn primary"
                   type="submit"
-                  style={{ width: '100%', marginTop: 14 }}
+                  style={{ width: '100%', marginTop: 18, height: 48, fontSize: 16 }}
                   disabled={loginLoading}
                 >
                   {loginLoading ? 'Verificando en Padrón...' : 'Ingresar al Sistema'}
                 </button>
               </form>
 
-              <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--line)' }}>
-                <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>
+              <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid var(--line)' }}>
+                <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 10, textAlign: 'center' }}>
                   Acceso directo de prueba por Roles:
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2.5">
                   <button
                     className="btn sm"
                     type="button"
