@@ -1,11 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseInstitucional } from '@/lib/supabaseInstitucional';
-import { UsuarioInstitucion } from '@/types/database';
+import { getSupabaseInstitucionalAdmin } from '@/lib/supabaseInstitucionalAdmin';
+import argon2 from 'argon2';
+import {
+  LEGACY_SESSION_COOKIES,
+  SESSION_COOKIE,
+  sessionCookieOptions,
+  signSession,
+  Rol,
+} from '@/lib/session';
+import { limpiarIntentos, obtenerClaveCliente, registrarFallo, verificarBloqueo } from '@/lib/rateLimit';
+
+const MENSAJE_CREDENCIALES = 'Credenciales inválidas o usuario no encontrado';
 
 export async function POST(request: NextRequest) {
+  const claveCliente = `login:${obtenerClaveCliente(request)}`;
+
   try {
+    const bloqueo = verificarBloqueo(claveCliente);
+    if (bloqueo.bloqueado) {
+      return NextResponse.json(
+        { error: 'Demasiados intentos fallidos. Intenta nuevamente más tarde.' },
+        { status: 429, headers: { 'Retry-After': String(bloqueo.retryAfter) } }
+      );
+    }
+
     const body = await request.json();
-    const { identificador, password } = body; // identificador puede ser RUT o correo institucional
+    const identificador = typeof body?.identificador === 'string' ? body.identificador : '';
+    const password = typeof body?.password === 'string' ? body.password : '';
 
     if (!identificador || !password) {
       return NextResponse.json(
@@ -15,7 +36,18 @@ export async function POST(request: NextRequest) {
     }
 
     const cleanId = identificador.trim().toLowerCase();
-    const supabase = getSupabaseInstitucional();
+    const claveIdentificador = `login:id:${cleanId}`;
+
+    // Segundo límite por cuenta: evita fuerza bruta distribuida desde muchas IP.
+    const bloqueoCuenta = verificarBloqueo(claveIdentificador);
+    if (bloqueoCuenta.bloqueado) {
+      return NextResponse.json(
+        { error: 'Demasiados intentos fallidos. Intenta nuevamente más tarde.' },
+        { status: 429, headers: { 'Retry-After': String(bloqueoCuenta.retryAfter) } }
+      );
+    }
+
+    const supabase = getSupabaseInstitucionalAdmin();
 
     // Buscar por correo o por RUT
     let query = supabase.from('usuarios_institucion').select('*');
@@ -27,64 +59,38 @@ export async function POST(request: NextRequest) {
 
     const { data: usuario, error } = await query.single();
 
-    // Fallback con credenciales de prueba del padrón institucional si Supabase está offline
     if (error || !usuario) {
-      const USUARIOS_DEMO: Record<string, Partial<UsuarioInstitucion>> = {
-        'alumno@inacapmail.cl': {
-          id: 'demo-alumno',
-          rut: '12.345.678-5',
-          nombre_completo: 'Juan Pérez González',
-          correo_institucional: 'alumno@inacapmail.cl',
-          rol: 'alumno',
-          carrera_o_departamento: 'Ingeniería en Informática',
-          estado_activo: true,
-        },
-        'encargado@institucion.cl': {
-          id: 'demo-encargado',
-          rut: '11.222.333-4',
-          nombre_completo: 'Claudia Soto Morales',
-          correo_institucional: 'encargado@institucion.cl',
-          rol: 'encargado_administrativo',
-          carrera_o_departamento: 'Dirección de Asuntos Estudiantiles',
-          estado_activo: true,
-        },
-        'admin@institucion.cl': {
-          id: 'demo-admin',
-          rut: '9.876.543-2',
-          nombre_completo: 'Rodrigo Valenzuela',
-          correo_institucional: 'admin@institucion.cl',
-          rol: 'administrador',
-          carrera_o_departamento: 'Infraestructura TI',
-          estado_activo: true,
-        },
-        'docente@institucion.cl': {
-          id: 'demo-docente',
-          rut: '15.678.901-3',
-          nombre_completo: 'Prof. Mario Bunge',
-          correo_institucional: 'docente@institucion.cl',
-          rol: 'docente',
-          carrera_o_departamento: 'Área Tecnologías de la Información',
-          estado_activo: true,
-        },
-      };
-
-      const demoUser = USUARIOS_DEMO[cleanId] || Object.values(USUARIOS_DEMO).find(u => u.rut === cleanId.toUpperCase());
-
-      if (demoUser && password.length >= 4) {
-        const response = NextResponse.json({
-          usuario: demoUser,
-          mensaje: 'Sesión iniciada correctamente (Padrón Institucional)',
-        });
-        response.cookies.set('inacap_session_rol', demoUser.rol!, { path: '/' });
-        response.cookies.set('inacap_session_rut', demoUser.rut!, { path: '/' });
-        return response;
-      }
-
-      return NextResponse.json(
-        { error: 'Credenciales inválidas o usuario no registrado en DB-Institucional' },
-        { status: 401 }
-      );
+      registrarFallo(claveCliente);
+      registrarFallo(claveIdentificador);
+      return NextResponse.json({ error: MENSAJE_CREDENCIALES }, { status: 401 });
     }
+
+    const passwordHash = usuario.password_hash as string;
+
+    // Solo se aceptan hashes Argon2id. Nunca comparar texto plano.
+    if (!passwordHash || !passwordHash.startsWith('$argon2')) {
+      console.error(`[login] Hash no soportado para el usuario ${usuario.id}`);
+      registrarFallo(claveCliente);
+      registrarFallo(claveIdentificador);
+      return NextResponse.json({ error: MENSAJE_CREDENCIALES }, { status: 401 });
+    }
+
+    let passwordValida = false;
+    try {
+      passwordValida = await argon2.verify(passwordHash, password);
+    } catch (err) {
+      console.error('[login] Error al verificar el hash Argon2:', err);
+      passwordValida = false;
+    }
+
+    if (!passwordValida) {
+      registrarFallo(claveCliente);
+      registrarFallo(claveIdentificador);
+      return NextResponse.json({ error: MENSAJE_CREDENCIALES }, { status: 401 });
+    }
+
+    limpiarIntentos(claveCliente);
+    limpiarIntentos(claveIdentificador);
 
     if (!usuario.estado_activo) {
       return NextResponse.json(
@@ -93,19 +99,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Respuesta exitosa con usuario y rol detectado
+    // Rehash transparente si los parámetros de Argon2 quedaron obsoletos.
+    if (argon2.needsRehash(passwordHash)) {
+      try {
+        const { error: errorActualizacion } = await supabase
+          .from('usuarios_institucion')
+          .update({ password_hash: await argon2.hash(password) })
+          .eq('id', usuario.id);
+        if (errorActualizacion) throw errorActualizacion;
+      } catch (err) {
+        console.error('[login] No se pudo actualizar el hash Argon2:', err);
+      }
+    }
+
+    // Sesión firmada: el cliente no puede alterar RUT ni rol.
+    const token = await signSession({ rut: usuario.rut, rol: usuario.rol as Rol });
+
     const { password_hash, ...perfilSeguro } = usuario;
     const response = NextResponse.json({
       usuario: perfilSeguro,
       mensaje: 'Autenticación institucional exitosa',
     });
 
-    response.cookies.set('inacap_session_rol', usuario.rol, { path: '/' });
-    response.cookies.set('inacap_session_rut', usuario.rut, { path: '/' });
+    response.cookies.set(SESSION_COOKIE, token, sessionCookieOptions());
 
+    // Limpiar cookies antiguas no firmadas, si existían.
+    for (const nombre of LEGACY_SESSION_COOKIES) {
+      response.cookies.set(nombre, '', { path: '/', maxAge: 0 });
+    }
+
+    response.headers.set('Cache-Control', 'no-store');
     return response;
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error durante autenticación';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[login] Error interno:', err);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }

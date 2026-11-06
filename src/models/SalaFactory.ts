@@ -5,7 +5,7 @@
 
 import type { Sala, SalaInsert, TipoSala } from '@/types/database';
 import { PREFIJOS_SALA } from '@/types/database';
-import { getSupabaseReservas } from '@/lib/supabaseReservas';
+import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 
 /**
  * Factory Method para la creación de Salas.
@@ -22,7 +22,7 @@ export class SalaFactory {
    */
   static async generarIdSala(tipo: TipoSala): Promise<string> {
     const prefijo = PREFIJOS_SALA[tipo];
-    const supabase = getSupabaseReservas();
+    const supabase = getSupabaseReservasAdmin();
 
     // Buscar la última sala de este tipo ordenada descendente
     const { data, error } = await supabase
@@ -55,7 +55,7 @@ export class SalaFactory {
   static async crearSala(
     params: Omit<SalaInsert, 'id_sala'>
   ): Promise<Sala> {
-    const supabase = getSupabaseReservas();
+    const supabase = getSupabaseReservasAdmin();
     const idSala = await this.generarIdSala(params.tipo);
 
     const nuevaSala: SalaInsert = {

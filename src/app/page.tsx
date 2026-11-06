@@ -4,7 +4,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import QRCode from 'qrcode';
 import {
   TipoSala,
-  RolUsuario,
   UsuarioInstitucion,
   BLOQUES_HORARIOS,
   PREFIJOS_SALA,
@@ -109,6 +108,7 @@ export default function ReservaPage() {
   const [step, setStep] = useState<number>(0);
   const [selectedType, setSelectedType] = useState<TipoSala | null>(null);
   const [selectedDayIdx, setSelectedDayIdx] = useState<number>(0);
+  const [weekStartIdx, setWeekStartIdx] = useState(0);
   const [selectedBlock, setSelectedBlock] = useState<number | null>(null);
   const [selectedRoomCode, setSelectedRoomCode] = useState<string | null>(null);
   const [rutInput, setRutInput] = useState<string>('');
@@ -150,11 +150,13 @@ export default function ReservaPage() {
   const days = useMemo(() => {
     const list: Date[] = [];
     const today = new Date();
-    for (let i = 0; i < 7; i++) {
+    const remainingDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate() + 1;
+    for (let i = 0; i < remainingDays; i++) {
       list.push(new Date(today.getFullYear(), today.getMonth(), today.getDate() + i));
     }
     return list;
   }, []);
+  const visibleDays = days.slice(weekStartIdx, weekStartIdx + 7);
 
   // Carga inicial
   useEffect(() => {
@@ -179,17 +181,6 @@ export default function ReservaPage() {
         }
       })
       .catch(() => {});
-
-    // Sesión por defecto de prueba (Alumno)
-    setCurrentUser({
-      id: 'demo-alumno-1',
-      rut: '12.345.678-5',
-      nombre_completo: 'Juan Pérez González',
-      correo_institucional: 'alumno@inacapmail.cl',
-      rol: 'alumno',
-      carrera_o_departamento: 'Ingeniería en Informática',
-      estado_activo: true,
-    });
   }, []);
 
   const toggleTheme = () => {
@@ -238,50 +229,12 @@ export default function ReservaPage() {
     }
   };
 
-  const handleQuickDemoLogin = (rol: RolUsuario) => {
-    const demos: Record<RolUsuario, Partial<UsuarioInstitucion>> = {
-      alumno: {
-        rut: '12.345.678-5',
-        nombre_completo: 'Juan Pérez González',
-        correo_institucional: 'alumno@inacapmail.cl',
-        rol: 'alumno',
-        carrera_o_departamento: 'Ingeniería en Informática',
-        estado_activo: true,
-      },
-      encargado_administrativo: {
-        rut: '11.222.333-4',
-        nombre_completo: 'Claudia Soto Morales',
-        correo_institucional: 'encargado@institucion.cl',
-        rol: 'encargado_administrativo',
-        carrera_o_departamento: 'Dirección de Asuntos Estudiantiles',
-        estado_activo: true,
-      },
-      administrador: {
-        rut: '9.876.543-2',
-        nombre_completo: 'Rodrigo Valenzuela',
-        correo_institucional: 'admin@institucion.cl',
-        rol: 'administrador',
-        carrera_o_departamento: 'Infraestructura TI',
-        estado_activo: true,
-      },
-      docente: {
-        rut: '15.678.901-3',
-        nombre_completo: 'Prof. Mario Bunge',
-        correo_institucional: 'docente@institucion.cl',
-        rol: 'docente',
-        carrera_o_departamento: 'Área Tecnologías de la Información',
-        estado_activo: true,
-      },
-    };
-
-    const user = demos[rol];
-    setCurrentUser(user);
-    setView('reservar');
-    setStep(0);
-    showToast(`Sesión activa: ${user.nombre_completo} [Rol: ${user.rol}]`);
-  };
-
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {
+      // Si falla la llamada, igual limpiamos el estado local.
+    }
     setCurrentUser(null);
     setLoginId('');
     setLoginPass('');
@@ -320,19 +273,8 @@ export default function ReservaPage() {
       setEstudianteValido(data.usuario);
       setEstudianteMsg(`✅ Estudiante verificado: ${data.usuario.nombre_completo} (${data.usuario.carrera_o_departamento || 'INACAP'})`);
     } catch {
-      // Mock fallback
-      setEstudianteValido({
-        id: 'mock-est',
-        rut: clean,
-        nombre_completo: 'Estudiante Verificado',
-        correo_institucional: 'estudiante@inacapmail.cl',
-        password_hash: '',
-        rol: 'alumno',
-        carrera_o_departamento: 'Ingeniería',
-        estado_activo: true,
-        creado_en: new Date().toISOString(),
-      });
-      setEstudianteMsg(`✅ Estudiante verificado: ${clean}`);
+      setEstudianteValido(null);
+      setEstudianteMsg('No fue posible validar al estudiante. Intenta nuevamente.');
     }
   };
 
@@ -420,9 +362,7 @@ export default function ReservaPage() {
       setRutInput('');
       setRutMsg('');
     } catch {
-      // Fallback
-      setAttendees([...attendees, clean]);
-      setRutInput('');
+      setRutMsg('No fue posible validar el RUT. Intenta nuevamente.');
     } finally {
       setValidatingRut(false);
     }
@@ -473,21 +413,45 @@ export default function ReservaPage() {
           cantidad_asistentes: attendees.length + 1,
           proposito: nuevaReserva.purpose,
           asistentes: attendees,
-          encargado_rut: esTercero ? currentUser.rut : undefined,
         }),
       });
 
-      if (resp.status === 409) {
-        showToast('⚠️ Conflicto (409): este bloque ya fue tomado por otro usuario');
+      const data = (await resp.json().catch(() => null)) as
+        | {
+            error?: string;
+            id_sala?: string;
+            codigo_reserva?: string;
+            fecha?: string;
+            bloque_horario?: number;
+            usuario_rut?: string;
+            proposito?: string;
+          }
+        | null;
+
+      if (!resp.ok) {
+        showToast(data?.error || 'No fue posible registrar la reserva');
         return;
       }
-    } catch {}
 
-    setReservas([nuevaReserva, ...reservas]);
-    setLastBooking(nuevaReserva);
-    setStep(4);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast(esTercero ? `Reserva a nombre de ${rutTitular} confirmada y auditada` : 'Reserva confirmada');
+      // Usa los identificadores generados por el servidor (código real de reserva).
+      const reservaConfirmada: ReservaVisual = {
+        ...nuevaReserva,
+        code: data?.codigo_reserva || nuevaReserva.code,
+        room: data?.id_sala || nuevaReserva.room,
+        dateStr: data?.fecha || nuevaReserva.dateStr,
+        block: data?.bloque_horario ?? nuevaReserva.block,
+        userRut: data?.usuario_rut || nuevaReserva.userRut,
+        purpose: data?.proposito || nuevaReserva.purpose,
+      };
+
+      setReservas([reservaConfirmada, ...reservas]);
+      setLastBooking(reservaConfirmada);
+      setStep(4);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast(esTercero ? `Reserva a nombre de ${rutTitular} confirmada y auditada` : 'Reserva confirmada');
+    } catch {
+      showToast('No fue posible conectar con el servidor. Intenta nuevamente.');
+    }
   };
 
   const resetFlow = () => {
@@ -533,22 +497,30 @@ export default function ReservaPage() {
 
   const completarAsistencia = async () => {
     if (!asistenciaReserva) return;
-    const nowIso = new Date().toISOString();
-
     try {
-      await fetch('/api/reservas/check-in', {
+      const resp = await fetch('/api/reservas/check-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ codigo_reserva: asistenciaReserva.code }),
       });
-    } catch {}
 
-    setReservas((prev) =>
-      prev.map((r) =>
-        r.id === asistenciaReserva.id ? { ...r, attended: nowIso } : r
-      )
-    );
-    setAsistModo('ok');
+      const data = (await resp.json().catch(() => null)) as { error?: string } | null;
+
+      if (!resp.ok) {
+        setManualCodeError(data?.error || 'No fue posible registrar la asistencia.');
+        return;
+      }
+
+      const nowIso = new Date().toISOString();
+      setReservas((prev) =>
+        prev.map((r) =>
+          r.id === asistenciaReserva.id ? { ...r, attended: nowIso } : r
+        )
+      );
+      setAsistModo('ok');
+    } catch {
+      setManualCodeError('No fue posible conectar con el servidor. Intenta nuevamente.');
+    }
   };
 
   // Crear Sala (Admin)
@@ -578,7 +550,7 @@ export default function ReservaPage() {
     };
 
     try {
-      await fetch('/api/salas', {
+      const resp = await fetch('/api/salas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -588,13 +560,40 @@ export default function ReservaPage() {
           piso: nuevaSala.floor,
         }),
       });
-    } catch {}
 
-    setSalas([...salas, nuevaSala]);
-    setAdminName('');
-    setAdminMsg('');
-    showToast(`Sala creada: ${nuevaSala.code}`);
-    openQrModal(nuevaSala);
+      const data = (await resp.json().catch(() => null)) as
+        | {
+            error?: string;
+            id_sala?: string;
+            nombre_descriptivo?: string;
+            tipo?: TipoSala;
+            aforo?: number;
+            piso?: number;
+          }
+        | null;
+
+      if (!resp.ok) {
+        setAdminMsg(data?.error || 'No fue posible crear la sala.');
+        return;
+      }
+
+      const salaCreada: SalaVisual = {
+        ...nuevaSala,
+        code: data?.id_sala || nuevaSala.code,
+        name: data?.nombre_descriptivo || nuevaSala.name,
+        type: data?.tipo || nuevaSala.type,
+        cap: data?.aforo ?? nuevaSala.cap,
+        floor: data?.piso ?? nuevaSala.floor,
+      };
+
+      setSalas([...salas, salaCreada]);
+      setAdminName('');
+      setAdminMsg('');
+      showToast(`Sala creada: ${salaCreada.code}`);
+      openQrModal(salaCreada);
+    } catch {
+      setAdminMsg('No fue posible conectar con el servidor. Intenta nuevamente.');
+    }
   };
 
   const openQrModal = async (room: SalaVisual) => {
@@ -773,42 +772,6 @@ export default function ReservaPage() {
                   {loginLoading ? 'Verificando en Padrón...' : 'Ingresar al Sistema'}
                 </button>
               </form>
-
-              <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid var(--line)' }}>
-                <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 10, textAlign: 'center' }}>
-                  Acceso directo de prueba por Roles:
-                </p>
-                <div className="grid grid-cols-2 gap-2.5">
-                  <button
-                    className="btn sm"
-                    type="button"
-                    onClick={() => handleQuickDemoLogin('alumno')}
-                  >
-                    👤 Alumno
-                  </button>
-                  <button
-                    className="btn sm"
-                    type="button"
-                    onClick={() => handleQuickDemoLogin('encargado_administrativo')}
-                  >
-                    🛡️ Encargado Admin
-                  </button>
-                  <button
-                    className="btn sm"
-                    type="button"
-                    onClick={() => handleQuickDemoLogin('administrador')}
-                  >
-                    ⚙️ Administrador
-                  </button>
-                  <button
-                    className="btn sm"
-                    type="button"
-                    onClick={() => handleQuickDemoLogin('docente')}
-                  >
-                    🎓 Docente
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -912,8 +875,11 @@ export default function ReservaPage() {
                     {step === 1 && (
                       <section className="panel on">
                         <span className="label">Día</span>
-                        <div className="days">
-                          {days.map((d, i) => {
+                        <div className="days-nav">
+                          <button type="button" className="week-nav" aria-label="Semana anterior" disabled={weekStartIdx === 0} onClick={() => setWeekStartIdx(Math.max(0, weekStartIdx - 7))}>‹</button>
+                          <div className="days">
+                          {visibleDays.map((d, visibleIdx) => {
+                            const i = weekStartIdx + visibleIdx;
                             const domingo = d.getDay() === 0;
                             const diaSem = d
                               .toLocaleDateString('es-CL', { weekday: 'short' })
@@ -935,6 +901,8 @@ export default function ReservaPage() {
                               </button>
                             );
                           })}
+                          </div>
+                          <button type="button" className="week-nav" aria-label="Semana siguiente" disabled={weekStartIdx + 7 >= days.length} onClick={() => setWeekStartIdx(weekStartIdx + 7)}>›</button>
                         </div>
 
                         <span className="label">Hora (14 Bloques de 45 min)</span>

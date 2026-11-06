@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseInstitucional } from '@/lib/supabaseInstitucional';
-import { getSupabaseReservas } from '@/lib/supabaseReservas';
+import { getSupabaseInstitucionalAdmin } from '@/lib/supabaseInstitucionalAdmin';
+import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import { validarRutChileno, validarCorreoInstitucional } from '@/lib/validators';
 import { HistorialPenalizacion } from '@/types/database';
+import { authorize, ROLES_STAFF } from '@/lib/authz';
 
 export async function POST(request: NextRequest) {
   try {
+    // Solo usuarios autenticados pueden validar RUTs.
+    const auth = await authorize(request);
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const { rut } = body;
 
@@ -18,16 +23,16 @@ export async function POST(request: NextRequest) {
     }
 
     // 1. Buscar en DB-Institucional
-    const supabaseInst = getSupabaseInstitucional();
+    const supabaseInst = getSupabaseInstitucionalAdmin();
     const { data: usuario, error: errUsuario } = await supabaseInst
       .from('usuarios_institucion')
-      .select('id, rut, nombre_completo, correo_institucional, rol, carrera_o_departamento, estado_activo')
+      .select('rut, nombre_completo, correo_institucional, rol, carrera_o_departamento, estado_activo')
       .eq('rut', rut)
       .single();
 
     if (errUsuario || !usuario) {
       return NextResponse.json(
-        { error: 'Usuario no registrado en el padrón institucional (DB-Institucional)' },
+        { error: 'No encontramos este RUT en el registro institucional' },
         { status: 404 }
       );
     }
@@ -41,13 +46,13 @@ export async function POST(request: NextRequest) {
 
     if (!validarCorreoInstitucional(usuario.correo_institucional)) {
       return NextResponse.json(
-        { error: 'El correo institucional no cumple con los dominios permitidos (@institucion.cl / @inacapmail.cl - RN04)' },
+        { error: 'El correo institucional no cumple con los dominios permitidos' },
         { status: 403 }
       );
     }
 
     // 2. Comprobar penalizaciones en DB-Reservas
-    const supabaseRes = getSupabaseReservas();
+    const supabaseRes = getSupabaseReservasAdmin();
     const { data: penal } = await supabaseRes
       .from('historial_penalizaciones')
       .select('*')
@@ -55,7 +60,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     let bloqueado = false;
-    let mensajeBloqueo = null;
+    let mensajeBloqueo: string | null = null;
 
     if (penal) {
       const p = penal as HistorialPenalizacion;
@@ -65,14 +70,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
-      usuario,
-      penalizacion: penal || null,
-      bloqueado,
-      mensajeBloqueo,
-    });
+    // 3. Minimización de datos:
+    //    - Personal administrativo: nombre y carrera para confirmar al estudiante.
+    //    - Alumnos/docentes: solo confirmación de validez, sin datos personales.
+    if (ROLES_STAFF.includes(auth.session.rol)) {
+      return NextResponse.json(
+        {
+          usuario: {
+            rut: usuario.rut,
+            nombre_completo: usuario.nombre_completo,
+            carrera_o_departamento: usuario.carrera_o_departamento,
+            estado_activo: usuario.estado_activo,
+          },
+          bloqueado,
+          mensajeBloqueo,
+        },
+        { headers: { 'Cache-Control': 'no-store' } }
+      );
+    }
+
+    return NextResponse.json(
+      { valido: true },
+      { headers: { 'Cache-Control': 'no-store' } }
+    );
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error al validar usuario';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[usuarios/validar] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al validar usuario' }, { status: 500 });
   }
 }

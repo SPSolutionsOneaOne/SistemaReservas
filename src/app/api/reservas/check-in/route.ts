@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseReservas } from '@/lib/supabaseReservas';
+import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import { resetearAusencias } from '@/controllers/reservasController';
+import { authorize, ROLES_STAFF } from '@/lib/authz';
 
 export async function POST(request: NextRequest) {
   try {
+    // Cualquier usuario autenticado puede hacer check-in, pero solo de sus
+    // propias reservas. El personal administrativo puede hacerlo por terceros.
+    const auth = await authorize(request);
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const { id_reserva, codigo_reserva } = body;
 
@@ -14,7 +20,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = getSupabaseReservas();
+    const supabase = getSupabaseReservasAdmin();
     let query = supabase.from('reservas').select('*');
 
     if (id_reserva) {
@@ -27,6 +33,16 @@ export async function POST(request: NextRequest) {
 
     if (errBusqueda || !reserva) {
       return NextResponse.json({ error: 'Reserva no encontrada' }, { status: 404 });
+    }
+
+    // El titular solo puede registrar su propia asistencia.
+    // El personal administrativo puede registrar la asistencia de cualquier reserva.
+    const esStaff = ROLES_STAFF.includes(auth.session.rol);
+    if (!esStaff && reserva.usuario_rut !== auth.session.rut) {
+      return NextResponse.json(
+        { error: 'No autorizado para registrar la asistencia de esta reserva' },
+        { status: 403 }
+      );
     }
 
     if (reserva.estado === 'cancelada') {
@@ -53,7 +69,8 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (errUpdate) {
-      return NextResponse.json({ error: errUpdate.message }, { status: 500 });
+      console.error('[check-in] Error al actualizar la reserva:', errUpdate);
+      return NextResponse.json({ error: 'Error interno al registrar el check-in' }, { status: 500 });
     }
 
     // Regla de Negocio: si asiste a la sala, se resetean las ausencias acumuladas
@@ -64,7 +81,7 @@ export async function POST(request: NextRequest) {
       reserva: actualizada,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error al registrar check-in';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[check-in] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al registrar el check-in' }, { status: 500 });
   }
 }

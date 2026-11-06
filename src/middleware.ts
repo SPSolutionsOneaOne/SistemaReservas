@@ -1,41 +1,61 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getSessionFromRequest, Rol } from '@/lib/session';
 
 /**
- * Middleware de Control de Acceso basado en Roles (RBAC - RF-SEC-11 / RN03)
- * Protege endpoints y vistas sensibles según el rol detectado.
+ * Middleware de control de acceso.
+ * - Verifica la firma HMAC de la cookie de sesión.
+ * - Falla cerrado: si no hay sesión válida, responde 401.
+ * - Aplica RBAC para operaciones administrativas.
+ *
+ * Las rutas API vuelven a validar la sesión como defensa en profundidad.
  */
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const userRole = request.cookies.get('inacap_session_rol')?.value;
+  const method = request.method;
 
-  // 1. Proteger creación de salas (Solo Administrador)
-  if (pathname === '/api/salas' && request.method === 'POST') {
-    if (userRole && userRole !== 'administrador') {
-      return NextResponse.json(
-        { error: 'Acceso denegado: solo el Administrador puede crear salas' },
-        { status: 403 }
-      );
-    }
+  // Catálogo de salas: lectura pública (no contiene datos personales).
+  if (pathname === '/api/salas' && method === 'GET') {
+    return NextResponse.next();
   }
 
-  // 2. Proteger Bitácora Administrativa (Solo Encargado Administrativo y Administrador)
-  if (pathname.startsWith('/api/bitacora')) {
-    if (
-      userRole &&
-      userRole !== 'encargado_administrativo' &&
-      userRole !== 'administrador'
-    ) {
-      return NextResponse.json(
-        { error: 'Acceso denegado: solo Encargados Administrativos pueden registrar bitácoras' },
-        { status: 403 }
-      );
-    }
+  const session = await getSessionFromRequest(request);
+
+  if (!session) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
   }
+
+  const rolesStaff: Rol[] = ['encargado_administrativo', 'administrador'];
+
+  // Crear salas: solo administrador.
+  if (pathname === '/api/salas' && method === 'POST' && session.rol !== 'administrador') {
+    return NextResponse.json(
+      { error: 'Acceso denegado: solo el Administrador puede crear salas' },
+      { status: 403 }
+    );
+  }
+
+  // Bitácora administrativa: encargado o administrador.
+  if (pathname.startsWith('/api/bitacora') && !rolesStaff.includes(session.rol)) {
+    return NextResponse.json(
+      { error: 'Acceso denegado: solo Encargados Administrativos pueden registrar bitácoras' },
+      { status: 403 }
+    );
+  }
+
+  // Check-in: cualquier usuario autenticado puede registrar su propia
+  // asistencia. La ruta API verifica además la titularidad de la reserva
+  // y permite al personal administrativo operar sobre terceros.
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/api/salas', '/api/bitacora/:path*'],
+  matcher: [
+    '/api/salas',
+    '/api/bitacora/:path*',
+    '/api/reservas',
+    '/api/reservas/:path*',
+    '/api/usuarios/validar',
+  ],
 };

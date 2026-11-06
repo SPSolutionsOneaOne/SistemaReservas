@@ -16,8 +16,8 @@ import {
   MAX_AUSENCIAS_ANTES_BLOQUEO,
   DIAS_BLOQUEO_PENALIZACION,
 } from '@/types/database';
-import { getSupabaseReservas } from '@/lib/supabaseReservas';
-import { getSupabaseInstitucional } from '@/lib/supabaseInstitucional';
+import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
+import { getSupabaseInstitucionalAdmin } from '@/lib/supabaseInstitucionalAdmin';
 import {
   validarRutChileno,
   validarBloqueHorario,
@@ -36,7 +36,7 @@ export async function validarAsistentesInstitucionales(
     return { validos: true, invalidos: [] };
   }
 
-  const supabaseInstitucional = getSupabaseInstitucional();
+  const supabaseInstitucional = getSupabaseInstitucionalAdmin();
   const invalidos: string[] = [];
 
   for (const rut of ruts) {
@@ -84,8 +84,8 @@ export async function crearReservaConValidacion(
   asistentesRuts: string[] = [],
   encargadoRut?: string // Si un administrativo reserva a nombre de un estudiante
 ): Promise<{ exito: boolean; reserva?: Reserva; error?: string; httpCode?: number }> {
-  const supabaseReservas = getSupabaseReservas();
-  const supabaseInstitucional = getSupabaseInstitucional();
+  const supabaseReservas = getSupabaseReservasAdmin();
+  const supabaseInstitucional = getSupabaseInstitucionalAdmin();
 
   // 1. Validar RUT del titular
   if (!validarRutChileno(params.usuario_rut)) {
@@ -194,7 +194,8 @@ export async function crearReservaConValidacion(
         httpCode: 409,
       };
     }
-    return { exito: false, error: errInsert.message, httpCode: 500 };
+    console.error('[reservas POST] Error al insertar reserva:', errInsert);
+    return { exito: false, error: 'Error interno al crear la reserva', httpCode: 500 };
   }
 
   const reservaFinal = nuevaReserva as Reserva;
@@ -235,7 +236,7 @@ export async function editarReservaConValidacion(
     proposito?: string;
   }
 ): Promise<{ exito: boolean; reserva?: Reserva; error?: string; httpCode?: number }> {
-  const supabaseReservas = getSupabaseReservas();
+  const supabaseReservas = getSupabaseReservasAdmin();
 
   // 1. Obtener reserva actual
   const { data: reservaActual, error: errGet } = await supabaseReservas
@@ -300,7 +301,8 @@ export async function editarReservaConValidacion(
         httpCode: 409,
       };
     }
-    return { exito: false, error: errUpdate.message, httpCode: 500 };
+    console.error('[reservas PATCH] Error al actualizar reserva:', errUpdate);
+    return { exito: false, error: 'Error interno al editar la reserva', httpCode: 500 };
   }
 
   return { exito: true, reserva: actualizada as Reserva };
@@ -311,7 +313,7 @@ export async function editarReservaConValidacion(
 export async function procesarAusencia(
   usuarioRut: string
 ): Promise<{ bloqueado: boolean; ausencias: number }> {
-  const supabase = getSupabaseReservas();
+  const supabase = getSupabaseReservasAdmin();
 
   const { data: existente } = await supabase
     .from('historial_penalizaciones')
@@ -354,7 +356,7 @@ export async function procesarAusencia(
 }
 
 export async function resetearAusencias(usuarioRut: string): Promise<void> {
-  const supabase = getSupabaseReservas();
+  const supabase = getSupabaseReservasAdmin();
 
   await supabase
     .from('historial_penalizaciones')
@@ -371,7 +373,7 @@ export async function resetearAusencias(usuarioRut: string): Promise<void> {
 export async function registrarBitacora(
   entrada: BitacoraAdministrativaInsert
 ): Promise<void> {
-  const supabase = getSupabaseReservas();
+  const supabase = getSupabaseReservasAdmin();
 
   const { error } = await supabase
     .from('bitacora_administrativa')

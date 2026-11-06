@@ -1,18 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseReservas } from '@/lib/supabaseReservas';
+import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import {
   crearReservaConValidacion,
   editarReservaConValidacion,
 } from '@/controllers/reservasController';
+import { authorize, ROLES_STAFF } from '@/lib/authz';
 
 export async function GET(request: NextRequest) {
   try {
+    const auth = await authorize(request);
+    if (!auth.ok) return auth.response;
+
     const { searchParams } = new URL(request.url);
     const id_sala = searchParams.get('id_sala');
-    const usuario_rut = searchParams.get('usuario_rut');
     const fecha = searchParams.get('fecha');
 
-    const supabase = getSupabaseReservas();
+    // Los usuarios no administrativos solo pueden consultar sus propias reservas.
+    const esStaff = ROLES_STAFF.includes(auth.session.rol);
+    const usuario_rut = esStaff
+      ? searchParams.get('usuario_rut')
+      : auth.session.rut;
+
+    const supabase = getSupabaseReservasAdmin();
     let query = supabase.from('reservas').select('*');
 
     if (id_sala) query = query.eq('id_sala', id_sala);
@@ -22,18 +31,22 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query.order('fecha', { ascending: false });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('[reservas GET] Error al consultar reservas:', error);
+      return NextResponse.json({ error: 'Error interno al consultar reservas' }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data, { headers: { 'Cache-Control': 'no-store' } });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error interno al consultar reservas';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[reservas GET] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al consultar reservas' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await authorize(request);
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const {
       id_sala,
@@ -43,7 +56,6 @@ export async function POST(request: NextRequest) {
       cantidad_asistentes,
       proposito,
       asistentes,
-      encargado_rut,
     } = body;
 
     if (
@@ -59,6 +71,20 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const esStaff = ROLES_STAFF.includes(auth.session.rol);
+    const esTercero = usuario_rut !== auth.session.rut;
+
+    // Un alumno/docente solo puede reservar para sí mismo.
+    if (!esStaff && esTercero) {
+      return NextResponse.json(
+        { error: 'No autorizado para reservar a nombre de otro usuario' },
+        { status: 403 }
+      );
+    }
+
+    // El encargado se toma de la sesión, nunca del cuerpo de la petición.
+    const encargado_rut = esStaff && esTercero ? auth.session.rut : undefined;
 
     const resultado = await crearReservaConValidacion(
       {
@@ -83,18 +109,40 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(resultado.reserva, { status: 201 });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error inesperado al crear reserva';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[reservas POST] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al crear la reserva' }, { status: 500 });
   }
 }
 
 export async function PATCH(request: NextRequest) {
   try {
+    const auth = await authorize(request);
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const { id_reserva, fecha, bloque_horario, cantidad_asistentes, proposito } = body;
 
     if (!id_reserva) {
       return NextResponse.json({ error: 'id_reserva es requerido' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseReservasAdmin();
+    const { data: reserva } = await supabase
+      .from('reservas')
+      .select('usuario_rut')
+      .eq('id_reserva', id_reserva)
+      .single();
+
+    if (!reserva) {
+      return NextResponse.json({ error: 'Reserva no encontrada' }, { status: 404 });
+    }
+
+    const esStaff = ROLES_STAFF.includes(auth.session.rol);
+    if (!esStaff && reserva.usuario_rut !== auth.session.rut) {
+      return NextResponse.json(
+        { error: 'No autorizado para modificar esta reserva' },
+        { status: 403 }
+      );
     }
 
     const resultado = await editarReservaConValidacion(id_reserva, {
@@ -113,7 +161,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(resultado.reserva);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error inesperado al editar reserva';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[reservas PATCH] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al editar la reserva' }, { status: 500 });
   }
 }

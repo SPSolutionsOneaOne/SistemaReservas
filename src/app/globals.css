@@ -373,6 +373,29 @@ h2.title {
   gap: 10px;
 }
 
+.days-nav {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-nav {
+  width: 32px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.week-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .day {
   all: unset;
   box-sizing: border-box;

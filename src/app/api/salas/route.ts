@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseReservas } from '@/lib/supabaseReservas';
+import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import { SalaFactory } from '@/models/SalaFactory';
 import { TipoSala, EstadoHabilitacion } from '@/types/database';
 import { validarPiso } from '@/lib/validators';
+import { authorize } from '@/lib/authz';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
     const piso = searchParams.get('piso');
     const estado = searchParams.get('estado') as EstadoHabilitacion | null;
 
-    const supabase = getSupabaseReservas();
+    const supabase = getSupabaseReservasAdmin();
     let query = supabase.from('salas').select('*');
 
     if (tipo) query = query.eq('tipo', tipo);
@@ -21,18 +22,22 @@ export async function GET(request: NextRequest) {
     const { data, error } = await query.order('id_sala', { ascending: true });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('[salas GET] Error al consultar salas:', error);
+      return NextResponse.json({ error: 'Error interno al consultar salas' }, { status: 500 });
     }
 
     return NextResponse.json(data);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error interno al consultar salas';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[salas GET] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al consultar salas' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = await authorize(request, ['administrador']);
+    if (!auth.ok) return auth.response;
+
     const body = await request.json();
     const { nombre_descriptivo, tipo, aforo, piso, estado_habilitacion } = body;
 
@@ -41,6 +46,20 @@ export async function POST(request: NextRequest) {
         { error: 'Faltan campos obligatorios: nombre_descriptivo, tipo, aforo, piso' },
         { status: 400 }
       );
+    }
+
+    const tiposValidos: TipoSala[] = ['lab', 'sala', 'aud', 'conf', 'bib'];
+    if (!tiposValidos.includes(tipo)) {
+      return NextResponse.json({ error: 'Tipo de sala inválido' }, { status: 400 });
+    }
+
+    const estadosValidos: EstadoHabilitacion[] = ['activo', 'mantencion', 'inactivo'];
+    if (estado_habilitacion && !estadosValidos.includes(estado_habilitacion)) {
+      return NextResponse.json({ error: 'Estado de habilitación inválido' }, { status: 400 });
+    }
+
+    if (typeof nombre_descriptivo !== 'string' || nombre_descriptivo.trim().length === 0) {
+      return NextResponse.json({ error: 'El nombre descriptivo es inválido' }, { status: 400 });
     }
 
     if (aforo <= 0) {
@@ -61,7 +80,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(nuevaSala, { status: 201 });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error al procesar la creación de sala';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[salas POST] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al procesar la creación de sala' }, { status: 500 });
   }
 }
