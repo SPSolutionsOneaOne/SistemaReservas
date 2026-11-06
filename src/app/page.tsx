@@ -411,7 +411,7 @@ export default function ReservaPage() {
       const data = await resp.json();
 
       if (!resp.ok) {
-        setRutMsg(data.error || 'El asistente no pertenece al padrón institucional (RN04).');
+        setRutMsg(data.error || 'El asistente no pertenece al padrón institucional.');
         setValidatingRut(false);
         return;
       }
@@ -693,14 +693,14 @@ export default function ReservaPage() {
                 Mis reservas
               </button>
 
-              {/* Vista exclusiva Encargado Administrativo (RF-SEC-04) */}
-              {(esEncargado || esAdmin) && (
+              {/* Vista exclusiva Encargado Administrativo */}
+              {esEncargado && (
                 <button
                   type="button"
                   onClick={() => { setView('reserva-tercero'); setStep(0); }}
                   aria-current={view === 'reserva-tercero' ? 'page' : undefined}
                 >
-                  🛡️ Reserva Asistida a Tercero (RF-SEC-04)
+                  🛡️ Reserva para Estudiante
                 </button>
               )}
 
@@ -819,14 +819,14 @@ export default function ReservaPage() {
         {currentUser && (
           <>
             {/* ============================================================== */}
-            {/* VISTA: RESERVA A TERCEROS (ENCARGADO ADMINISTRATIVO - RF-SEC-04) */}
+            {/* VISTA: RESERVA PARA ESTUDIANTES (ENCARGADO ADMINISTRATIVO) */}
             {/* ============================================================== */}
-            {view === 'reserva-tercero' && (
+            {view === 'reserva-tercero' && esEncargado && (
               <div style={{ marginTop: 20 }}>
                 <div className="card" style={{ marginBottom: 20, borderLeft: '4px solid var(--accent)' }}>
-                  <h2 className="title" style={{ margin: 0 }}>🛡️ Reserva Asistida a Tercero (RF-SEC-04)</h2>
+                  <h2 className="title" style={{ margin: 0 }}>🛡️ Reserva Asistida para Estudiante</h2>
                   <p style={{ color: 'var(--muted)', fontSize: 13, margin: '4px 0 14px' }}>
-                    Módulo presencial para que el Encargado Administrativo (<b>{currentUser.nombre_completo}</b>) asigne una sala en nombre de un estudiante. La acción se auditará automáticamente en <code>public.bitacora_administrativa</code>.
+                    Módulo presencial para que el Encargado Administrativo (<b>{currentUser.nombre_completo}</b>) asigne una sala en nombre de un estudiante. El registro se almacenará en la bitácora administrativa de auditoría.
                   </p>
 
                   <label className="label" htmlFor="rut_tercero" style={{ marginTop: 0 }}>
@@ -1001,11 +1001,11 @@ export default function ReservaPage() {
                       </section>
                     )}
 
-                    {/* Panel 3: Asistentes y Motivo (RN04) */}
+                    {/* Panel 3: Asistentes y Motivo */}
                     {step === 3 && (
                       <section className="panel on">
                         <label className="label" htmlFor="rut_asistente" style={{ marginTop: 20 }}>
-                          RUT de asistentes institucionales (RN04)
+                          RUT de asistentes institucionales
                         </label>
                         <div className="field">
                           <input
@@ -1120,7 +1120,7 @@ export default function ReservaPage() {
 
                           <div className="msgcard">
                             <small>
-                              Notificación y archivo .ics (Observer) despachados al correo institucional
+                              Notificación y archivo de calendario .ics enviados al correo institucional
                             </small>
                             Reserva confirmada. Al llegar a la sala, escanea el código QR o ingresa el código manual de 6 dígitos para validar tu asistencia y evitar penalizaciones de 1 semana por ausencias acumuladas.
                           </div>
@@ -1365,11 +1365,11 @@ export default function ReservaPage() {
             )}
 
             {/* ============================================================== */}
-            {/* VISTA: ADMIN - CREACIÓN DE SALAS (RF-FUN-12) */}
+            {/* VISTA: ADMIN - GESTIÓN Y CREACIÓN DE SALAS */}
             {/* ============================================================== */}
             {view === 'admin' && esAdmin && (
               <div>
-                <h1 className="title">Gestión de Infraestructura (SalaFactory)</h1>
+                <h1 className="title">Gestión de Salas e Infraestructura</h1>
                 <div className="admin" style={{ marginTop: 12 }}>
                   <section className="card">
                     <span className="label" style={{ marginTop: 0 }}>Tipo de Sala</span>
@@ -1456,7 +1456,7 @@ export default function ReservaPage() {
                     </div>
 
                     <p className="prev">
-                      Sigla autogenerada (RF-FUN-12): <b className="num">{nextAdminCode}</b>
+                      Sigla autogenerada: <b className="num">{nextAdminCode}</b>
                     </p>
                     {adminMsg && <p className="msg" role="alert" style={{ margin: '-6px 0 8px' }}>{adminMsg}</p>}
 
@@ -1466,7 +1466,7 @@ export default function ReservaPage() {
                       style={{ width: '100%' }}
                       onClick={handleCrearSala}
                     >
-                      Crear sala con Factory Method
+                      Crear sala
                     </button>
                   </section>
 

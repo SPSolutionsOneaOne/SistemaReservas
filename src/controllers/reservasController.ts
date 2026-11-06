@@ -62,7 +62,7 @@ export async function validarAsistentesInstitucionales(
     }
 
     if (!validarCorreoInstitucional(usuario.correo_institucional)) {
-      invalidos.push(`${rut} (Correo no pertenece a @institucion.cl / @inacapmail.cl - RN04)`);
+      invalidos.push(`${rut} (Correo no pertenece a un dominio institucional válido)`);
     }
   }
 
@@ -70,7 +70,7 @@ export async function validarAsistentesInstitucionales(
     return {
       validos: false,
       invalidos,
-      error: `Asistentes no autorizados (RN04): ${invalidos.join(', ')}`,
+      error: `Asistentes no autorizados: ${invalidos.join(', ')}`,
     };
   }
 

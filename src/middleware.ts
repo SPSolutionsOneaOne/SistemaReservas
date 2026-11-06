@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   if (pathname === '/api/salas' && request.method === 'POST') {
     if (userRole && userRole !== 'administrador') {
       return NextResponse.json(
-        { error: 'Acceso denegado: solo el Administrador puede crear salas (RF-SEC-11)' },
+        { error: 'Acceso denegado: solo el Administrador puede crear salas' },
         { status: 403 }
       );
     }
@@ -27,7 +27,7 @@ export function middleware(request: NextRequest) {
       userRole !== 'administrador'
     ) {
       return NextResponse.json(
-        { error: 'Acceso denegado: solo Encargados Administrativos pueden registrar bitácoras (RF-SEC-04)' },
+        { error: 'Acceso denegado: solo Encargados Administrativos pueden registrar bitácoras' },
         { status: 403 }
       );
     }
