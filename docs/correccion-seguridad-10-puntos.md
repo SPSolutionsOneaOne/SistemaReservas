@@ -212,7 +212,9 @@ flowchart LR
 
 **Verificación:** 6 intentos fallidos con IPs distintas para la misma cuenta → `401, 401, 401, 401, 401, 429`. El estado persiste entre reinicios del servidor y se comparte entre instancias.
 
-**Requisito de despliegue:** ejecutar `docs/sql/db-reservas-rate-limit.sql` en el SQL Editor de DB-Reservas. Sin ese script, la aplicación funciona con el fallback en memoria.
+**Estado en Supabase:** ✅ **Aplicado y verificado el 6 de noviembre de 2026.** Las funciones `login_verificar_bloqueo`, `login_registrar_fallo` y `login_limpiar_intentos` responden correctamente y la aplicación escribe el contador en `public.intentos_login` (verificado con `fallos = 5` y `bloqueado_hasta` tras cinco intentos fallidos).
+
+**Requisito de despliegue:** el script `docs/sql/db-reservas-rate-limit.sql` debe ejecutarse en cada entorno nuevo (staging, otra instancia de Supabase). Sin ese script, la aplicación funciona con el fallback en memoria.
 
 **Resultado:** ✅ Aprobado.
 
@@ -439,7 +441,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 ## 7. Riesgos residuales y recomendaciones
 
 1. **RLS pendiente de ejecución.** Hasta correr los scripts, la base no tiene la segunda barrera. Es el paso más importante antes de producción.
-2. **Rate limiting en PostgreSQL.** El contador ya es compartido entre instancias. Si el volumen de login crece mucho, evaluar Redis/Upstash para reducir latencia y carga sobre la base. La tabla requiere limpieza periódica de registros antiguos (ver el script SQL).
+2. **Rate limiting en PostgreSQL.** El contador es compartido entre instancias y persiste entre despliegues. Si el volumen de login crece mucho, evaluar Redis/Upstash para reducir latencia y carga sobre la base. La tabla requiere limpieza periódica de registros antiguos (ver el script SQL).
 3. **Bloqueo por cuenta y denegación de servicio.** Un atacante podría bloquear una cuenta con 5 fallos. Ajustar umbral/ventana o combinar con CAPTCHA.
 4. **Sesión stateless sin revocación inmediata.** El logout borra la cookie, pero un token robado sigue siendo válido hasta su `exp` (8 h). Considerar una lista de revocación o `token_version` en base de datos.
 5. **Sin MFA.** Se recomienda MFA para `administrador` y `encargado_administrativo`.
@@ -460,7 +462,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 - [ ] Confirmar que no exista ninguna variable `NEXT_PUBLIC_*SERVICE_ROLE*`.
 - [x] Ejecutar `docs/sql/db-reservas-rls.sql` en DB-Reservas.
 - [x] Ejecutar `docs/sql/db-institucional-rls.sql` en DB-Institucional.
-- [ ] Ejecutar `docs/sql/db-reservas-rate-limit.sql` en DB-Reservas (rate limiting compartido).
+- [x] Ejecutar `docs/sql/db-reservas-rate-limit.sql` en DB-Reservas (rate limiting compartido).
 - [x] Verificar que una clave pública no puede leer `usuarios_institucion` (`401`).
 - [ ] Confirmar en DB-Reservas que `salas`, `reservas`, `historial_penalizaciones` y `bitacora_administrativa` tienen `relrowsecurity = true`.
 - [ ] Verificar que `GET /api/salas` funciona sin sesión.
