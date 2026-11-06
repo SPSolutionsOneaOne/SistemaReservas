@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   const claveCliente = `login:${obtenerClaveCliente(request)}`;
 
   try {
-    const bloqueo = verificarBloqueo(claveCliente);
+    const bloqueo = await verificarBloqueo(claveCliente);
     if (bloqueo.bloqueado) {
       return NextResponse.json(
         { error: 'Demasiados intentos fallidos. Intenta nuevamente más tarde.' },
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     const claveIdentificador = `login:id:${cleanId}`;
 
     // Segundo límite por cuenta: evita fuerza bruta distribuida desde muchas IP.
-    const bloqueoCuenta = verificarBloqueo(claveIdentificador);
+    const bloqueoCuenta = await verificarBloqueo(claveIdentificador);
     if (bloqueoCuenta.bloqueado) {
       return NextResponse.json(
         { error: 'Demasiados intentos fallidos. Intenta nuevamente más tarde.' },
@@ -60,8 +60,7 @@ export async function POST(request: NextRequest) {
     const { data: usuario, error } = await query.single();
 
     if (error || !usuario) {
-      registrarFallo(claveCliente);
-      registrarFallo(claveIdentificador);
+      await Promise.all([registrarFallo(claveCliente), registrarFallo(claveIdentificador)]);
       return NextResponse.json({ error: MENSAJE_CREDENCIALES }, { status: 401 });
     }
 
@@ -70,8 +69,7 @@ export async function POST(request: NextRequest) {
     // Solo se aceptan hashes Argon2id. Nunca comparar texto plano.
     if (!passwordHash || !passwordHash.startsWith('$argon2')) {
       console.error(`[login] Hash no soportado para el usuario ${usuario.id}`);
-      registrarFallo(claveCliente);
-      registrarFallo(claveIdentificador);
+      await Promise.all([registrarFallo(claveCliente), registrarFallo(claveIdentificador)]);
       return NextResponse.json({ error: MENSAJE_CREDENCIALES }, { status: 401 });
     }
 
@@ -84,13 +82,11 @@ export async function POST(request: NextRequest) {
     }
 
     if (!passwordValida) {
-      registrarFallo(claveCliente);
-      registrarFallo(claveIdentificador);
+      await Promise.all([registrarFallo(claveCliente), registrarFallo(claveIdentificador)]);
       return NextResponse.json({ error: MENSAJE_CREDENCIALES }, { status: 401 });
     }
 
-    limpiarIntentos(claveCliente);
-    limpiarIntentos(claveIdentificador);
+    await Promise.all([limpiarIntentos(claveCliente), limpiarIntentos(claveIdentificador)]);
 
     if (!usuario.estado_activo) {
       return NextResponse.json(

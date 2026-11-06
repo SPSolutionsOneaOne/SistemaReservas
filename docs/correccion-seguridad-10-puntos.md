@@ -197,21 +197,24 @@ flowchart LR
 **Problema:** Argon2id hace costosa cada verificación, pero no impide intentos ilimitados. Un atacante podía probar contraseñas indefinidamente.
 
 **Solución:**
-- Limitador en memoria con dos claves:
+- Limitador compartido en PostgreSQL (`public.intentos_login` de DB-Reservas) con dos claves:
   - **Por IP:** `login:<ip>`.
   - **Por cuenta:** `login:id:<identificador>`.
+- Las claves se almacenan como hash SHA-256; la base no guarda el correo ni el RUT en claro.
 - Máximo 5 intentos fallidos en una ventana de 15 minutos.
 - Bloqueo de 15 minutos y respuesta `429` con `Retry-After`.
 - Un login exitoso limpia ambos contadores.
 - La IP se obtiene de `x-forwarded-for` (primer valor) o `local` como respaldo.
+- Las operaciones son RPC atómicas (`login_verificar_bloqueo`, `login_registrar_fallo`, `login_limpiar_intentos`), por lo que el contador se comparte entre todas las instancias serverless y persiste entre despliegues.
+- Si el almacén compartido falla, el limitador cae a memoria local y registra el error en el servidor: el login sigue disponible, pero la protección vuelve a ser por instancia.
 
-**Archivos:** `src/lib/rateLimit.ts`, `src/app/api/auth/login/route.ts`.
+**Archivos:** `src/lib/rateLimit.ts`, `src/app/api/auth/login/route.ts`, `docs/sql/db-reservas-rate-limit.sql`.
 
-**Verificación:** 6 intentos fallidos con IPs distintas para la misma cuenta → `401, 401, 401, 401, 401, 429`.
+**Verificación:** 6 intentos fallidos con IPs distintas para la misma cuenta → `401, 401, 401, 401, 401, 429`. El estado persiste entre reinicios del servidor y se comparte entre instancias.
 
-**Limitación:** el almacén es local a cada proceso. En un despliegue serverless o con varias instancias, cada instancia tiene su propio contador. Para producción distribuida se recomienda Redis/Upstash o una tabla de intentos en PostgreSQL.
+**Requisito de despliegue:** ejecutar `docs/sql/db-reservas-rate-limit.sql` en el SQL Editor de DB-Reservas. Sin ese script, la aplicación funciona con el fallback en memoria.
 
-**Resultado:** ✅ Aprobado con limitación documentada.
+**Resultado:** ✅ Aprobado.
 
 ---
 
@@ -436,7 +439,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 ## 7. Riesgos residuales y recomendaciones
 
 1. **RLS pendiente de ejecución.** Hasta correr los scripts, la base no tiene la segunda barrera. Es el paso más importante antes de producción.
-2. **Rate limiting en memoria.** No se comparte entre instancias/serverless. Migrar a Redis/Upstash o a una tabla de intentos.
+2. **Rate limiting en PostgreSQL.** El contador ya es compartido entre instancias. Si el volumen de login crece mucho, evaluar Redis/Upstash para reducir latencia y carga sobre la base. La tabla requiere limpieza periódica de registros antiguos (ver el script SQL).
 3. **Bloqueo por cuenta y denegación de servicio.** Un atacante podría bloquear una cuenta con 5 fallos. Ajustar umbral/ventana o combinar con CAPTCHA.
 4. **Sesión stateless sin revocación inmediata.** El logout borra la cookie, pero un token robado sigue siendo válido hasta su `exp` (8 h). Considerar una lista de revocación o `token_version` en base de datos.
 5. **Sin MFA.** Se recomienda MFA para `administrador` y `encargado_administrativo`.
@@ -457,6 +460,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 - [ ] Confirmar que no exista ninguna variable `NEXT_PUBLIC_*SERVICE_ROLE*`.
 - [x] Ejecutar `docs/sql/db-reservas-rls.sql` en DB-Reservas.
 - [x] Ejecutar `docs/sql/db-institucional-rls.sql` en DB-Institucional.
+- [ ] Ejecutar `docs/sql/db-reservas-rate-limit.sql` en DB-Reservas (rate limiting compartido).
 - [x] Verificar que una clave pública no puede leer `usuarios_institucion` (`401`).
 - [ ] Confirmar en DB-Reservas que `salas`, `reservas`, `historial_penalizaciones` y `bitacora_administrativa` tienen `relrowsecurity = true`.
 - [ ] Verificar que `GET /api/salas` funciona sin sesión.
@@ -482,6 +486,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 - `src/app/api/auth/logout/route.ts`
 - `docs/sql/db-reservas-rls.sql`
 - `docs/sql/db-institucional-rls.sql`
+- `docs/sql/db-reservas-rate-limit.sql`
 - `docs/correccion-seguridad-10-puntos.md`
 
 ### Modificados
