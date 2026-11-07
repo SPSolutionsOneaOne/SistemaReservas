@@ -267,6 +267,39 @@ button, input, textarea {
     display: block;
     margin: 0 0 2px;
   }
+
+  /* Ampliar el contenedor en móvil: menos padding lateral y gaps compactos
+     para que los 7 días y los bloques horarios respiren. */
+  .wrap {
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  }
+  .days {
+    gap: 6px;
+  }
+  .days-nav {
+    grid-template-columns: 30px minmax(0, 1fr) 30px;
+    gap: 6px;
+  }
+  .week-nav {
+    width: 30px;
+    font-size: 20px;
+    border-radius: 10px;
+  }
+  .day {
+    min-height: 64px;
+    border-radius: 10px;
+  }
+  .day small {
+    font-size: 10px;
+  }
+  .day b {
+    font-size: 19px;
+  }
+  .blocks {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
 }
 
 /* Área Principal */
@@ -370,24 +403,27 @@ h2.title {
 .days {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .days-nav {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) 32px;
-  align-items: center;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: stretch;
   gap: 8px;
 }
 
 .week-nav {
-  width: 32px;
-  height: 42px;
+  width: 36px;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 24px;
+  font-size: 22px;
   cursor: pointer;
 }
 
@@ -400,27 +436,35 @@ h2.title {
   all: unset;
   box-sizing: border-box;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   text-align: center;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 14px 6px;
+  border-radius: 12px;
+  min-height: 68px;
+  padding: 10px 2px;
   transition: all 0.15s ease;
 }
 
 .day small {
   display: block;
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .day b {
   display: block;
-  font: 700 22px/1.2 var(--f-display);
-  margin-top: 2px;
+  font: 700 20px/1.1 var(--f-display);
+  font-variant-numeric: tabular-nums;
 }
 
 .day[aria-pressed="true"] {
