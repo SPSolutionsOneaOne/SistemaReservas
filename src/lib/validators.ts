@@ -85,3 +85,40 @@ export function validarPiso(piso: number): boolean {
 export function generarCodigoReserva(secuencia: number): string {
   return `RES-${secuencia.toString().padStart(4, '0')}`;
 }
+
+/**
+ * Valida que la fecha ('YYYY-MM-DD') sea una fecha real del calendario.
+ */
+export function esFechaValida(fecha: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return false;
+  const [anio, mes, dia] = fecha.split('-').map(Number);
+  if (mes < 1 || mes > 12 || dia < 1 || dia > 31) return false;
+  const date = new Date(Date.UTC(anio, mes - 1, dia));
+  return (
+    date.getUTCFullYear() === anio &&
+    date.getUTCMonth() === mes - 1 &&
+    date.getUTCDate() === dia
+  );
+}
+
+/**
+ * Valida que la fecha ('YYYY-MM-DD') sea hoy o dentro del mes en curso.
+ * Regla del sistema: no se agenda más allá del mes presente.
+ * Tolera ±1 día entre la hora del servidor (UTC) y la hora local del usuario
+ * para no rechazar fechas válidas en los bordes del mes.
+ */
+export function validarFechaMesEnCurso(fecha: string): boolean {
+  if (!esFechaValida(fecha)) return false;
+
+  const MS_POR_DIA = 24 * 60 * 60 * 1000;
+  const ahora = Date.now();
+  const diaMinimo = new Date(ahora - MS_POR_DIA).toISOString().split('T')[0];
+  const manana = new Date(ahora + MS_POR_DIA);
+  const diaMaximo = new Date(
+    Date.UTC(manana.getUTCFullYear(), manana.getUTCMonth() + 1, 0)
+  )
+    .toISOString()
+    .split('T')[0];
+
+  return fecha >= diaMinimo && fecha <= diaMaximo;
+}

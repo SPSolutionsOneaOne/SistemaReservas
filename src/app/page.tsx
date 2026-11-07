@@ -708,6 +708,11 @@ export default function ReservaPage() {
 
   const guardarEdicion = async () => {
     if (!editando || editBloque === null) return;
+    const fechaMaxima = toLocalDateStr(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+    if (editFecha > fechaMaxima) {
+      setEditError('Solo se puede agendar dentro del mes en curso.');
+      return;
+    }
     const sala = salas.find((s) => s.code === editando.room);
     if (editAsistentes < 1 || (sala && editAsistentes >= sala.cap)) {
       setEditError(`La cantidad de asistentes debe estar entre 1 y ${sala ? sala.cap - 1 : 30}.`);
@@ -1843,9 +1848,13 @@ export default function ReservaPage() {
                 className="in"
                 value={editFecha}
                 min={toLocalDateStr(new Date())}
+                max={toLocalDateStr(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))}
                 onChange={(e) => setEditFecha(e.target.value)}
               />
             </div>
+            <p className="hint" style={{ margin: '2px 0 8px' }}>
+              Solo se puede agendar dentro del mes en curso.
+            </p>
 
             <label className="label" htmlFor="editBloque">
               Horario {editCargando ? '(cargando disponibilidad…)' : ''}

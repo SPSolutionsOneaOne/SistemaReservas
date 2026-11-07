@@ -22,6 +22,7 @@ import {
   validarRutChileno,
   validarBloqueHorario,
   validarAforo,
+  validarFechaMesEnCurso,
   generarCodigoReserva,
   validarCorreoInstitucional,
 } from '@/lib/validators';
@@ -95,6 +96,15 @@ export async function crearReservaConValidacion(
   // 2. Validar bloque horario (0 - 13)
   if (!validarBloqueHorario(params.bloque_horario)) {
     return { exito: false, error: 'Bloque horario debe estar entre 0 y 13', httpCode: 400 };
+  }
+
+  // 2b. La fecha debe estar dentro del mes en curso
+  if (!validarFechaMesEnCurso(params.fecha)) {
+    return {
+      exito: false,
+      error: 'La fecha debe estar dentro del mes en curso',
+      httpCode: 422,
+    };
   }
 
   // 3. Verificar existencia del usuario titular en padrón institucional
@@ -268,6 +278,15 @@ export async function editarReservaConValidacion(
   // 2. Validar bloque horario si cambia
   if (datos.bloque_horario !== undefined && !validarBloqueHorario(datos.bloque_horario)) {
     return { exito: false, error: 'Bloque horario debe estar entre 0 y 13', httpCode: 400 };
+  }
+
+  // 2b. La fecha debe estar dentro del mes en curso
+  if (datos.fecha !== undefined && !validarFechaMesEnCurso(datos.fecha)) {
+    return {
+      exito: false,
+      error: 'La fecha debe estar dentro del mes en curso',
+      httpCode: 422,
+    };
   }
 
   // 3. Validar aforo si cambia cantidad
