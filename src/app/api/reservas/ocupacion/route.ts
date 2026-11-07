@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { authorize } from '@/lib/authz';
 
 export const dynamic = 'force-dynamic';
@@ -44,10 +43,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Cliente SDK (supabase-js) con defaults frescos por request: el SDK
-    // anterior con .neq('estado','cancelada') devolvía 0 filas tras un
-    // INSERT porque la query casi idéntica a la anterior quedó cacheada
-    // en la capa de red de Supabase. Ahora el sdk fuerza lectura consistente.
+    // fetch directo a PostgREST (sin supabase-js) + cache-buster aleatorio:
+    // las consultas GET idénticas a las de la API de Supabase quedan
+    // cacheadas por URL exacta en alguna capa de red (regional): tras un
+    // INSERT, una query igual a la anterior (vacía) devuelve 200 con
+    // 0 filas aunque la fila exista y /api/reservas la devuelva, y ni
+    // no-store ni cache-bust en nuestra URL lo resuelven. El parámetro
+    // aleatorio `_cb` cambia la URL en cada request; PostgREST ignora
+    // parámetros desconocidos, así que la lectura siempre es fresca.
     //
     // NOTA: no se usa estado!=cancelada. La restricción
     // UNIQUE(id_sala, fecha, bloque_horario) garantiza que una reserva
@@ -61,30 +64,35 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       );
     }
-    const supabase = createClient(
-      supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''),
-      supabaseKey,
-      { auth: { persistSession: false, autoRefreshToken: false } }
-    );
 
-    let query = supabase
-      .from('reservas')
-      .select('id_sala, bloque_horario')
-      .eq('fecha', fecha);
+    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}`;
+    if (id_sala) {
+      postgrestUrl += `&id_sala=eq.${encodeURIComponent(id_sala)}`;
+    }
+    postgrestUrl += `&_cb=${Date.now().toString(36)}${Math.floor(Math.random() * 1e9).toString(36)}`;
 
-    if (id_sala) query = query.eq('id_sala', id_sala);
+    const resp = await fetch(postgrestUrl, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        'Cache-Control': 'no-store',
+        Pragma: 'no-cache',
+      },
+    });
 
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('[reservas/ocupacion] Error al consultar ocupación:', error);
+    let rows: Array<{ id_sala: string; bloque_horario: number }> | null = null;
+    try {
+      const body = await resp.json();
+      if (!resp.ok || !Array.isArray(body)) throw new Error('Respuesta inesperada de PostgREST');
+      rows = body as Array<{ id_sala: string; bloque_horario: number }>;
+    } catch {
       return NextResponse.json(
         { error: 'Error interno al consultar la disponibilidad' },
         { status: 500 }
       );
     }
 
-    const ocupacion = (data ?? []).map((row) => ({
+    const ocupacion = rows.map((row) => ({
       id_sala: row.id_sala as string,
       bloque_horario: row.bloque_horario as number,
     }));
