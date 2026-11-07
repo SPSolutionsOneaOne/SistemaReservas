@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { authorize } from '@/lib/authz';
 
 export const dynamic = 'force-dynamic';
@@ -44,48 +43,61 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Cliente dedicado con no-store: las réplicas de lectura de Supabase
-    // pueden servir cachés de lista muy breves tras un INSERT (query casi
-    // idéntica a la anterior devuelve 200 con 0 filas aunque la reserva ya
-    // existe y /api/reservas la devuelve). Forzar no-store evita que el
-    // cliente lea respuestas cacheadas de la capa de red.
+    // Se usa fetch directo a PostgREST (sin supabase-js) porque el SDK de
+    // Supabase implementa caché en memoria de respuestas para queries
+    // idénticas dentro de una misma instancia: tras un INSERT, una query
+    // igual a la anterior (vacía) devuelve 200 con 0 filas aunque la fila
+    // ya exista y /api/reservas sí la devuelva. Con fetch en cada request
+    // hay instancia nueva y la lectura es siempre consistente.
     //
-    // NOTA: no se usa .neq('estado', 'cancelada') aquí. La restricción
+    // NOTA: no se usa estado!=cancelada. La restricción
     // UNIQUE(id_sala, fecha, bloque_horario) garantiza que una reserva
     // cancelada debe eliminarse o editarse (no hay camino de cancelación
     // activado en la UI), por lo que cualquier fila existente bloquea.
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_RESERVAS_URL;
-    const supabaseKey = process.env.SUPABASE_RESERVAS_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_RESERVAS_URL?.trim();
+    const supabaseKey = process.env.SUPABASE_RESERVAS_SERVICE_ROLE_KEY?.trim();
     if (!supabaseUrl || !supabaseKey) {
       return NextResponse.json(
         { error: 'Configuración del servidor incompleta' },
         { status: 500 }
       );
     }
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      global: {
-        headers: { 'Cache-Control': 'no-store', Pragma: 'no-cache' },
+
+    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}`;
+    if (id_sala) {
+      postgrestUrl += `&id_sala=eq.${encodeURIComponent(id_sala)}`;
+    }
+
+    const resp = await fetch(postgrestUrl, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+        'Cache-Control': 'no-store',
+        Pragma: 'no-cache',
       },
     });
 
-    let query = supabase
-      .from('reservas')
-      .select('id_sala, bloque_horario')
-      .eq('fecha', fecha);
-
-    if (id_sala) query = query.eq('id_sala', id_sala);
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('[reservas/ocupacion] Error al consultar ocupación:', error);
+    let data: Array<{ id_sala: string; bloque_horario: number }> | null = null;
+    try {
+      const body = await resp.json();
+      if (!resp.ok) throw new Error('PostgREST respondió error');
+      data = Array.isArray(body)
+        ? (body as Array<{ id_sala: string; bloque_horario: number }>)
+        : null;
+    } catch {
+      return NextResponse.json(
+        { error: 'Error interno al consultar la disponibilidad' },
+        { status: 500 }
+      );
+    }
+    if (data === null) {
       return NextResponse.json(
         { error: 'Error interno al consultar la disponibilidad' },
         { status: 500 }
       );
     }
 
-    const ocupacion = (data ?? []).map((row) => ({
+    const ocupacion = data.map((row) => ({
       id_sala: row.id_sala as string,
       bloque_horario: row.bloque_horario as number,
     }));
