@@ -65,11 +65,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}`;
+    // El cache-buster NO puede ir como `&_cb=valor` (PostgREST lo interpreta
+    // como filtro sobre una columna inexistente y devuelve 400). Se usa
+    // `&limit=` con valores distintos: cambia la URL sin alterar el resultado
+    // (1000 es mucho mayor que cualquier ocupación diaria real).
+    const limite = 1000 + Math.floor(Math.random() * 1000);
+    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}&limit=${limite}`;
     if (id_sala) {
       postgrestUrl += `&id_sala=eq.${encodeURIComponent(id_sala)}`;
     }
-    postgrestUrl += `&_cb=${Date.now().toString(36)}${Math.floor(Math.random() * 1e9).toString(36)}`;
 
     const resp = await fetch(postgrestUrl, {
       headers: {
