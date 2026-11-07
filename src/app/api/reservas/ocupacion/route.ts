@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
+import { createClient } from '@supabase/supabase-js';
 import { authorize } from '@/lib/authz';
 
 export const dynamic = 'force-dynamic';
@@ -44,12 +44,30 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = getSupabaseReservasAdmin();
-
+    // Cliente dedicado con no-store: las réplicas de lectura de Supabase
+    // pueden servir cachés de lista muy breves tras un INSERT (query casi
+    // idéntica a la anterior devuelve 200 con 0 filas aunque la reserva ya
+    // existe y /api/reservas la devuelve). Forzar no-store evita que el
+    // cliente lea respuestas cacheadas de la capa de red.
+    //
     // NOTA: no se usa .neq('estado', 'cancelada') aquí. La restricción
     // UNIQUE(id_sala, fecha, bloque_horario) garantiza que una reserva
     // cancelada debe eliminarse o editarse (no hay camino de cancelación
     // activado en la UI), por lo que cualquier fila existente bloquea.
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_RESERVAS_URL;
+    const supabaseKey = process.env.SUPABASE_RESERVAS_SERVICE_ROLE_KEY;
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json(
+        { error: 'Configuración del servidor incompleta' },
+        { status: 500 }
+      );
+    }
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: {
+        headers: { 'Cache-Control': 'no-store', Pragma: 'no-cache' },
+      },
+    });
+
     let query = supabase
       .from('reservas')
       .select('id_sala, bloque_horario')
