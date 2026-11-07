@@ -596,6 +596,46 @@ Prueba E2E de disponibilidad en producción (11/11 aprobadas, dos ejecuciones co
 
 Los datos de prueba se eliminaron tras cada ejecución y la base quedó limpia.
 
+### CRUD completo de reservas
+
+El ciclo de vida completo de una reserva quedó implementado en el frontend y en la API:
+
+| Operación | API | UI (“Mis reservas”) |
+| --- | --- | --- |
+| **Crear** | `POST /api/reservas` | Flujo de reserva (pasos 0–4) |
+| **Ver** | `GET /api/reservas` (propias o todas si es staff) | Lista de reservas del usuario |
+| **Actualizar** | `PATCH /api/reservas` (fecha, bloque, asistentes, propósito) | Botón **Editar** + modal con disponibilidad en tiempo real |
+| **Eliminar** | `DELETE /api/reservas?id_reserva=` (físico) | Botón **“Cancelar reserva”** con confirmación |
+
+Reglas aplicadas en el servidor (`src/controllers/reservasController.ts`):
+
+- **Titularidad:** solo el dueño de la reserva o un rol staff (`encargado_administrativo` / `administrador`) puede actualizar o eliminar.
+- **Estado:** solo se editan/eliminan reservas `confirmada`.
+- **Asistencia:** una reserva con check-in (`asistencia_registrada_en` no nula) no puede editarse ni eliminarse (`422`).
+- **Conflictos:** mover una reserva a un bloque ocupado devuelve `409` por la restricción `UNIQUE(id_sala, fecha, bloque_horario)`.
+- **Aforo:** la cantidad de asistentes se valida contra el aforo de la sala (`422`).
+- **Auditoría (RF-SEC-04):** si un staff cancela la reserva de un tercero, queda registrada en `bitacora_administrativa`.
+- **Eliminación física:** borra la fila y libera el bloque al instante. La cancelación lógica (`estado='cancelada'`) haría que la fila siguiera bloqueando el `UNIQUE`, impidiendo re-reservar esa hora.
+- En la UI, el botón se llama **“Cancelar reserva”** (terminología de usuario); el verbo HTTP sigue siendo `DELETE`.
+
+Prueba E2E del CRUD en producción (13/13 aprobadas, dos ejecuciones consecutivas):
+
+| Prueba | Resultado |
+| --- | --- |
+| `DELETE` sin sesión | `401` |
+| `DELETE` sin `id_reserva` | `400` |
+| Crear reserva | `201` |
+| Ver reserva creada | `200`, 1 fila |
+| Actualizar fecha/bloque/asistentes/propósito | `200` |
+| La ocupación se mueve con la edición (viejo bloque libre, nuevo ocupado) | ✅ |
+| Actualizar reserva inexistente | `404` |
+| Mover a bloque ocupado | `409` |
+| Eliminar reserva | `200` |
+| Reserva eliminada no visible y bloque liberado | ✅ |
+| Eliminar reserva inexistente | `404` |
+
+Los datos de prueba se eliminaron tras cada ejecución (0 reservas y 0 usuarios de prueba).
+
 ---
 
 ## 10. Archivos principales modificados
