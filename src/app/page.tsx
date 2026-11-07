@@ -566,7 +566,7 @@ export default function ReservaPage() {
       setLastBooking(reservaConfirmada);
       setStep(4);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      showToast(esTercero ? `Reserva a nombre de ${rutTitular} confirmada y auditada` : 'Reserva confirmada');
+      // Sin toast en éxito: el panel de confirmación (paso 4) ya lo comunica.
     } catch {
       showToast('No fue posible conectar con el servidor. Intenta nuevamente.');
     }
@@ -1210,10 +1210,7 @@ export default function ReservaPage() {
                           </dl>
 
                           <div className="msgcard">
-                            <small>
-                              Notificación y archivo de calendario .ics enviados al correo institucional
-                            </small>
-                            Reserva confirmada. Al llegar a la sala, escanea el código QR o ingresa el código manual de 6 dígitos para validar tu asistencia y evitar penalizaciones de 1 semana por ausencias acumuladas.
+                            Tu reserva está lista. Al llegar a la sala, escanea el código QR o ingresa el código manual de 6 dígitos para registrar tu asistencia.
                           </div>
 
                           <div className="row">
@@ -1444,7 +1441,7 @@ export default function ReservaPage() {
                       </div>
                       <h2 className="title">Asistencia confirmada</h2>
                       <p style={{ margin: '0 0 16px', color: 'var(--muted)' }}>
-                        Check-in registrado exitosamente en DB-Reservas. Ausencias reseteadas a 0.
+                        Tu asistencia quedó registrada.
                       </p>
                       <button className="btn primary" type="button" onClick={() => setView('mis')}>
                         Listo

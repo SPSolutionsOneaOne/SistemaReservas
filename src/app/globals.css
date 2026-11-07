@@ -851,13 +851,6 @@ textarea {
   font-size: 14.5px;
 }
 
-.msgcard small {
-  display: block;
-  color: var(--muted);
-  font-size: 12.5px;
-  margin-bottom: 6px;
-}
-
 .code {
   display: inline-block;
   font: 700 28px var(--f-display);

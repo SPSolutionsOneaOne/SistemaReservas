@@ -52,7 +52,7 @@ export async function validarAsistentesInstitucionales(
       .single();
 
     if (error || !usuario) {
-      invalidos.push(`${rut} (No registrado en DB-Institucional)`);
+      invalidos.push(`${rut} (No registrado en el padrón institucional)`);
       continue;
     }
 
