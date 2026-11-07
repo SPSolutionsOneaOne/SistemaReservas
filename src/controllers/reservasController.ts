@@ -487,12 +487,17 @@ export async function procesarInasistencias(): Promise<{
   const pared = ahoraSantiago();
 
   // Candidatas: confirmadas, sin asistencia, fecha ya iniciada o pasada.
+  // El limit aleatorio cambia la URL en cada corrida: la capa de red de
+  // Supabase cachea respuestas GET por URL exacta y devolvía listas
+  // vencidas (doble conteo). Sin esto, el barrido veía filas ya procesadas.
+  const limite = 10000 + Math.floor(Math.random() * 1000);
   const { data: candidatas, error } = await supabaseReservas
     .from('reservas')
     .select('id_reserva, usuario_rut, fecha, bloque_horario')
     .eq('estado', 'confirmada')
     .is('asistencia_registrada_en', null)
-    .lte('fecha', pared.fecha);
+    .lte('fecha', pared.fecha)
+    .limit(limite);
 
   if (error) {
     console.error('[Motor ausencia] Error al listar candidatas:', error);
@@ -501,6 +506,13 @@ export async function procesarInasistencias(): Promise<{
 
   const vencidas = (candidatas ?? []).filter((r) =>
     vencidaGracia(r.fecha, r.bloque_horario, pared)
+  );
+
+  console.log(
+    '[Motor ausencia] candidatas:',
+    (candidatas ?? []).length,
+    'vencidas:',
+    vencidas.length
   );
 
   if (vencidas.length === 0) {
@@ -532,8 +544,19 @@ export async function procesarInasistencias(): Promise<{
       .eq('estado', 'confirmada')
       .select('id_reserva');
 
-    if (errUpdate || !marcadas || marcadas.length === 0) continue;
+    if (errUpdate || !marcadas || marcadas.length === 0) {
+      console.log(
+        '[Motor ausencia] skip',
+        r.id_reserva,
+        'errUpdate:',
+        errUpdate ? errUpdate.code : 'null',
+        'marcadas:',
+        marcadas ? marcadas.length : 'null'
+      );
+      continue;
+    }
 
+    console.log('[Motor ausencia] marcada', r.id_reserva, 'marcadas:', marcadas.length);
     procesadas++;
 
     const rol = rolPorRut.get(r.usuario_rut);
