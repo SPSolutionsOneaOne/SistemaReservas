@@ -555,9 +555,20 @@ La corrección elimina el hash y usa la base de datos como única fuente de verd
 1. Nuevo endpoint `GET /api/reservas/ocupacion?fecha=YYYY-MM-DD[&id_sala=AAA-00]`.
    - Requiere sesión válida (`authorize`).
    - Valida que la fecha exista realmente en el calendario.
-   - Consulta `public.reservas` filtrando por fecha y excluyendo `estado = 'cancelada'`.
+   - Consulta `public.reservas` filtrando por fecha. No filtra por `estado`:
+     la restricción `UNIQUE(id_sala, fecha, bloque_horario)` implica que
+     cualquier fila existente bloquea (no hay camino de cancelación en la UI).
    - Devuelve solo `{ id_sala, bloque_horario }`; no expone RUT, propósito ni asistentes.
    - Responde con `Cache-Control: no-store`.
+   - La lectura usa `fetch` directo a PostgREST con `limit` aleatorio por request:
+     las consultas GET idénticas a las de la API de Supabase quedan cacheadas
+     por URL exacta en alguna capa de red regional (tras un INSERT, una query
+     igual devuelve `200` con `0` filas aunque la fila exista y `GET /api/reservas`
+     la devuelva; ni `no-store` ni cache-bust en nuestra URL lo resuelven).
+     El `limit` variable cambia la URL sin alterar el resultado, y PostgREST
+     ignora parámetros que no reconoce solo si son filtros sobre columnas
+     inexistentes: por eso NO se usa un parámetro tipo `&_cb=` (devuelve `400`).
+     Se agregan además `Cache-Control: no-store` y `Pragma: no-cache` en la petición.
 2. `src/app/page.tsx` consulta ese endpoint cada vez que cambia el día seleccionado o la sesión.
    - Mientras carga, los bloques se deshabilitan y se muestra “Cargando disponibilidad…”.
    - Una sala/bloque solo se considera ocupado si existe una reserva real.
@@ -567,6 +578,23 @@ La corrección elimina el hash y usa la base de datos como única fuente de verd
 5. La regla de negocio de domingo sin atención se mantiene explícita en la UI.
 
 La validación de conflictos sigue siendo server-side: la restricción `UNIQUE(id_sala, fecha, bloque_horario)` devuelve `409` si dos usuarios intentan reservar el mismo bloque, incluso si la UI quedó desactualizada.
+
+Prueba E2E de disponibilidad en producción (11/11 aprobadas, dos ejecuciones consecutivas):
+
+| Prueba | Resultado |
+| --- | --- |
+| `GET /api/reservas/ocupacion` sin sesión | `401` |
+| Login real | `200` |
+| Ocupación inicial vacía | `200`, `ocupacion: []` |
+| Fecha inválida (`2026-02-31`) | `400` |
+| Crear reserva real (`LAB-01`, 2026-11-10, bloque 13) | `201` |
+| Ocupación tras crear refleja el bloque reservado | `200`, 1 fila |
+| Respuesta sin datos personales | `{"id_sala":"LAB-01","bloque_horario":13}` |
+| Solape de la misma reserva | `409` |
+| `GET /api/reservas` devuelve la reserva propia | `200`, 1 fila |
+| `Cache-Control: no-store` en la respuesta de ocupación | ✅ |
+
+Los datos de prueba se eliminaron tras cada ejecución y la base quedó limpia.
 
 ---
 
