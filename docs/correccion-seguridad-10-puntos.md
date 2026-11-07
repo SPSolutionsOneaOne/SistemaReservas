@@ -715,6 +715,35 @@ Prueba E2E del motor en producción (10/10 aprobadas, dos ejecuciones consecutiv
 > request (`limiteAleatorio()`), igual que la ocupación. Las lecturas con
 > filtros estables deben variar su URL siempre.
 
+### Limpieza periódica de `intentos_login`
+
+Cada intento fallido de login deja una fila (hash SHA-256 de la clave IP/cuenta)
+que solo se borra con un login exitoso; sin limpieza, la tabla crece sin cota.
+La recomendación ya existía en `docs/sql/db-reservas-rate-limit.sql` (punto 3)
+y quedó automatizada con el mismo patrón del motor:
+
+- **`GET /api/cron/limpieza`** (mismo `Bearer CRON_SECRET`, falla cerrado):
+  borra filas con `actualizado_en` de más de 1 día **y** sin bloqueo vigente
+  (`bloqueado_hasta IS NULL o < ahora`). Es idempotente y responde
+  `{ ok: true, eliminadas }`.
+- **Disparador:** un segundo job externo diario (p. ej. cron-job.org,
+  todos los días a las 02:00 America/Santiago) con la misma cabecera.
+- No toca registros activos: una clave con bloqueo vigente nunca se borra
+  aunque su última actividad supere el día.
+
+Prueba E2E de limpieza en producción (4/4 aprobadas, dos ejecuciones consecutivas):
+
+| Prueba | Resultado |
+| --- | --- |
+| Sin secreto | `401` |
+| Elimina filas vencidas (>1 día, sin bloqueo) | `200`, `eliminadas: 2` |
+| Conserva registro reciente y registro con bloqueo vigente | ✅ |
+| Segunda corrida idempotente | `eliminadas: 0` |
+
+El script de prueba ya no depende de `like`/`in.` de PostgREST: el backend de
+Supabase devuelve 500 con operadores `like` sobre esta tabla; la verificación
+se hace con `eq` por clave.
+
 ---
 
 ## 10. Archivos principales modificados
