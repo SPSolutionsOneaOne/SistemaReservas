@@ -88,6 +88,22 @@ function fmtRut(v: string) {
   return clean.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + clean.slice(-1);
 }
 
+/**
+ * Formato automático de RUT en el login (puntos y guion).
+ * El campo acepta “RUT o correo institucional”, por lo que:
+ * - Si contiene '@', es correo: se deja intacto.
+ * - Si contiene letras distintas de K (correo en edición), se deja intacto.
+ * - Solo se formatea cuando el valor usa caracteres de RUT (dígitos, K, puntos, guion).
+ */
+function formatearIdentificadorLogin(v: string): string {
+  // Correo (contiene '@'): no tocar.
+  if (v.includes('@')) return v;
+  // Letras que no son K (correo en edición): no tocar.
+  if (!/^[0-9kK.\-\s]*$/.test(v)) return v;
+  // Solo caracteres de RUT: formatear (fmtRut elimina los espacios).
+  return fmtRut(v);
+}
+
 function hashCode(str: string): number {
   let hash = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -327,10 +343,12 @@ export default function ReservaPage() {
     setLoginError('');
 
     try {
+      // Normaliza por si el valor llegó por autocompletado sin pasar por onChange.
+      const identificador = formatearIdentificadorLogin(loginId.trim());
       const resp = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identificador: loginId, password: loginPass }),
+        body: JSON.stringify({ identificador, password: loginPass }),
       });
 
       const data = await resp.json();
@@ -1023,8 +1041,9 @@ export default function ReservaPage() {
                   id="logId"
                   className="in"
                   value={loginId}
-                  onChange={(e) => setLoginId(e.target.value)}
+                  onChange={(e) => setLoginId(formatearIdentificadorLogin(e.target.value))}
                   placeholder="Ej: 12.345.678-5 o alumno@inacapmail.cl"
+                  autoComplete="username"
                   required
                 />
 
