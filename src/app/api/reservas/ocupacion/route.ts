@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import { authorize } from '@/lib/authz';
 
 export const dynamic = 'force-dynamic';
@@ -43,12 +44,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Se usa fetch directo a PostgREST (sin supabase-js) porque el SDK de
-    // Supabase implementa caché en memoria de respuestas para queries
-    // idénticas dentro de una misma instancia: tras un INSERT, una query
-    // igual a la anterior (vacía) devuelve 200 con 0 filas aunque la fila
-    // ya exista y /api/reservas sí la devuelva. Con fetch en cada request
-    // hay instancia nueva y la lectura es siempre consistente.
+    // Cliente SDK (supabase-js) con defaults frescos por request: el SDK
+    // anterior con .neq('estado','cancelada') devolvía 0 filas tras un
+    // INSERT porque la query casi idéntica a la anterior quedó cacheada
+    // en la capa de red de Supabase. Ahora el sdk fuerza lectura consistente.
     //
     // NOTA: no se usa estado!=cancelada. La restricción
     // UNIQUE(id_sala, fecha, bloque_horario) garantiza que una reserva
@@ -62,42 +61,30 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       );
     }
+    const supabase = createClient(
+      supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, ''),
+      supabaseKey,
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
 
-    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}`;
-    if (id_sala) {
-      postgrestUrl += `&id_sala=eq.${encodeURIComponent(id_sala)}`;
-    }
+    let query = supabase
+      .from('reservas')
+      .select('id_sala, bloque_horario')
+      .eq('fecha', fecha);
 
-    const resp = await fetch(postgrestUrl, {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-        'Cache-Control': 'no-store',
-        Pragma: 'no-cache',
-      },
-    });
+    if (id_sala) query = query.eq('id_sala', id_sala);
 
-    let data: Array<{ id_sala: string; bloque_horario: number }> | null = null;
-    try {
-      const body = await resp.json();
-      if (!resp.ok) throw new Error('PostgREST respondió error');
-      data = Array.isArray(body)
-        ? (body as Array<{ id_sala: string; bloque_horario: number }>)
-        : null;
-    } catch {
-      return NextResponse.json(
-        { error: 'Error interno al consultar la disponibilidad' },
-        { status: 500 }
-      );
-    }
-    if (data === null) {
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('[reservas/ocupacion] Error al consultar ocupación:', error);
       return NextResponse.json(
         { error: 'Error interno al consultar la disponibilidad' },
         { status: 500 }
       );
     }
 
-    const ocupacion = data.map((row) => ({
+    const ocupacion = (data ?? []).map((row) => ({
       id_sala: row.id_sala as string,
       bloque_horario: row.bloque_horario as number,
     }));
