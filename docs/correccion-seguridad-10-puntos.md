@@ -693,6 +693,28 @@ indexada (ms) + 1 escritura por inasistencia real + 1 query de roles por lote.
 144 invocaciones/día de una función serverless de ~150 ms. Sin polling de
 clientes: el costo no crece con el tráfico web.
 
+Prueba E2E del motor en producción (10/10 aprobadas, dos ejecuciones consecutivas):
+
+| Prueba | Resultado |
+| --- | --- |
+| Cron sin secreto / secreto incorrecto | `401` |
+| Reserva vencida (ayer) → cron la marca `no_asistio` | `200`, `procesadas: 2` |
+| Alumno acumula 1 ausencia (sin bloqueo) | ✅ |
+| Staff (encargado) exento: sin penalización | ✅ |
+| Segunda corrida idempotente (0 procesadas, contador intacto) | ✅ |
+| Ocupación excluye la inasistencia (sala liberada) | `ocupacion: []` |
+| Check-in fuera de ventana (ayer) | `400` “Fuera de horario…” |
+
+> **Hallazgo durante la verificación:** la capa de red de Supabase cachea
+> respuestas GET por URL exacta (la misma causa raíz del bug de disponibilidad).
+> Afectaba a tres lecturas: candidatas del barrido y las lecturas de
+> `historial_penalizaciones` (en `procesarAusencia`, en crear y en validar).
+> Una lectura vencida del historial hacía que el contador “no existiera” e
+> insertara filas fantasma en la memoria caché, o que bloqueos vigentes se
+> ignoraran. **Corrección:** todas esas lecturas usan `limit` aleatorio por
+> request (`limiteAleatorio()`), igual que la ocupación. Las lecturas con
+> filtros estables deben variar su URL siempre.
+
 ---
 
 ## 10. Archivos principales modificados
