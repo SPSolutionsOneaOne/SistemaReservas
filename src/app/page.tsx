@@ -1204,7 +1204,6 @@ export default function ReservaPage() {
                           <button type="button" className="week-nav" aria-label="Semana siguiente" disabled={weekStartIdx + 7 >= days.length} onClick={() => setWeekStartIdx(weekStartIdx + 7)}>›</button>
                         </div>
 
-                        <span className="label">Hora (14 Bloques de 45 min)</span>
                         {ocupacionCargando && (
                           <p className="center" style={{ color: 'var(--muted)', margin: '0 0 12px' }}>
                             Cargando disponibilidad…
