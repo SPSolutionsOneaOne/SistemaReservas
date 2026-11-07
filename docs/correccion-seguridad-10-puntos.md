@@ -653,6 +653,46 @@ Prueba E2E de la regla en producción (6/6 aprobadas, dos ejecuciones consecutiv
 | Actualizar hacia el próximo mes | `422` |
 | Actualizar sin cambiar fecha | `200` |
 
+### Motor automático de penalización por inasistencia
+
+Regla: 3 ausencias acumuladas → bloqueo de 1 semana (`historial_penalizaciones`).
+Si el alumno **asiste** (check-in), el contador se reinicia a 0.
+
+**Pulso del motor (el cron):** `GET /api/cron/ausencias` cada 10 minutos
+protegido con `Authorization: Bearer <CRON_SECRET>` (variable configurada en
+Vercel; falla cerrado sin secreto). Como Vercel Cron requiere plan Pro para
+más de una ejecución diaria, el disparador es un **servicio externo gratuito**
+(p. ej. cron-job.org) que llama al endpoint con ese header; alternativa
+documentada en el SQL: `pg_cron` + `pg_net` de Supabase.
+
+**Flujo del barrido** (`procesarInasistencias()` en `reservasController.ts`):
+
+1. Lista reservas `confirmada` sin asistencia con `fecha` ≤ hoy (Santiago).
+2. Las procesables son las de gracia vencida: inicio del bloque + 10 min
+   (`MINUTOS_GRACIA_CHECKIN`) < ahora (reloj de pared America/Santiago).
+3. Marca `estado = 'no_asistio'` solo si sigue `confirmada` (idempotente:
+   dos barridos concurrentes no duplican el conteo).
+4. Por cada inasistencia llama `procesarAusencia()`: +1 ausencia; a las 3 →
+   `bloqueado_hasta = ahora + 7 días`. Asistir (check-in) pone el contador en 0.
+5. **Personal exento:** `encargado_administrativo` y `administrador` reciben la
+   marca `no_asistio` pero **no** acumulan penalización.
+
+**Check-in con ventana estricta:** solo desde 10 min antes hasta 10 min
+después del inicio del bloque; fuera de ella, `400`.
+
+**Sala liberada:** la unicidad `(id_sala, fecha, bloque_horario)` es **parcial**
+(solo `confirmada`/`completada` bloquean) y la ocupación las excluye: tras la
+inasistencia, el resto del bloque queda libre para ser reservado.
+
+**Migración requerida** (`docs/sql/db-reservas-motor-penalizaciones.sql`, en
+DB-Reservas): estado `no_asistio` válido, unicidad parcial e índice de barrido
+(idempotente, ejecutar en el SQL Editor de Supabase).
+
+**Costo con 100+ reservas:** despreciable. Un barrido cada 10 min es 1 query
+indexada (ms) + 1 escritura por inasistencia real + 1 query de roles por lote.
+144 invocaciones/día de una función serverless de ~150 ms. Sin polling de
+clientes: el costo no crece con el tráfico web.
+
 ---
 
 ## 10. Archivos principales modificados

@@ -63,6 +63,21 @@ create index if not exists reservas_sweep_idx
   where estado = 'confirmada';
 
 -- ============================================================
+-- DISPARADOR DEL MOTOR (cron cada 10 minutos)
+-- ------------------------------------------------------------
+-- Vercel Cron requiere plan Pro para ejecutar más de una vez al día,
+-- por lo que el disparador es un servicio externo (p. ej. cron-job.org,
+-- gratuito) que llama al endpoint protegido:
+--
+--   GET https://sistema-reservas-lac.vercel.app/api/cron/ausencias
+--   Authorization: Bearer <CRON_SECRET>
+--
+-- El valor de CRON_SECRET está en Vercel -> Environment Variables.
+-- Alternativa sin terceros: pg_cron + pg_net de Supabase que haga
+-- POST al mismo endpoint con el header Authorization.
+-- ============================================================
+
+-- ============================================================
 -- Verificación (opcional):
 --
 --   -- Debe devolver 1 fila: la restricción de estado incluye 'no_asistio'
