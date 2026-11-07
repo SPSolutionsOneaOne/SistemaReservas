@@ -45,11 +45,15 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = getSupabaseReservasAdmin();
+
+    // NOTA: no se usa .neq('estado', 'cancelada') aquí. La restricción
+    // UNIQUE(id_sala, fecha, bloque_horario) garantiza que una reserva
+    // cancelada debe eliminarse o editarse (no hay camino de cancelación
+    // activado en la UI), por lo que cualquier fila existente bloquea.
     let query = supabase
       .from('reservas')
       .select('id_sala, bloque_horario')
-      .eq('fecha', fecha)
-      .neq('estado', 'cancelada');
+      .eq('fecha', fecha);
 
     if (id_sala) query = query.eq('id_sala', id_sala);
 
