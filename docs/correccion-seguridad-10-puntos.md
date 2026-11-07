@@ -636,6 +636,23 @@ Prueba E2E del CRUD en producción (13/13 aprobadas, dos ejecuciones consecutiva
 
 Los datos de prueba se eliminaron tras cada ejecución (0 reservas y 0 usuarios de prueba).
 
+### Solo mes en curso
+
+No se puede agendar más allá del mes presente. El calendario de reserva ya solo genera días hasta fin de mes; la regla ahora también se aplica al modal de edición y al servidor:
+
+- **UI:** el date picker del modal de edición tiene `min` (hoy) y `max` (último día del mes) con el mensaje “Solo se puede agendar dentro del mes en curso”, y `guardarEdicion` valida la fecha antes de enviar.
+- **Servidor:** `validarFechaMesEnCurso()` (`src/lib/validators.ts`) se aplica en `crearReservaConValidacion` y `editarReservaConValidacion`. Devuelve `422` con “La fecha debe estar dentro del mes en curso” si la fecha es inválida, está fuera del mes en curso o en el pasado. Tolera ±1 día entre la hora del servidor y la zona local del usuario para no rechazar días válidos en los bordes del mes.
+
+Prueba E2E de la regla en producción (6/6 aprobadas, dos ejecuciones consecutivas):
+
+| Prueba | Resultado |
+| --- | --- |
+| Crear con fecha del próximo mes | `422` |
+| Crear con fecha del mes pasado | `422` |
+| Crear con fecha de hoy | `201` |
+| Actualizar hacia el próximo mes | `422` |
+| Actualizar sin cambiar fecha | `200` |
+
 ---
 
 ## 10. Archivos principales modificados
