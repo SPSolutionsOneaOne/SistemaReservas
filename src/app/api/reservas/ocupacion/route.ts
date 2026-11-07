@@ -80,9 +80,9 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    let rows: Array<{ id_sala: string; bloque_horario: number }> | null = null;
+    let rows: Array<{ id_sala: string; bloque_horario: number }>;
     try {
-      const body = await resp.json();
+      const body: unknown = await resp.json();
       if (!resp.ok || !Array.isArray(body)) throw new Error('Respuesta inesperada de PostgREST');
       rows = body as Array<{ id_sala: string; bloque_horario: number }>;
     } catch {
