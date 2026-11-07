@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import { resetearAusencias } from '@/controllers/reservasController';
 import { authorize, ROLES_STAFF } from '@/lib/authz';
+import { checkinPermitido } from '@/lib/horarios';
 
 export async function POST(request: NextRequest) {
   try {
@@ -52,6 +53,18 @@ export async function POST(request: NextRequest) {
     if (reserva.asistencia_registrada_en) {
       return NextResponse.json(
         { error: `Asistencia ya registrada previamente el ${new Date(reserva.asistencia_registrada_en).toLocaleString('es-CL')}` },
+        { status: 400 }
+      );
+    }
+
+    // Ventana estricta: desde 10 min antes hasta 10 min después del inicio
+    // del bloque. Fuera de ella rige el motor de inasistencias.
+    if (!checkinPermitido(reserva.fecha, reserva.bloque_horario)) {
+      return NextResponse.json(
+        {
+          error:
+            'Fuera de horario: el check-in solo está disponible desde 10 minutos antes hasta 10 minutos después del inicio del bloque.',
+        },
         { status: 400 }
       );
     }

@@ -70,7 +70,9 @@ export async function GET(request: NextRequest) {
     // `&limit=` con valores distintos: cambia la URL sin alterar el resultado
     // (1000 es mucho mayor que cualquier ocupación diaria real).
     const limite = 1000 + Math.floor(Math.random() * 1000);
-    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}&limit=${limite}`;
+    // Solo confirmada/completada ocupan: una inasistencia ('no_asistio')
+    // libera el resto del bloque.
+    let postgrestUrl = `${supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')}/rest/v1/reservas?select=id_sala,bloque_horario&fecha=eq.${encodeURIComponent(fecha)}&estado=in.(confirmada,completada)&limit=${limite}`;
     if (id_sala) {
       postgrestUrl += `&id_sala=eq.${encodeURIComponent(id_sala)}`;
     }

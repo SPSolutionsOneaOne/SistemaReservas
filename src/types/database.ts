@@ -98,7 +98,7 @@ export type SalaUpdate = Partial<Omit<Sala, 'id_sala' | 'creado_en'>>;
 // --- Tabla: public.reservas (Transaccional) ---
 
 /** Estados de reserva válidos según CHECK constraint */
-export type EstadoReserva = 'confirmada' | 'cancelada' | 'completada';
+export type EstadoReserva = 'confirmada' | 'cancelada' | 'completada' | 'no_asistio';
 
 /**
  * Tabla: public.reservas — DB-Reservas
@@ -241,3 +241,6 @@ export const MAX_AUSENCIAS_ANTES_BLOQUEO = 3;
 
 /** Duración del bloqueo por penalización (días) */
 export const DIAS_BLOQUEO_PENALIZACION = 7;
+
+/** Minutos de gracia tras el inicio del bloque para el check-in */
+export const MINUTOS_GRACIA_CHECKIN = 10;

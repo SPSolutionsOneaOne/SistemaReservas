@@ -27,6 +27,7 @@ import {
   validarCorreoInstitucional,
 } from '@/lib/validators';
 import { notificadorGlobal } from '@/services/NotificadorICS';
+import { ahoraSantiago, vencidaGracia } from '@/lib/horarios';
 
 // ---- Validar 100% Asistentes Institucionales (RN04 / RF-FUN-07) ----
 
@@ -464,6 +465,88 @@ export async function resetearAusencias(usuarioRut: string): Promise<void> {
       ultima_actualizacion: new Date().toISOString(),
     } satisfies HistorialPenalizacionUpdate)
     .eq('usuario_rut', usuarioRut);
+}
+
+/**
+ * Barrido automático de inasistencias (lo invoca el cron de Vercel).
+ *
+ * Marca como 'no_asistio' las reservas confirmadas cuya gracia de check-in
+ * (inicio del bloque + MINUTOS_GRACIA_CHECKIN) ya venció sin asistencia.
+ * Cada inasistencia cuenta 1 ausencia vía procesarAusencia(), salvo para
+ * el personal administrativo (encargado/administrador), exento de
+ * penalización. Es idempotente: solo procesa filas aún 'confirmada' y
+ * solo cuenta la ausencia si THIS run ganó la actualización.
+ */
+export async function procesarInasistencias(): Promise<{
+  procesadas: number;
+  bloqueados: number;
+  exentosStaff: number;
+}> {
+  const supabaseReservas = getSupabaseReservasAdmin();
+  const supabaseInstitucional = getSupabaseInstitucionalAdmin();
+  const pared = ahoraSantiago();
+
+  // Candidatas: confirmadas, sin asistencia, fecha ya iniciada o pasada.
+  const { data: candidatas, error } = await supabaseReservas
+    .from('reservas')
+    .select('id_reserva, usuario_rut, fecha, bloque_horario')
+    .eq('estado', 'confirmada')
+    .is('asistencia_registrada_en', null)
+    .lte('fecha', pared.fecha);
+
+  if (error) {
+    console.error('[Motor ausencia] Error al listar candidatas:', error);
+    return { procesadas: 0, bloqueados: 0, exentosStaff: 0 };
+  }
+
+  const vencidas = (candidatas ?? []).filter((r) =>
+    vencidaGracia(r.fecha, r.bloque_horario, pared)
+  );
+
+  if (vencidas.length === 0) {
+    return { procesadas: 0, bloqueados: 0, exentosStaff: 0 };
+  }
+
+  // Roles de los titulares afectados (una sola consulta indexada).
+  const ruts = Array.from(new Set(vencidas.map((r) => r.usuario_rut)));
+  const { data: usuarios } = await supabaseInstitucional
+    .from('usuarios_institucion')
+    .select('rut, rol')
+    .in('rut', ruts);
+
+  const rolPorRut = new Map(
+    (usuarios ?? []).map((u) => [u.rut as string, u.rol as string])
+  );
+
+  let procesadas = 0;
+  let bloqueados = 0;
+  let exentosStaff = 0;
+
+  for (const r of vencidas) {
+    // Marca no_asistio solo si sigue confirmada (evita doble conteo
+    // si dos barridos concurrentes procesan la misma fila).
+    const { data: marcadas, error: errUpdate } = await supabaseReservas
+      .from('reservas')
+      .update({ estado: 'no_asistio' })
+      .eq('id_reserva', r.id_reserva)
+      .eq('estado', 'confirmada')
+      .select('id_reserva');
+
+    if (errUpdate || !marcadas || marcadas.length === 0) continue;
+
+    procesadas++;
+
+    const rol = rolPorRut.get(r.usuario_rut);
+    if (rol === 'encargado_administrativo' || rol === 'administrador') {
+      exentosStaff++;
+      continue;
+    }
+
+    const resultado = await procesarAusencia(r.usuario_rut);
+    if (resultado.bloqueado) bloqueados++;
+  }
+
+  return { procesadas, bloqueados, exentosStaff };
 }
 
 // ---- Bitácora Administrativa (RF-SEC-04) ----

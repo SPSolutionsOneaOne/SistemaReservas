@@ -75,6 +75,7 @@ interface ReservaVisual {
   attendees: string[];
   purpose: string;
   attended: string | null;
+  estado: string;
 }
 
 interface OcupacionItem {
@@ -255,6 +256,7 @@ export default function ReservaPage() {
             bloque_horario?: number;
             usuario_rut?: string;
             proposito?: string;
+            estado?: string;
             asistencia_registrada_en?: string | null;
           }) => ({
             id: r.id_reserva || `${r.id_sala}-${r.fecha}-${r.bloque_horario}`,
@@ -266,6 +268,7 @@ export default function ReservaPage() {
             attendees: [],
             purpose: r.proposito || '',
             attended: r.asistencia_registrada_en || null,
+            estado: r.estado || 'confirmada',
           })
         );
         setReservas(mapeadas);
@@ -535,6 +538,7 @@ export default function ReservaPage() {
       attendees: [...attendees],
       purpose: selectedPurpose + (detail ? ` - ${detail}` : ''),
       attended: null,
+      estado: 'confirmada',
     };
 
     try {
@@ -656,6 +660,8 @@ export default function ReservaPage() {
 
       if (!resp.ok) {
         setManualCodeError(data?.error || 'No fue posible registrar la asistencia.');
+        // Muestra el motivo en la vista manual (también si venía del escaneo).
+        setAsistModo('manual');
         return;
       }
 
@@ -1496,7 +1502,9 @@ export default function ReservaPage() {
                             <p className="num">
                               {r.dateStr} · {BLOQUES_HORARIOS[r.block]?.inicio} – {BLOQUES_HORARIOS[r.block]?.fin} · Código: <b>{r.code}</b>
                             </p>
-                            {r.attended ? (
+                            {r.estado === 'no_asistio' ? (
+                              <span className="state warn num">No asististe</span>
+                            ) : r.attended ? (
                               <span className="state ok num">
                                 Asistencia registrada {new Date(r.attended).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
                               </span>
@@ -1504,7 +1512,7 @@ export default function ReservaPage() {
                               <span className="state">Por confirmar</span>
                             )}
                           </div>
-                          {!r.attended && (
+                          {r.estado === 'confirmada' && !r.attended && (
                             <div className="row" style={{ gap: 8 }}>
                               <button
                                 className="btn sm primary"
