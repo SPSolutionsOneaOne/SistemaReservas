@@ -257,6 +257,14 @@ export async function editarReservaConValidacion(
     };
   }
 
+  if (reservaActual.asistencia_registrada_en) {
+    return {
+      exito: false,
+      error: 'No se puede editar una reserva con asistencia registrada',
+      httpCode: 422,
+    };
+  }
+
   // 2. Validar bloque horario si cambia
   if (datos.bloque_horario !== undefined && !validarBloqueHorario(datos.bloque_horario)) {
     return { exito: false, error: 'Bloque horario debe estar entre 0 y 13', httpCode: 400 };
@@ -306,6 +314,77 @@ export async function editarReservaConValidacion(
   }
 
   return { exito: true, reserva: actualizada as Reserva };
+}
+
+// ---- Reservas: Eliminación (DELETE físico) ----
+
+/**
+ * Elimina físicamente la reserva: libera el bloque al instante (compatible
+ * con la restricción UNIQUE(id_sala, fecha, bloque_horario)).
+ * Reglas: solo el titular o un rol staff; solo reservas confirmadas y sin
+ * asistencia registrada. Si un staff elimina la reserva de un tercero,
+ * queda auditada en bitácora (RF-SEC-04).
+ */
+export async function eliminarReservaConValidacion(
+  idReserva: string,
+  actorRut: string,
+  esStaff: boolean
+): Promise<{ exito: boolean; reserva?: Reserva; error?: string; httpCode?: number }> {
+  const supabaseReservas = getSupabaseReservasAdmin();
+
+  // 1. Obtener reserva actual
+  const { data: reservaActual, error: errGet } = await supabaseReservas
+    .from('reservas')
+    .select('*')
+    .eq('id_reserva', idReserva)
+    .single();
+
+  if (errGet || !reservaActual) {
+    return { exito: false, error: 'Reserva no encontrada', httpCode: 404 };
+  }
+
+  // 2. Titularidad: solo el dueño o un rol staff
+  if (!esStaff && reservaActual.usuario_rut !== actorRut) {
+    return { exito: false, error: 'No autorizado para eliminar esta reserva', httpCode: 403 };
+  }
+
+  if (reservaActual.estado !== 'confirmada') {
+    return {
+      exito: false,
+      error: `No se puede eliminar una reserva en estado '${reservaActual.estado}'`,
+      httpCode: 422,
+    };
+  }
+
+  if (reservaActual.asistencia_registrada_en) {
+    return {
+      exito: false,
+      error: 'No se puede eliminar una reserva con asistencia registrada',
+      httpCode: 422,
+    };
+  }
+
+  // 3. Eliminar físicamente
+  const { error: errDelete } = await supabaseReservas
+    .from('reservas')
+    .delete()
+    .eq('id_reserva', idReserva);
+
+  if (errDelete) {
+    console.error('[reservas DELETE] Error al eliminar reserva:', errDelete);
+    return { exito: false, error: 'Error interno al eliminar la reserva', httpCode: 500 };
+  }
+
+  // 4. Auditoría si un staff elimina la reserva de un tercero (RF-SEC-04)
+  if (esStaff && reservaActual.usuario_rut !== actorRut) {
+    await registrarBitacora({
+      encargado_rut: actorRut,
+      accion: `Reserva eliminada: sala ${reservaActual.id_sala}, fecha ${reservaActual.fecha}, bloque ${reservaActual.bloque_horario}. Código: ${reservaActual.codigo_reserva}`,
+      rut_estudiante_afectado: reservaActual.usuario_rut,
+    });
+  }
+
+  return { exito: true, reserva: reservaActual as Reserva };
 }
 
 // ---- Motor de Penalización ----

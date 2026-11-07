@@ -3,6 +3,7 @@ import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import {
   crearReservaConValidacion,
   editarReservaConValidacion,
+  eliminarReservaConValidacion,
 } from '@/controllers/reservasController';
 import { authorize, ROLES_STAFF } from '@/lib/authz';
 
@@ -163,5 +164,43 @@ export async function PATCH(request: NextRequest) {
   } catch (err: unknown) {
     console.error('[reservas PATCH] Error inesperado:', err);
     return NextResponse.json({ error: 'Error interno al editar la reserva' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const auth = await authorize(request);
+    if (!auth.ok) return auth.response;
+
+    const { searchParams } = new URL(request.url);
+    const id_reserva = searchParams.get('id_reserva');
+
+    if (!id_reserva) {
+      return NextResponse.json({ error: 'id_reserva es requerido' }, { status: 400 });
+    }
+
+    const esStaff = ROLES_STAFF.includes(auth.session.rol);
+
+    const resultado = await eliminarReservaConValidacion(
+      id_reserva,
+      auth.session.rut,
+      esStaff
+    );
+
+    if (!resultado.exito) {
+      return NextResponse.json(
+        { error: resultado.error },
+        { status: resultado.httpCode || 400 }
+      );
+    }
+
+    return NextResponse.json({
+      ok: true,
+      id_reserva: resultado.reserva?.id_reserva,
+      codigo_reserva: resultado.reserva?.codigo_reserva,
+    });
+  } catch (err: unknown) {
+    console.error('[reservas DELETE] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al eliminar la reserva' }, { status: 500 });
   }
 }

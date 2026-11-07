@@ -168,6 +168,18 @@ export default function ReservaPage() {
   // Modal QR
   const [qrModalData, setQrModalData] = useState<{ room: SalaVisual; qrSvg: string; code: string } | null>(null);
 
+  // Edición / Eliminación de reserva (CRUD)
+  const [editando, setEditando] = useState<ReservaVisual | null>(null);
+  const [editFecha, setEditFecha] = useState('');
+  const [editBloque, setEditBloque] = useState<number | null>(null);
+  const [editProposito, setEditProposito] = useState('');
+  const [editAsistentes, setEditAsistentes] = useState(1);
+  const [editOcupacion, setEditOcupacion] = useState<Record<string, true>>({});
+  const [editCargando, setEditCargando] = useState(false);
+  const [editGuardando, setEditGuardando] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [eliminandoId, setEliminandoId] = useState<string | number | null>(null);
+
   // 7 días disponibles
   const days = useMemo(() => {
     const list: Date[] = [];
@@ -638,6 +650,151 @@ export default function ReservaPage() {
       setAsistModo('ok');
     } catch {
       setManualCodeError('No fue posible conectar con el servidor. Intenta nuevamente.');
+    }
+  };
+
+  // ---- CRUD: Editar y Eliminar reserva ----
+
+  const abrirEdicion = (res: ReservaVisual) => {
+    setEditando(res);
+    setEditFecha(res.dateStr);
+    setEditBloque(res.block);
+    setEditProposito(res.purpose);
+    setEditAsistentes(Math.max(1, res.attendees.length || 1));
+    setEditError('');
+    setEditGuardando(false);
+  };
+
+  const cerrarEdicion = () => {
+    setEditando(null);
+    setEditOcupacion({});
+    setEditError('');
+  };
+
+  // Ocupación de la fecha en edición (excluye el bloque actual de la reserva).
+  useEffect(() => {
+    if (!editando || !editFecha) return;
+    const controller = new AbortController();
+    setEditCargando(true);
+    fetch(`/api/reservas/ocupacion?fecha=${encodeURIComponent(editFecha)}&id_sala=${encodeURIComponent(editando.room)}`, {
+      signal: controller.signal,
+    })
+      .then((resp) => {
+        if (!resp.ok) throw new Error('Ocupación no disponible');
+        return resp.json() as Promise<{ ocupacion?: OcupacionItem[] }>;
+      })
+      .then((data) => {
+        const esMismoBloque = (item: OcupacionItem) =>
+          item.id_sala === editando.room &&
+          editFecha === editando.dateStr &&
+          item.bloque_horario === editando.block;
+        const next: Record<string, true> = {};
+        for (const item of data.ocupacion ?? []) {
+          if (item && typeof item.id_sala === 'string' && Number.isInteger(item.bloque_horario) && !esMismoBloque(item)) {
+            next[claveOcupacion(editFecha, item.id_sala, item.bloque_horario)] = true;
+          }
+        }
+        setEditOcupacion(next);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        setEditOcupacion({});
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setEditCargando(false);
+      });
+    return () => controller.abort();
+  }, [editando, editFecha, editando?.room, editando?.dateStr, editando?.block]);
+
+  const guardarEdicion = async () => {
+    if (!editando || editBloque === null) return;
+    const sala = salas.find((s) => s.code === editando.room);
+    if (editAsistentes < 1 || (sala && editAsistentes >= sala.cap)) {
+      setEditError(`La cantidad de asistentes debe estar entre 1 y ${sala ? sala.cap - 1 : 30}.`);
+      return;
+    }
+    setEditGuardando(true);
+    setEditError('');
+    try {
+      const resp = await fetch('/api/reservas', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id_reserva: editando.id,
+          fecha: editFecha,
+          bloque_horario: editBloque,
+          cantidad_asistentes: editAsistentes,
+          proposito: editProposito.trim() || editando.purpose,
+        }),
+      });
+      const data = (await resp.json().catch(() => null)) as
+        | {
+            error?: string;
+            id_reserva?: string;
+            id_sala?: string;
+            fecha?: string;
+            bloque_horario?: number;
+            proposito?: string;
+          }
+        | null;
+      if (!resp.ok) {
+        setEditError(data?.error || 'No fue posible guardar los cambios. Intenta nuevamente.');
+        return;
+      }
+      setReservas((prev) =>
+        prev.map((r) =>
+          r.id === editando.id
+            ? {
+                ...r,
+                dateStr: data?.fecha || editFecha,
+                block: data?.bloque_horario ?? editBloque,
+                purpose: data?.proposito || editProposito.trim() || r.purpose,
+                attendees: Array.from({ length: editAsistentes }, (_, i) => r.attendees[i] || ''),
+              }
+            : r
+        )
+      );
+      // Refresca la ocupación local de ambas fechas.
+      setOcupacion((prev) => {
+        const next = { ...prev };
+        delete next[claveOcupacion(editando.dateStr, editando.room, editando.block)];
+        next[claveOcupacion(editFecha, editando.room, editBloque)] = true;
+        return next;
+      });
+      cerrarEdicion();
+      showToast('Reserva actualizada');
+    } catch {
+      setEditError('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setEditGuardando(false);
+    }
+  };
+
+  const eliminarReserva = async (res: ReservaVisual) => {
+    if (!window.confirm(`¿Cancelar la reserva ${res.code} (${res.room}, ${res.dateStr})? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+    setEliminandoId(res.id);
+    try {
+      const resp = await fetch(`/api/reservas?id_reserva=${encodeURIComponent(String(res.id))}`, {
+        method: 'DELETE',
+      });
+      const data = (await resp.json().catch(() => null)) as { error?: string } | null;
+      if (!resp.ok) {
+        showToast(data?.error || 'No fue posible eliminar la reserva.');
+        return;
+      }
+      setReservas((prev) => prev.filter((r) => r.id !== res.id));
+      setOcupacion((prev) => {
+        const next = { ...prev };
+        delete next[claveOcupacion(res.dateStr, res.room, res.block)];
+        return next;
+      });
+      showToast('Reserva cancelada');
+    } catch {
+      showToast('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setEliminandoId(null);
     }
   };
 
@@ -1325,13 +1482,30 @@ export default function ReservaPage() {
                             )}
                           </div>
                           {!r.attended && (
-                            <button
-                              className="btn sm primary"
-                              type="button"
-                              onClick={() => openAsistencia(r)}
-                            >
-                              Confirmar asistencia
-                            </button>
+                            <div className="row" style={{ gap: 8 }}>
+                              <button
+                                className="btn sm primary"
+                                type="button"
+                                onClick={() => openAsistencia(r)}
+                              >
+                                Confirmar asistencia
+                              </button>
+                              <button
+                                className="btn sm"
+                                type="button"
+                                onClick={() => abrirEdicion(r)}
+                              >
+                                Editar
+                              </button>
+                              <button
+                                className="btn sm danger"
+                                type="button"
+                                disabled={eliminandoId === r.id}
+                                onClick={() => eliminarReserva(r)}
+                              >
+                                {eliminandoId === r.id ? 'Cancelando…' : 'Cancelar reserva'}
+                              </button>
+                            </div>
                           )}
                         </li>
                       );
@@ -1637,6 +1811,109 @@ export default function ReservaPage() {
                 onClick={() => setQrModalData(null)}
               >
                 Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Editar reserva */}
+      {editando && (
+        <div
+          className="modal"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !editGuardando) cerrarEdicion();
+          }}
+        >
+          <div className="card" style={{ maxWidth: 480, width: '100%' }}>
+            <h2 className="title" style={{ margin: '0 0 4px' }}>
+              Editar reserva {editando.code}
+            </h2>
+            <p style={{ margin: '0 0 16px', color: 'var(--muted)', fontSize: 13 }}>
+              {salas.find((s) => s.code === editando.room)?.name || editando.room} · {editando.room}
+            </p>
+
+            <label className="label" htmlFor="editFecha">Fecha</label>
+            <div className="field">
+              <input
+                id="editFecha"
+                type="date"
+                className="in"
+                value={editFecha}
+                min={toLocalDateStr(new Date())}
+                onChange={(e) => setEditFecha(e.target.value)}
+              />
+            </div>
+
+            <label className="label" htmlFor="editBloque">
+              Horario {editCargando ? '(cargando disponibilidad…)' : ''}
+            </label>
+            <div className="field">
+              <select
+                id="editBloque"
+                className="in"
+                value={editBloque ?? ''}
+                onChange={(e) => setEditBloque(e.target.value === '' ? null : Number(e.target.value))}
+                disabled={editCargando}
+              >
+                {editBloque === null && <option value="">Selecciona un horario</option>}
+                {Object.entries(BLOQUES_HORARIOS).map(([n, info]) => {
+                  const blk = Number(n);
+                  const ocupado = !!editOcupacion[claveOcupacion(editFecha, editando.room, blk)];
+                  return (
+                    <option key={n} value={blk} disabled={ocupado}>
+                      {info.inicio} – {info.fin}{ocupado ? ' (ocupado)' : ''}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <label className="label" htmlFor="editAsistentes">Cantidad de asistentes</label>
+            <div className="field">
+              <input
+                id="editAsistentes"
+                type="number"
+                className="in"
+                min={1}
+                max={(salas.find((s) => s.code === editando.room)?.cap ?? 31) - 1}
+                value={editAsistentes}
+                onChange={(e) => setEditAsistentes(Number(e.target.value))}
+              />
+            </div>
+
+            <label className="label" htmlFor="editProposito">Propósito</label>
+            <div className="field">
+              <input
+                id="editProposito"
+                type="text"
+                className="in"
+                maxLength={100}
+                value={editProposito}
+                onChange={(e) => setEditProposito(e.target.value)}
+              />
+            </div>
+
+            {editError && <p className="msg" role="alert">{editError}</p>}
+
+            <div className="row" style={{ marginTop: 8 }}>
+              <button
+                className="btn primary"
+                type="button"
+                onClick={guardarEdicion}
+                disabled={editGuardando || editCargando || editBloque === null || !editFecha}
+              >
+                {editGuardando ? 'Guardando…' : 'Guardar cambios'}
+              </button>
+              <button
+                className="btn"
+                type="button"
+                onClick={cerrarEdicion}
+                disabled={editGuardando}
+              >
+                Cancelar
               </button>
             </div>
           </div>

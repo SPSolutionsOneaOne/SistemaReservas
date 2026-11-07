@@ -620,6 +620,25 @@ h2.title {
   border-radius: 8px;
 }
 
+.btn.danger {
+  color: #c53030;
+  border-color: rgba(197, 48, 48, 0.45);
+}
+
+.btn.danger:hover:not(:disabled) {
+  background: rgba(197, 48, 48, 0.08);
+}
+
+.btn.danger:disabled {
+  color: var(--muted);
+  cursor: default;
+}
+
+[data-theme='dark'] .btn.danger {
+  color: #f56565;
+  border-color: rgba(245, 101, 101, 0.45);
+}
+
 .msg {
   font-size: 13.5px;
   margin: 8px 0 0;
