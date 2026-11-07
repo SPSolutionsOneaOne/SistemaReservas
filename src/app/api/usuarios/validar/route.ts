@@ -52,11 +52,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Comprobar penalizaciones en DB-Reservas
+    // (limit aleatorio: la capa de red cachea GET por URL exacta)
     const supabaseRes = getSupabaseReservasAdmin();
     const { data: penal } = await supabaseRes
       .from('historial_penalizaciones')
       .select('*')
       .eq('usuario_rut', rut)
+      .limit(10000 + Math.floor(Math.random() * 1000))
       .single();
 
     let bloqueado = false;

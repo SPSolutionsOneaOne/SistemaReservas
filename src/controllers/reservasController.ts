@@ -29,6 +29,16 @@ import {
 import { notificadorGlobal } from '@/services/NotificadorICS';
 import { ahoraSantiago, vencidaGracia } from '@/lib/horarios';
 
+/**
+ * Límite aleatorio para que la URL de PostgREST varíe en cada consulta:
+ * la capa de red de Supabase cachea respuestas GET por URL exacta y las
+ * lecturas estables (p. ej. historial de un RUT) devolvían filas vencidas
+ * (doble conteo, bloqueos ignorados). Ver /api/reservas/ocupacion.
+ */
+export function limiteAleatorio(): number {
+  return 10000 + Math.floor(Math.random() * 1000);
+}
+
 // ---- Validar 100% Asistentes Institucionales (RN04 / RF-FUN-07) ----
 
 export async function validarAsistentesInstitucionales(
@@ -136,6 +146,7 @@ export async function crearReservaConValidacion(
     .from('historial_penalizaciones')
     .select('*')
     .eq('usuario_rut', params.usuario_rut)
+    .limit(limiteAleatorio())
     .single();
 
   if (penal) {
@@ -418,6 +429,7 @@ export async function procesarAusencia(
     .from('historial_penalizaciones')
     .select('*')
     .eq('usuario_rut', usuarioRut)
+    .limit(limiteAleatorio())
     .single();
 
   let ausencias = 1;
