@@ -1048,10 +1048,13 @@ export default function ReservaPage() {
                   className="in"
                   value={loginId}
                   onChange={(e) => setLoginId(formatearIdentificadorLogin(e.target.value))}
-                  placeholder="Ej: 12.345.678-5 o alumno@inacapmail.cl"
+                  placeholder="Ej: 12.345.678-5"
                   autoComplete="username"
                   required
                 />
+                <p className="hint" style={{ textAlign: 'left', marginTop: 8 }}>
+                  También puedes ingresar con tu correo @inacapmail.cl
+                </p>
 
                 <label className="label" htmlFor="logPass">
                   Contraseña
