@@ -1077,7 +1077,7 @@ export default function ReservaPage() {
                   style={{ width: '100%', marginTop: 18, height: 48, fontSize: 16 }}
                   disabled={loginLoading}
                 >
-                  {loginLoading ? 'Verificando en Padrón...' : 'Ingresar al Sistema'}
+                  {loginLoading ? 'Ingresando...' : 'Ingresar al Sistema'}
                 </button>
               </form>
             </div>
