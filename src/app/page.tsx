@@ -364,7 +364,7 @@ export default function ReservaPage() {
       setCurrentUser(data.usuario);
       setView('reservar');
       setStep(0);
-      showToast(`Bienvenido ${data.usuario.nombre_completo} (${data.usuario.rol})`);
+      // Sin toast de bienvenida: la interfaz ya cambia a estado autenticado.
     } catch {
       setLoginError('Error de conexión con el servidor');
     } finally {
