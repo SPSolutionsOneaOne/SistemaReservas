@@ -744,6 +744,44 @@ El script de prueba ya no depende de `like`/`in.` de PostgREST: el backend de
 Supabase devuelve 500 con operadores `like` sobre esta tabla; la verificación
 se hace con `eq` por clave.
 
+### Horarios del cliente y gestión de salas
+
+Horarios finales (bloques de **30 minutos**):
+
+| Día | Horario | Bloques |
+| --- | --- | --- |
+| Lunes a viernes | 08:30–22:00 | 0–26 (27 bloques) |
+| Sábado | 08:30–14:00 | 0–10 (11 bloques) |
+| Domingo | Sin servicio | — |
+
+Reglas aplicadas en `validarBloqueParaFecha()` (crear/editar): domingo → `422`
+“Los domingos no hay servicio de salas”; sábado con bloque > 10 → `422`
+“El sábado solo se reservan bloques de 08:30 a 14:00”. La UI muestra los
+grupos según el día (sábado solo “Mañana”) y deshabilita en el modal de
+edición los bloques fuera de horario del día. La **franja de uso** (para la
+eliminación de salas) sigue esa misma tabla: lun–vie 08:30–22:00, sáb
+08:30–14:00 (`enFranjaDeUso()` en `src/lib/horarios.ts`, hora America/Santiago).
+
+> **Migración pendiente:** `docs/sql/db-reservas-bloques-30min.sql` amplía
+> el CHECK `bloque_horario` de `0-13` a `0-26` (DB-Reservas, SQL Editor).
+> Sin ella, los bloques 14–26 devuelven `500`. Nota: el significado del
+> índice de bloque cambia (14×45 min desde 08:00 → 27×30 min desde 08:30);
+> en fase pre-piloto solo hay datos de prueba.
+
+**Gestión de salas (administrador):**
+
+- Pestaña **“Gestión Salas”** (sin “(Admin)”).
+- **Editar** (`PATCH /api/salas`): nombre, aforo, piso y estado
+  (`activo`/`mantencion`/`inactivo`); logo autogenerado y tipo inmutables.
+  Las salas no activas no aparecen como reservables (y el servidor rechaza
+  su reserva con `422`).
+- **Eliminar** (`DELETE /api/salas?id_sala=`): solo fuera de franja de uso y
+  sin reservas activas; si tiene reservas activas (`confirmada`, fecha ≥ hoy)
+  → `409` “No se pueden eliminar salas con reservas activas”; en franja →
+  `409` “No se puede eliminar salas durante la franja de uso”.
+- Middleware restringe `POST/PATCH/DELETE /api/salas` a `administrador`
+  (`403` para otros roles, incluida bitácora intacta).
+
 ---
 
 ## 10. Archivos principales modificados
