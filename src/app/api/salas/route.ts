@@ -84,3 +84,122 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Error interno al procesar la creación de sala' }, { status: 500 });
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const auth = await authorize(request, ['administrador']);
+    if (!auth.ok) return auth.response;
+
+    const body = await request.json();
+    const { id_sala, nombre_descriptivo, aforo, piso, estado_habilitacion } = body;
+
+    if (!id_sala) {
+      return NextResponse.json({ error: 'id_sala es requerido' }, { status: 400 });
+    }
+
+    if (nombre_descriptivo !== undefined && (typeof nombre_descriptivo !== 'string' || nombre_descriptivo.trim().length === 0)) {
+      return NextResponse.json({ error: 'El nombre descriptivo es inválido' }, { status: 400 });
+    }
+
+    if (aforo !== undefined && !(Number(aforo) > 0)) {
+      return NextResponse.json({ error: 'El aforo debe ser mayor a 0' }, { status: 400 });
+    }
+
+    if (piso !== undefined && !validarPiso(Number(piso))) {
+      return NextResponse.json({ error: 'El piso debe estar entre 1 y 9' }, { status: 400 });
+    }
+
+    const estadosValidos: EstadoHabilitacion[] = ['activo', 'mantencion', 'inactivo'];
+    if (estado_habilitacion !== undefined && !estadosValidos.includes(estado_habilitacion)) {
+      return NextResponse.json({ error: 'Estado de habilitación inválido' }, { status: 400 });
+    }
+
+    const updatePayload: Record<string, unknown> = {};
+    if (nombre_descriptivo !== undefined) updatePayload.nombre_descriptivo = nombre_descriptivo.trim();
+    if (aforo !== undefined) updatePayload.aforo = Number(aforo);
+    if (piso !== undefined) updatePayload.piso = Number(piso);
+    if (estado_habilitacion !== undefined) updatePayload.estado_habilitacion = estado_habilitacion;
+
+    if (Object.keys(updatePayload).length === 0) {
+      return NextResponse.json({ error: 'No hay cambios para guardar' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseReservasAdmin();
+    const { data, error } = await supabase
+      .from('salas')
+      .update(updatePayload)
+      .eq('id_sala', id_sala)
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return NextResponse.json({ error: 'Sala no encontrada' }, { status: 404 });
+      }
+      if (error.code === '23505') {
+        return NextResponse.json({ error: 'Ya existe una sala con ese nombre' }, { status: 409 });
+      }
+      console.error('[salas PATCH] Error al actualizar sala:', error);
+      return NextResponse.json({ error: 'Error interno al actualizar la sala' }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (err: unknown) {
+    console.error('[salas PATCH] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al actualizar la sala' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const auth = await authorize(request, ['administrador']);
+    if (!auth.ok) return auth.response;
+
+    const { searchParams } = new URL(request.url);
+    const id_sala = searchParams.get('id_sala');
+
+    if (!id_sala) {
+      return NextResponse.json({ error: 'id_sala es requerido' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseReservasAdmin();
+
+    const { data: sala, error: errSala } = await supabase
+      .from('salas')
+      .select('id_sala')
+      .eq('id_sala', id_sala)
+      .single();
+
+    if (errSala || !sala) {
+      return NextResponse.json({ error: 'Sala no encontrada' }, { status: 404 });
+    }
+
+    // Protección: no eliminar salas con reservas asociadas.
+    const { count } = await supabase
+      .from('reservas')
+      .select('id_reserva', { count: 'exact', head: true })
+      .eq('id_sala', id_sala);
+
+    if ((count ?? 0) > 0) {
+      return NextResponse.json(
+        { error: 'No se puede eliminar la sala porque tiene reservas asociadas' },
+        { status: 409 }
+      );
+    }
+
+    const { error: errDelete } = await supabase
+      .from('salas')
+      .delete()
+      .eq('id_sala', id_sala);
+
+    if (errDelete) {
+      console.error('[salas DELETE] Error al eliminar sala:', errDelete);
+      return NextResponse.json({ error: 'Error interno al eliminar la sala' }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, id_sala });
+  } catch (err: unknown) {
+    console.error('[salas DELETE] Error inesperado:', err);
+    return NextResponse.json({ error: 'Error interno al eliminar la sala' }, { status: 500 });
+  }
+}

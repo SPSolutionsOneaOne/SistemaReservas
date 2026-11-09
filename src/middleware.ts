@@ -27,10 +27,14 @@ export async function middleware(request: NextRequest) {
 
   const rolesStaff: Rol[] = ['encargado_administrativo', 'administrador'];
 
-  // Crear salas: solo administrador.
-  if (pathname === '/api/salas' && method === 'POST' && session.rol !== 'administrador') {
+  // Gestionar salas (crear/editar/eliminar): solo administrador.
+  if (
+    pathname === '/api/salas' &&
+    (method === 'POST' || method === 'PATCH' || method === 'DELETE') &&
+    session.rol !== 'administrador'
+  ) {
     return NextResponse.json(
-      { error: 'Acceso denegado: solo el Administrador puede crear salas' },
+      { error: 'Acceso denegado: solo el Administrador puede gestionar salas' },
       { status: 403 }
     );
   }

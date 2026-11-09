@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import QRCode from 'qrcode';
 import {
   TipoSala,
+  EstadoHabilitacion,
   UsuarioInstitucion,
   BLOQUES_HORARIOS,
   PREFIJOS_SALA,
@@ -34,21 +35,22 @@ interface SalaVisual {
   name: string;
   cap: number;
   floor: number;
+  estado: EstadoHabilitacion;
 }
 
 const SALAS_INICIALES: SalaVisual[] = [
-  { code: 'LAB-01', type: 'lab', name: 'Lab Turing', cap: 30, floor: 1 },
-  { code: 'LAB-02', type: 'lab', name: 'Lab Lovelace', cap: 25, floor: 1 },
-  { code: 'LAB-03', type: 'lab', name: 'Lab Hopper', cap: 20, floor: 2 },
-  { code: 'SAL-01', type: 'sala', name: 'Sala Mistral', cap: 40, floor: 2 },
-  { code: 'SAL-02', type: 'sala', name: 'Sala Neruda', cap: 35, floor: 3 },
-  { code: 'SAL-03', type: 'sala', name: 'Sala Parra', cap: 18, floor: 3 },
-  { code: 'AUD-01', type: 'aud', name: 'Auditorio Atacama', cap: 120, floor: 1 },
-  { code: 'CON-01', type: 'conf', name: 'Sala Cordillera', cap: 15, floor: 2 },
-  { code: 'CON-02', type: 'conf', name: 'Sala Altiplano', cap: 8, floor: 2 },
-  { code: 'BIB-01', type: 'bib', name: 'Estudio Maipo', cap: 6, floor: 1 },
-  { code: 'BIB-02', type: 'bib', name: 'Estudio Loa', cap: 6, floor: 1 },
-  { code: 'BIB-03', type: 'bib', name: 'Estudio Biobío', cap: 4, floor: 2 },
+  { code: 'LAB-01', type: 'lab', name: 'Lab Turing', cap: 30, floor: 1, estado: 'activo' },
+  { code: 'LAB-02', type: 'lab', name: 'Lab Lovelace', cap: 25, floor: 1, estado: 'activo' },
+  { code: 'LAB-03', type: 'lab', name: 'Lab Hopper', cap: 20, floor: 2, estado: 'activo' },
+  { code: 'SAL-01', type: 'sala', name: 'Sala Mistral', cap: 40, floor: 2, estado: 'activo' },
+  { code: 'SAL-02', type: 'sala', name: 'Sala Neruda', cap: 35, floor: 3, estado: 'activo' },
+  { code: 'SAL-03', type: 'sala', name: 'Sala Parra', cap: 18, floor: 3, estado: 'activo' },
+  { code: 'AUD-01', type: 'aud', name: 'Auditorio Atacama', cap: 120, floor: 1, estado: 'activo' },
+  { code: 'CON-01', type: 'conf', name: 'Sala Cordillera', cap: 15, floor: 2, estado: 'activo' },
+  { code: 'CON-02', type: 'conf', name: 'Sala Altiplano', cap: 8, floor: 2, estado: 'activo' },
+  { code: 'BIB-01', type: 'bib', name: 'Estudio Maipo', cap: 6, floor: 1, estado: 'activo' },
+  { code: 'BIB-02', type: 'bib', name: 'Estudio Loa', cap: 6, floor: 1, estado: 'activo' },
+  { code: 'BIB-03', type: 'bib', name: 'Estudio Biobío', cap: 4, floor: 2, estado: 'activo' },
 ];
 
 const GRUPOS = [
@@ -197,6 +199,16 @@ export default function ReservaPage() {
   const [editError, setEditError] = useState('');
   const [eliminandoId, setEliminandoId] = useState<string | number | null>(null);
 
+  // Edición / Eliminación de sala (solo administrador)
+  const [editSala, setEditSala] = useState<SalaVisual | null>(null);
+  const [editSalaNombre, setEditSalaNombre] = useState('');
+  const [editSalaCap, setEditSalaCap] = useState(30);
+  const [editSalaPiso, setEditSalaPiso] = useState(1);
+  const [editSalaEstado, setEditSalaEstado] = useState<EstadoHabilitacion>('activo');
+  const [editSalaGuardando, setEditSalaGuardando] = useState(false);
+  const [editSalaError, setEditSalaError] = useState('');
+  const [eliminandoSalaCode, setEliminandoSalaCode] = useState<string | null>(null);
+
   // 7 días disponibles
   const days = useMemo(() => {
     const list: Date[] = [];
@@ -221,12 +233,13 @@ export default function ReservaPage() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && Array.isArray(data) && data.length > 0) {
-          const map = data.map((s: { id_sala: string; tipo: TipoSala; nombre_descriptivo: string; aforo: number; piso: number }) => ({
+          const map = data.map((s: { id_sala: string; tipo: TipoSala; nombre_descriptivo: string; aforo: number; piso: number; estado_habilitacion?: EstadoHabilitacion }) => ({
             code: s.id_sala,
             type: s.tipo,
             name: s.nombre_descriptivo,
             cap: s.aforo,
             floor: s.piso,
+            estado: s.estado_habilitacion || 'activo',
           }));
           setSalas(map);
         }
@@ -439,7 +452,7 @@ export default function ReservaPage() {
   const freeRooms = useMemo(() => {
     if (!selectedType || selectedBlock === null) return [];
     const day = days[selectedDayIdx];
-    return salas.filter((r) => r.type === selectedType && isRoomFree(r, day, selectedBlock));
+    return salas.filter((r) => r.type === selectedType && r.estado === 'activo' && isRoomFree(r, day, selectedBlock));
   }, [salas, selectedType, selectedDayIdx, selectedBlock, days, isRoomFree]);
 
   const handleSelectType = (tipo: TipoSala) => {
@@ -851,6 +864,7 @@ export default function ReservaPage() {
       name: adminName.trim(),
       cap: Number(adminCap),
       floor: Number(adminFloor),
+      estado: 'activo',
     };
 
     try {
@@ -915,6 +929,109 @@ export default function ReservaPage() {
       });
     } catch {
       showToast('Error generando QR');
+    }
+  };
+
+  // ---- Gestión de salas (solo administrador) ----
+
+  const abrirEdicionSala = (sala: SalaVisual) => {
+    setEditSala(sala);
+    setEditSalaNombre(sala.name);
+    setEditSalaCap(sala.cap);
+    setEditSalaPiso(sala.floor);
+    setEditSalaEstado(sala.estado);
+    setEditSalaError('');
+    setEditSalaGuardando(false);
+  };
+
+  const cerrarEdicionSala = () => {
+    setEditSala(null);
+    setEditSalaError('');
+  };
+
+  const guardarEdicionSala = async () => {
+    if (!editSala) return;
+    if (!editSalaNombre.trim()) {
+      setEditSalaError('El nombre no puede estar vacío.');
+      return;
+    }
+    if (!(editSalaCap > 0)) {
+      setEditSalaError('La capacidad debe ser mayor a 0.');
+      return;
+    }
+    if (!(editSalaPiso >= 1 && editSalaPiso <= 9)) {
+      setEditSalaError('El piso debe estar entre 1 y 9.');
+      return;
+    }
+    setEditSalaGuardando(true);
+    setEditSalaError('');
+    try {
+      const resp = await fetch('/api/salas', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id_sala: editSala.code,
+          nombre_descriptivo: editSalaNombre.trim(),
+          aforo: editSalaCap,
+          piso: editSalaPiso,
+          estado_habilitacion: editSalaEstado,
+        }),
+      });
+      const data = (await resp.json().catch(() => null)) as
+        | {
+            error?: string;
+            nombre_descriptivo?: string;
+            aforo?: number;
+            piso?: number;
+            estado_habilitacion?: EstadoHabilitacion;
+          }
+        | null;
+      if (!resp.ok) {
+        setEditSalaError(data?.error || 'No fue posible guardar los cambios. Intenta nuevamente.');
+        return;
+      }
+      setSalas((prev) =>
+        prev.map((s) =>
+          s.code === editSala.code
+            ? {
+                ...s,
+                name: data?.nombre_descriptivo || editSalaNombre.trim(),
+                cap: data?.aforo ?? editSalaCap,
+                floor: data?.piso ?? editSalaPiso,
+                estado: data?.estado_habilitacion || editSalaEstado,
+              }
+            : s
+        )
+      );
+      cerrarEdicionSala();
+      showToast('Sala actualizada');
+    } catch {
+      setEditSalaError('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setEditSalaGuardando(false);
+    }
+  };
+
+  const eliminarSala = async (sala: SalaVisual) => {
+    if (!window.confirm(`¿Eliminar la sala ${sala.code} - ${sala.name}? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+    setEliminandoSalaCode(sala.code);
+    try {
+      const resp = await fetch(`/api/salas?id_sala=${encodeURIComponent(sala.code)}`, {
+        method: 'DELETE',
+      });
+      const data = (await resp.json().catch(() => null)) as { error?: string } | null;
+      if (!resp.ok) {
+        showToast(data?.error || 'No fue posible eliminar la sala.');
+        return;
+      }
+      setSalas((prev) => prev.filter((s) => s.code !== sala.code));
+      showToast('Sala eliminada');
+    } catch {
+      showToast('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setEliminandoSalaCode(null);
     }
   };
 
@@ -1014,7 +1131,7 @@ export default function ReservaPage() {
                   onClick={() => setView('admin')}
                   aria-current={view === 'admin' ? 'page' : undefined}
                 >
-                  Gestión Salas (Admin)
+                  Gestión Salas
                 </button>
               )}
             </nav>
@@ -1227,7 +1344,7 @@ export default function ReservaPage() {
                                   const bInfo = BLOQUES_HORARIOS[blk];
                                   const day = days[selectedDayIdx];
                                   const hayLibres = salas.some(
-                                    (r) => r.type === selectedType && isRoomFree(r, day, blk)
+                                    (r) => r.type === selectedType && r.estado === 'activo' && isRoomFree(r, day, blk)
                                   );
                                   return (
                                     <button
@@ -1787,14 +1904,37 @@ export default function ReservaPage() {
                                   <span className="num">
                                     {r.cap} personas · Piso {r.floor}
                                   </span>
+                                  {r.estado === 'mantencion' && (
+                                    <span className="state warn num">En mantención</span>
+                                  )}
+                                  {r.estado === 'inactivo' && (
+                                    <span className="state num">Inactiva</span>
+                                  )}
                                 </div>
-                                <button
-                                  className="btn sm"
-                                  type="button"
-                                  onClick={() => openQrModal(r)}
-                                >
-                                  QR
-                                </button>
+                                <div className="row" style={{ gap: 8 }}>
+                                  <button
+                                    className="btn sm"
+                                    type="button"
+                                    onClick={() => abrirEdicionSala(r)}
+                                  >
+                                    Editar
+                                  </button>
+                                  <button
+                                    className="btn sm danger"
+                                    type="button"
+                                    disabled={eliminandoSalaCode === r.code}
+                                    onClick={() => eliminarSala(r)}
+                                  >
+                                    {eliminandoSalaCode === r.code ? 'Eliminando…' : 'Eliminar'}
+                                  </button>
+                                  <button
+                                    className="btn sm"
+                                    type="button"
+                                    onClick={() => openQrModal(r)}
+                                  >
+                                    QR
+                                  </button>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -1950,6 +2090,115 @@ export default function ReservaPage() {
                 type="button"
                 onClick={cerrarEdicion}
                 disabled={editGuardando}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Editar sala */}
+      {editSala && (
+        <div
+          className="modal"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !editSalaGuardando) cerrarEdicionSala();
+          }}
+        >
+          <div className="card" style={{ maxWidth: 480, width: '100%' }}>
+            <h2 className="title" style={{ margin: '0 0 4px' }}>
+              Editar sala {editSala.code}
+            </h2>
+            <p style={{ margin: '0 0 16px', color: 'var(--muted)', fontSize: 13 }}>
+              {TIPOS.find((t) => t.id === editSala.type)?.name}
+            </p>
+
+            <label className="label" htmlFor="editSalaNombre" style={{ marginTop: 0 }}>
+              Nombre descriptivo
+            </label>
+            <div className="field">
+              <input
+                id="editSalaNombre"
+                type="text"
+                className="in"
+                maxLength={28}
+                value={editSalaNombre}
+                onChange={(e) => setEditSalaNombre(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="fgrid">
+              <div>
+                <label className="label" htmlFor="editSalaCap">
+                  Capacidad
+                </label>
+                <input
+                  id="editSalaCap"
+                  type="number"
+                  className="in"
+                  min={1}
+                  max={300}
+                  inputMode="numeric"
+                  value={editSalaCap}
+                  onChange={(e) => setEditSalaCap(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <label className="label" htmlFor="editSalaPiso">
+                  Piso (1 - 9)
+                </label>
+                <input
+                  id="editSalaPiso"
+                  type="number"
+                  className="in"
+                  min={1}
+                  max={9}
+                  inputMode="numeric"
+                  value={editSalaPiso}
+                  onChange={(e) => setEditSalaPiso(Number(e.target.value))}
+                />
+              </div>
+            </div>
+
+            <label className="label" htmlFor="editSalaEstado">
+              Estado
+            </label>
+            <div className="field">
+              <select
+                id="editSalaEstado"
+                className="in"
+                value={editSalaEstado}
+                onChange={(e) => setEditSalaEstado(e.target.value as EstadoHabilitacion)}
+              >
+                <option value="activo">Activa</option>
+                <option value="mantencion">En mantención</option>
+                <option value="inactivo">Inactiva</option>
+              </select>
+            </div>
+            <p className="hint" style={{ textAlign: 'left', marginTop: 8 }}>
+              Las salas en mantención o inactivas no aparecen como reservables.
+            </p>
+
+            {editSalaError && <p className="msg" role="alert">{editSalaError}</p>}
+
+            <div className="row" style={{ marginTop: 8 }}>
+              <button
+                className="btn primary"
+                type="button"
+                onClick={guardarEdicionSala}
+                disabled={editSalaGuardando || !editSalaNombre.trim()}
+              >
+                {editSalaGuardando ? 'Guardando…' : 'Guardar cambios'}
+              </button>
+              <button
+                className="btn"
+                type="button"
+                onClick={cerrarEdicionSala}
+                disabled={editSalaGuardando}
               >
                 Cancelar
               </button>
