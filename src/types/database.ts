@@ -117,7 +117,7 @@ export interface Reserva {
   usuario_rut: string;
   /** date, NOT NULL — formato ISO 'YYYY-MM-DD' */
   fecha: string;
-  /** int, NOT NULL, CHECK 0-13 — 14 bloques diarios de 45 min */
+  /** int, NOT NULL, CHECK 0-26 — 27 bloques diarios de 30 min */
   bloque_horario: number;
   /** int, NOT NULL */
   cantidad_asistentes: number;
@@ -203,22 +203,39 @@ export interface BitacoraAdministrativaInsert {
 // CONSTANTES DEL DOMINIO
 // ==============================================================
 
-/** Mapeo de bloques horarios (0-13) a rangos de hora (14 bloques de 45 min) */
+/**
+ * Mapeo de bloques horarios a rangos de hora (27 bloques de 30 min).
+ * Horarios del cliente: lunes a viernes 08:30–22:00 (bloques 0-26) y
+ * sábado 08:30–14:00 (bloques 0-10). Domingos sin servicio.
+ */
 export const BLOQUES_HORARIOS: Record<number, { inicio: string; fin: string }> = {
-  0:  { inicio: '08:00', fin: '08:45' },
-  1:  { inicio: '08:45', fin: '09:30' },
-  2:  { inicio: '09:30', fin: '10:15' },
-  3:  { inicio: '10:15', fin: '11:00' },
-  4:  { inicio: '11:00', fin: '11:45' },
-  5:  { inicio: '11:45', fin: '12:30' },
-  6:  { inicio: '12:30', fin: '13:15' },
-  7:  { inicio: '13:15', fin: '14:00' },
-  8:  { inicio: '14:00', fin: '14:45' },
-  9:  { inicio: '14:45', fin: '15:30' },
-  10: { inicio: '15:30', fin: '16:15' },
-  11: { inicio: '16:15', fin: '17:00' },
-  12: { inicio: '17:00', fin: '17:45' },
-  13: { inicio: '17:45', fin: '18:30' },
+  0:  { inicio: '08:30', fin: '09:00' },
+  1:  { inicio: '09:00', fin: '09:30' },
+  2:  { inicio: '09:30', fin: '10:00' },
+  3:  { inicio: '10:00', fin: '10:30' },
+  4:  { inicio: '10:30', fin: '11:00' },
+  5:  { inicio: '11:00', fin: '11:30' },
+  6:  { inicio: '11:30', fin: '12:00' },
+  7:  { inicio: '12:00', fin: '12:30' },
+  8:  { inicio: '12:30', fin: '13:00' },
+  9:  { inicio: '13:00', fin: '13:30' },
+  10: { inicio: '13:30', fin: '14:00' },
+  11: { inicio: '14:00', fin: '14:30' },
+  12: { inicio: '14:30', fin: '15:00' },
+  13: { inicio: '15:00', fin: '15:30' },
+  14: { inicio: '15:30', fin: '16:00' },
+  15: { inicio: '16:00', fin: '16:30' },
+  16: { inicio: '16:30', fin: '17:00' },
+  17: { inicio: '17:00', fin: '17:30' },
+  18: { inicio: '17:30', fin: '18:00' },
+  19: { inicio: '18:00', fin: '18:30' },
+  20: { inicio: '18:30', fin: '19:00' },
+  21: { inicio: '19:00', fin: '19:30' },
+  22: { inicio: '19:30', fin: '20:00' },
+  23: { inicio: '20:00', fin: '20:30' },
+  24: { inicio: '20:30', fin: '21:00' },
+  25: { inicio: '21:00', fin: '21:30' },
+  26: { inicio: '21:30', fin: '22:00' },
 };
 
 /** Prefijos de sigla por tipo de sala (SalaFactory) */

@@ -191,11 +191,11 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Restricción: en franja de uso (08:00–18:30, lun–sáb) no se puede
-    // eliminar salas. Agregar/editar sí están permitidos.
+    // Restricción: en franja de uso (lun–vie 08:30–22:00, sáb 08:30–14:00)
+    // no se puede eliminar salas. Agregar/editar sí están permitidos.
     if (enFranjaDeUso()) {
       return NextResponse.json(
-        { error: 'No se puede eliminar salas durante la franja de uso (08:00–18:30)' },
+        { error: 'No se puede eliminar salas durante la franja de uso' },
         { status: 409 }
       );
     }

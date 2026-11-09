@@ -53,11 +53,19 @@ const SALAS_INICIALES: SalaVisual[] = [
   { code: 'BIB-03', type: 'bib', name: 'Estudio Biobío', cap: 4, floor: 2, estado: 'activo' },
 ];
 
-const GRUPOS = [
-  ['Mañana', 0, 5],
-  ['Tarde', 6, 10],
-  ['Noche', 11, 13],
-] as const;
+/**
+ * Grupos de horario (bloques de 30 min).
+ * Lunes a viernes: 08:30–22:00 (bloques 0-26).
+ * Sábado: 08:30–14:00 (bloques 0-10).
+ */
+function gruposDelDia(esSabado: boolean): readonly (readonly [string, number, number])[] {
+  if (esSabado) return [['Mañana', 0, 10]] as const;
+  return [
+    ['Mañana', 0, 10],
+    ['Tarde', 11, 19],
+    ['Noche', 20, 26],
+  ] as const;
+}
 
 const PURPOSES = [
   'Estudio grupal',
@@ -1296,7 +1304,7 @@ export default function ReservaPage() {
                       </section>
                     )}
 
-                    {/* Panel 1: Horario (Días y Bloques 0-13) */}
+                    {/* Panel 1: Horario (Días y Bloques 0-26) */}
                     {step === 1 && (
                       <section className="panel on">
                         <span className="label">Día</span>
@@ -1335,7 +1343,7 @@ export default function ReservaPage() {
                             Cargando disponibilidad…
                           </p>
                         )}
-                        {GRUPOS.map(([name, start, end]) => (
+                        {gruposDelDia(days[selectedDayIdx]?.getDay() === 6).map(([name, start, end]) => (
                           <div key={name} className="group">
                             <h3>{name}</h3>
                             <div className="blocks">
@@ -2040,9 +2048,14 @@ export default function ReservaPage() {
                 {Object.entries(BLOQUES_HORARIOS).map(([n, info]) => {
                   const blk = Number(n);
                   const ocupado = !!editOcupacion[claveOcupacion(editFecha, editando.room, blk)];
+                  // Sábado: solo bloques 0-10 (08:30–14:00).
+                  const fueraDeHorario = editFecha
+                    ? new Date(`${editFecha}T12:00:00Z`).getUTCDay() === 6 && blk > 10
+                    : false;
+                  const disabled = ocupado || fueraDeHorario;
                   return (
-                    <option key={n} value={blk} disabled={ocupado}>
-                      {info.inicio} – {info.fin}{ocupado ? ' (ocupado)' : ''}
+                    <option key={n} value={blk} disabled={disabled}>
+                      {info.inicio} – {info.fin}{ocupado ? ' (ocupado)' : fueraDeHorario ? ' (fuera de horario)' : ''}
                     </option>
                   );
                 })}

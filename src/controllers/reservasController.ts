@@ -21,6 +21,8 @@ import { getSupabaseInstitucionalAdmin } from '@/lib/supabaseInstitucionalAdmin'
 import {
   validarRutChileno,
   validarBloqueHorario,
+  validarBloqueParaFecha,
+  diaSemanaDeFecha,
   validarAforo,
   validarFechaMesEnCurso,
   generarCodigoReserva,
@@ -104,9 +106,24 @@ export async function crearReservaConValidacion(
     return { exito: false, error: 'Formato de RUT del titular inválido', httpCode: 400 };
   }
 
-  // 2. Validar bloque horario (0 - 13)
+  // 2. Validar bloque horario (0 - 26)
   if (!validarBloqueHorario(params.bloque_horario)) {
-    return { exito: false, error: 'Bloque horario debe estar entre 0 y 13', httpCode: 400 };
+    return { exito: false, error: 'Bloque horario debe estar entre 0 y 26', httpCode: 400 };
+  }
+
+  // 2a. El bloque debe existir en ese día (sábado hasta las 14:00; domingo sin servicio)
+  if (validarFechaMesEnCurso(params.fecha)) {
+    if (!validarBloqueParaFecha(params.fecha, params.bloque_horario)) {
+      const dia = diaSemanaDeFecha(params.fecha);
+      return {
+        exito: false,
+        error:
+          dia === 0
+            ? 'Los domingos no hay servicio de salas'
+            : 'El sábado solo se reservan bloques de 08:30 a 14:00',
+        httpCode: 422,
+      };
+    }
   }
 
   // 2b. La fecha debe estar dentro del mes en curso
@@ -289,7 +306,7 @@ export async function editarReservaConValidacion(
 
   // 2. Validar bloque horario si cambia
   if (datos.bloque_horario !== undefined && !validarBloqueHorario(datos.bloque_horario)) {
-    return { exito: false, error: 'Bloque horario debe estar entre 0 y 13', httpCode: 400 };
+    return { exito: false, error: 'Bloque horario debe estar entre 0 y 26', httpCode: 400 };
   }
 
   // 2b. La fecha debe estar dentro del mes en curso
@@ -299,6 +316,27 @@ export async function editarReservaConValidacion(
       error: 'La fecha debe estar dentro del mes en curso',
       httpCode: 422,
     };
+  }
+
+  // 2c. El bloque efectivo debe existir en la fecha efectiva
+  {
+    const fechaEfectiva = datos.fecha ?? reservaActual.fecha;
+    const bloqueEfectivo = datos.bloque_horario ?? reservaActual.bloque_horario;
+    if (
+      (datos.fecha !== undefined || datos.bloque_horario !== undefined) &&
+      validarFechaMesEnCurso(fechaEfectiva) &&
+      !validarBloqueParaFecha(fechaEfectiva, bloqueEfectivo)
+    ) {
+      const dia = diaSemanaDeFecha(fechaEfectiva);
+      return {
+        exito: false,
+        error:
+          dia === 0
+            ? 'Los domingos no hay servicio de salas'
+            : 'El sábado solo se reservan bloques de 08:30 a 14:00',
+        httpCode: 422,
+      };
+    }
   }
 
   // 3. Validar aforo si cambia cantidad
