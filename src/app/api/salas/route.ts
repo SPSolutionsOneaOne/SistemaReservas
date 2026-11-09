@@ -175,15 +175,6 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Sala no encontrada' }, { status: 404 });
     }
 
-    // Restricción: en franja de uso (08:00–18:30, lun–sáb) no se puede
-    // eliminar salas. Agregar/editar sí están permitidos.
-    if (enFranjaDeUso()) {
-      return NextResponse.json(
-        { error: 'No se puede eliminar salas durante la franja de uso (08:00–18:30)' },
-        { status: 409 }
-      );
-    }
-
     // Restricción: si la sala tiene reservas activas, no se puede eliminar.
     const hoy = ahoraSantiago().fecha;
     const { count } = await supabase
@@ -196,6 +187,15 @@ export async function DELETE(request: NextRequest) {
     if ((count ?? 0) > 0) {
       return NextResponse.json(
         { error: 'No se pueden eliminar salas con reservas activas' },
+        { status: 409 }
+      );
+    }
+
+    // Restricción: en franja de uso (08:00–18:30, lun–sáb) no se puede
+    // eliminar salas. Agregar/editar sí están permitidos.
+    if (enFranjaDeUso()) {
+      return NextResponse.json(
+        { error: 'No se puede eliminar salas durante la franja de uso (08:00–18:30)' },
         { status: 409 }
       );
     }
