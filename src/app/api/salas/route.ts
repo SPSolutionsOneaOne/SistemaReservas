@@ -4,6 +4,7 @@ import { SalaFactory } from '@/models/SalaFactory';
 import { TipoSala, EstadoHabilitacion } from '@/types/database';
 import { validarPiso } from '@/lib/validators';
 import { authorize } from '@/lib/authz';
+import { ahoraSantiago, enFranjaDeUso } from '@/lib/horarios';
 
 export async function GET(request: NextRequest) {
   try {
@@ -174,15 +175,27 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Sala no encontrada' }, { status: 404 });
     }
 
-    // Protección: no eliminar salas con reservas asociadas.
+    // Restricción: en franja de uso (08:00–18:30, lun–sáb) no se puede
+    // eliminar salas. Agregar/editar sí están permitidos.
+    if (enFranjaDeUso()) {
+      return NextResponse.json(
+        { error: 'No se puede eliminar salas durante la franja de uso (08:00–18:30)' },
+        { status: 409 }
+      );
+    }
+
+    // Restricción: si la sala tiene reservas activas, no se puede eliminar.
+    const hoy = ahoraSantiago().fecha;
     const { count } = await supabase
       .from('reservas')
       .select('id_reserva', { count: 'exact', head: true })
-      .eq('id_sala', id_sala);
+      .eq('id_sala', id_sala)
+      .eq('estado', 'confirmada')
+      .gte('fecha', hoy);
 
     if ((count ?? 0) > 0) {
       return NextResponse.json(
-        { error: 'No se puede eliminar la sala porque tiene reservas asociadas' },
+        { error: 'No se pueden eliminar salas con reservas activas' },
         { status: 409 }
       );
     }

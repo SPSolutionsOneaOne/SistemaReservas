@@ -81,3 +81,19 @@ export function vencidaGracia(
   if (fecha > pared.fecha) return false;
   return pared.minutos >= inicioBloqueMinutos(bloque) + MINUTOS_GRACIA_CHECKIN;
 }
+
+/** Inicio y fin de la franja de uso (bloques 0-13: 08:00 a 18:30). */
+export const FRANJA_USO_INICIO_MINUTOS = 8 * 60;
+export const FRANJA_USO_FIN_MINUTOS = 18 * 60 + 30;
+
+/**
+ * Franja de uso: 08:00–18:30, de lunes a sábado (domingos no hay servicio,
+ * igual que en el calendario de reservas).
+ */
+export function enFranjaDeUso(pared: FechaHoraPared = ahoraSantiago()): boolean {
+  if (pared.minutos < FRANJA_USO_INICIO_MINUTOS || pared.minutos >= FRANJA_USO_FIN_MINUTOS) {
+    return false;
+  }
+  const diaSemana = new Date(`${pared.fecha}T12:00:00Z`).getUTCDay();
+  return diaSemana !== 0;
+}
