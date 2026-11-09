@@ -162,6 +162,9 @@ export default function ReservaPage() {
   const [rutMsg, setRutMsg] = useState<string>('');
   const [validatingRut, setValidatingRut] = useState<boolean>(false);
   const [attendees, setAttendees] = useState<string[]>([]);
+  // Nombre del asistente por RUT: solo se conoce si el servidor lo entrega
+  // (personal administrativo). Para alumno/docente la API no expone PII.
+  const [nombresAsistentes, setNombresAsistentes] = useState<Record<string, string>>({});
   const [selectedPurpose, setSelectedPurpose] = useState<string | null>(null);
   const [detail, setDetail] = useState<string>('');
   const [lastBooking, setLastBooking] = useState<ReservaVisual | null>(null);
@@ -402,6 +405,8 @@ export default function ReservaPage() {
     setCurrentUser(null);
     setLoginId('');
     setLoginPass('');
+    setAttendees([]);
+    setNombresAsistentes({});
     showToast('Sesión cerrada');
   };
 
@@ -519,6 +524,10 @@ export default function ReservaPage() {
       }
 
       setAttendees([...attendees, clean]);
+      const nombreAsistente = data?.usuario?.nombre_completo;
+      if (typeof nombreAsistente === 'string' && nombreAsistente) {
+        setNombresAsistentes((prev) => ({ ...prev, [clean]: nombreAsistente }));
+      }
       setRutInput('');
       setRutMsg('');
     } catch {
@@ -529,7 +538,15 @@ export default function ReservaPage() {
   };
 
   const handleRemoveRut = (idx: number) => {
+    const rutQuitado = attendees[idx];
     setAttendees(attendees.filter((_, i) => i !== idx));
+    if (rutQuitado) {
+      setNombresAsistentes((prev) => {
+        const next = { ...prev };
+        delete next[rutQuitado];
+        return next;
+      });
+    }
   };
 
   // Confirmación de reserva
@@ -633,6 +650,7 @@ export default function ReservaPage() {
     setSelectedBlock(null);
     setSelectedRoomCode(null);
     setAttendees([]);
+    setNombresAsistentes({});
     setSelectedPurpose(null);
     setDetail('');
     setLastBooking(null);
@@ -1446,7 +1464,7 @@ export default function ReservaPage() {
                           </li>
                           {attendees.map((rut, i) => (
                             <li key={i} className="chip">
-                              {rut}
+                              {nombresAsistentes[rut] ? `${nombresAsistentes[rut]} (${rut})` : rut}
                               <button
                                 type="button"
                                 onClick={() => handleRemoveRut(i)}
