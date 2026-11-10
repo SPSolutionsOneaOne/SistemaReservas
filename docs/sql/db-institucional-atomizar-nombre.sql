@@ -98,12 +98,16 @@ alter table public.usuarios_institucion
 alter table public.usuarios_institucion
   add column nombre_completo text
     generated always as (
-      btrim(concat_ws(' ',
-        primer_nombre,
-        segundo_nombre,
-        apellido_paterno,
-        apellido_materno
-      ))
+      case
+        when segundo_nombre is null and apellido_materno is null
+          then primer_nombre || ' ' || apellido_paterno
+        when segundo_nombre is null
+          then primer_nombre || ' ' || apellido_paterno || ' ' || apellido_materno
+        when apellido_materno is null
+          then primer_nombre || ' ' || segundo_nombre || ' ' || apellido_paterno
+        else
+          primer_nombre || ' ' || segundo_nombre || ' ' || apellido_paterno || ' ' || apellido_materno
+      end
     ) stored;
 
 -- 4. Restricciones
