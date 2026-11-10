@@ -56,14 +56,14 @@ export function validarCorreoInstitucional(correo: string): boolean {
   );
 }
 
-/** Bloque máximo válido: lunes a viernes 08:30–22:00 (27 bloques de 30 min). */
-export const BLOQUE_MAXIMO = 26;
+/** Bloque máximo válido: lunes a viernes 08:30–22:00 (18 bloques de 45 min). */
+export const BLOQUE_MAXIMO = 17;
 
-/** Último bloque de sábado (08:30–14:00). */
-export const BLOQUE_MAXIMO_SABADO = 10;
+/** Último bloque de sábado (08:30–13:45). */
+export const BLOQUE_MAXIMO_SABADO = 6;
 
 /**
- * Valida que el bloque horario esté dentro del rango válido (0-26).
+ * Valida que el bloque horario esté dentro del rango válido (0-17).
  */
 export function validarBloqueHorario(bloque: number): boolean {
   return Number.isInteger(bloque) && bloque >= 0 && bloque <= BLOQUE_MAXIMO;
@@ -79,8 +79,8 @@ export function diaSemanaDeFecha(fecha: string): number {
 /**
  * ¿El bloque existe en ese día?
  * - Domingo: sin servicio (ningún bloque).
- * - Sábado: solo bloques 0-10 (08:30–14:00).
- * - Lunes a viernes: bloques 0-26 (08:30–22:00).
+ * - Sábado: solo bloques 0-6 (08:30–13:45).
+ * - Lunes a viernes: bloques 0-17 (08:30–22:00).
  */
 export function validarBloqueParaFecha(fecha: string, bloque: number): boolean {
   if (!esFechaValida(fecha)) return false;

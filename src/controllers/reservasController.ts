@@ -106,9 +106,9 @@ export async function crearReservaConValidacion(
     return { exito: false, error: 'Formato de RUT del titular inválido', httpCode: 400 };
   }
 
-  // 2. Validar bloque horario (0 - 26)
+  // 2. Validar bloque horario (0 - 17)
   if (!validarBloqueHorario(params.bloque_horario)) {
-    return { exito: false, error: 'Bloque horario debe estar entre 0 y 26', httpCode: 400 };
+    return { exito: false, error: 'Bloque horario debe estar entre 0 y 17', httpCode: 400 };
   }
 
   // 2a. El bloque debe existir en ese día (sábado hasta las 14:00; domingo sin servicio)
@@ -120,7 +120,7 @@ export async function crearReservaConValidacion(
         error:
           dia === 0
             ? 'Los domingos no hay servicio de salas'
-            : 'El sábado solo se reservan bloques de 08:30 a 14:00',
+            : 'El sábado solo se reservan bloques de 08:30 a 13:45',
         httpCode: 422,
       };
     }
@@ -306,7 +306,7 @@ export async function editarReservaConValidacion(
 
   // 2. Validar bloque horario si cambia
   if (datos.bloque_horario !== undefined && !validarBloqueHorario(datos.bloque_horario)) {
-    return { exito: false, error: 'Bloque horario debe estar entre 0 y 26', httpCode: 400 };
+    return { exito: false, error: 'Bloque horario debe estar entre 0 y 17', httpCode: 400 };
   }
 
   // 2b. La fecha debe estar dentro del mes en curso
@@ -333,7 +333,7 @@ export async function editarReservaConValidacion(
         error:
           dia === 0
             ? 'Los domingos no hay servicio de salas'
-            : 'El sábado solo se reservan bloques de 08:30 a 14:00',
+            : 'El sábado solo se reservan bloques de 08:30 a 13:45',
         httpCode: 422,
       };
     }

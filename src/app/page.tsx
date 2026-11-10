@@ -54,16 +54,16 @@ const SALAS_INICIALES: SalaVisual[] = [
 ];
 
 /**
- * Grupos de horario (bloques de 30 min).
- * Lunes a viernes: 08:30–22:00 (bloques 0-26).
- * Sábado: 08:30–14:00 (bloques 0-10).
+ * Grupos de horario (bloques de 45 min).
+ * Lunes a viernes: 08:30–22:00 (bloques 0-17).
+ * Sábado: 08:30–13:45 (bloques 0-6).
  */
 function gruposDelDia(esSabado: boolean): readonly (readonly [string, number, number])[] {
-  if (esSabado) return [['Mañana', 0, 10]] as const;
+  if (esSabado) return [['Mañana', 0, 6]] as const;
   return [
-    ['Mañana', 0, 10],
-    ['Tarde', 11, 19],
-    ['Noche', 20, 26],
+    ['Mañana', 0, 7],
+    ['Tarde', 8, 13],
+    ['Noche', 14, 17],
   ] as const;
 }
 
@@ -1322,7 +1322,7 @@ export default function ReservaPage() {
                       </section>
                     )}
 
-                    {/* Panel 1: Horario (Días y Bloques 0-26) */}
+                    {/* Panel 1: Horario (Días y Bloques 0-17) */}
                     {step === 1 && (
                       <section className="panel on">
                         <span className="label">Día</span>
@@ -2066,9 +2066,9 @@ export default function ReservaPage() {
                 {Object.entries(BLOQUES_HORARIOS).map(([n, info]) => {
                   const blk = Number(n);
                   const ocupado = !!editOcupacion[claveOcupacion(editFecha, editando.room, blk)];
-                  // Sábado: solo bloques 0-10 (08:30–14:00).
+                  // Sábado: solo bloques 0-6 (08:30–13:45).
                   const fueraDeHorario = editFecha
-                    ? new Date(`${editFecha}T12:00:00Z`).getUTCDay() === 6 && blk > 10
+                    ? new Date(`${editFecha}T12:00:00Z`).getUTCDay() === 6 && blk > 6
                     : false;
                   const disabled = ocupado || fueraDeHorario;
                   return (

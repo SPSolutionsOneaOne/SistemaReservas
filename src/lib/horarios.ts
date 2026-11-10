@@ -44,7 +44,7 @@ function minutosDeHora(hora: string): number {
   return h * 60 + m;
 }
 
-/** Minutos desde medianoche del inicio del bloque (0-26). */
+/** Minutos desde medianoche del inicio del bloque (0-17). */
 export function inicioBloqueMinutos(bloque: number): number {
   const info = BLOQUES_HORARIOS[bloque];
   if (!info) throw new Error(`Bloque horario inválido: ${bloque}`);
@@ -85,13 +85,13 @@ export function vencidaGracia(
 /** Inicio de la franja de uso: 08:30 (todos los días con servicio). */
 export const FRANJA_USO_INICIO_MINUTOS = 8 * 60 + 30;
 
-/** Fin de la franja: lunes a viernes 22:00, sábado 14:00. */
+/** Fin de la franja: lunes a viernes 22:00, sábado 13:45. */
 export const FRANJA_USO_FIN_SEMANA_MINUTOS = 22 * 60;
-export const FRANJA_USO_FIN_SABADO_MINUTOS = 14 * 60;
+export const FRANJA_USO_FIN_SABADO_MINUTOS = 13 * 60 + 45;
 
 /**
  * Franja de uso (horario del cliente): lunes a viernes 08:30–22:00,
- * sábado 08:30–14:00. Domingos sin servicio (igual que en reservas).
+ * sábado 08:30–13:45. Domingos sin servicio (igual que en reservas).
  */
 export function enFranjaDeUso(pared: FechaHoraPared = ahoraSantiago()): boolean {
   const diaSemana = new Date(`${pared.fecha}T12:00:00Z`).getUTCDay();
