@@ -20,7 +20,15 @@ export interface UsuarioInstitucion {
   id: string;
   /** varchar(12), unique, NOT NULL — Ej: '12.345.678-5' */
   rut: string;
-  /** varchar(150), NOT NULL */
+  /** nombre atomizado: primer nombre de pila */
+  primer_nombre: string;
+  /** nombre atomizado: segundo nombre de pila (puede ser NULL) */
+  segundo_nombre: string | null;
+  /** nombre atomizado: apellido paterno */
+  apellido_paterno: string;
+  /** nombre atomizado: apellido materno (puede ser NULL) */
+  apellido_materno: string | null;
+  /** nombre_completo es una columna GENERATED: concatena los 4 campos */
   nombre_completo: string;
   /** varchar(150), unique, NOT NULL — Dominio @institucion.cl / @inacapmail.cl */
   correo_institucional: string;
@@ -39,7 +47,10 @@ export interface UsuarioInstitucion {
 /** DTO para inserción — campos opcionales tienen defaults en DB */
 export interface UsuarioInstitucionInsert {
   rut: string;
-  nombre_completo: string;
+  primer_nombre: string;
+  segundo_nombre?: string | null;
+  apellido_paterno: string;
+  apellido_materno?: string | null;
   correo_institucional: string;
   password_hash: string;
   rol: RolUsuario;
