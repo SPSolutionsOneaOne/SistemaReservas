@@ -206,12 +206,22 @@ export async function crearReservaConValidacion(
     };
   }
 
-  // 7. Generar código de reserva secuencial
-  const { count } = await supabaseReservas
+  // 7. Generar código de reserva secuencial.
+  // Se basa en el máximo código existente, no en count(*): count deja de
+  // reflejar los números usados luego de eliminar reservas y produce
+  // colisión con códigos que ya existieron antes.
+  const { data: ultimo } = await supabaseReservas
     .from('reservas')
-    .select('*', { count: 'exact', head: true });
+    .select('codigo_reserva')
+    .order('codigo_reserva', { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
-  const codigoReserva = generarCodigoReserva((count ?? 0) + 1);
+  let ultimoNumero = 0;
+  const coincidencia = ultimo?.codigo_reserva?.match(/(\d+)$/);
+  if (coincidencia) ultimoNumero = parseInt(coincidencia[1], 10);
+
+  const codigoReserva = generarCodigoReserva(ultimoNumero + 1);
 
   // 8. Insertar reserva (Restricción UNIQUE(id_sala, fecha, bloque_horario) -> 409 si solape)
   const reservaInsert: ReservaInsert = {
