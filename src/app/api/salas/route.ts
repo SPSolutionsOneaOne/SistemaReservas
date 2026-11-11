@@ -49,8 +49,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const tiposValidos: TipoSala[] = ['lab', 'sala', 'aud', 'conf', 'bib'];
-    if (!tiposValidos.includes(tipo)) {
+    // Validar tipo contra el catálogo dinámico tipos_sala (DB-Reservas)
+    const supabase = getSupabaseReservasAdmin();
+    const { data: tipoRow, error: errTipo } = await supabase
+      .from('tipos_sala')
+      .select('id')
+      .eq('id', tipo)
+      .maybeSingle();
+
+    if (errTipo) {
+      console.error('[salas POST] Error consultando tipos_sala:', errTipo);
+      return NextResponse.json({ error: 'Error interno al validar el tipo de sala' }, { status: 500 });
+    }
+    if (!tipoRow) {
       return NextResponse.json({ error: 'Tipo de sala inválido' }, { status: 400 });
     }
 

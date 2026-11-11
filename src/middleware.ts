@@ -19,6 +19,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Catálogo de tipos de sala: requiere sesión; escritura solo administrador.
+  if (pathname === '/api/tipos-sala' && method !== 'GET') {
+    const sessionCheck = await getSessionFromRequest(request);
+    if (!sessionCheck) {
+      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+    }
+    if (sessionCheck.rol !== 'administrador') {
+      return NextResponse.json(
+        { error: 'Acceso denegado: solo el Administrador puede gestionar tipos de sala' },
+        { status: 403 }
+      );
+    }
+    return NextResponse.next();
+  }
+
   const session = await getSessionFromRequest(request);
 
   if (!session) {
@@ -57,6 +72,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/api/salas',
+    '/api/tipos-sala',
     '/api/bitacora/:path*',
     '/api/reservas',
     '/api/reservas/:path*',

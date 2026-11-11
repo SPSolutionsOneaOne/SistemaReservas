@@ -4,29 +4,21 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import QRCode from 'qrcode';
 import {
   TipoSala,
+  TipoSalaDef,
   EstadoHabilitacion,
   UsuarioInstitucion,
   BLOQUES_HORARIOS,
-  PREFIJOS_SALA,
 } from '@/types/database';
 import { validarRutChileno } from '@/lib/validators';
 
-// --- Constantes del Dominio Visual ---
-interface TipoDef {
-  id: TipoSala;
-  code: string;
-  name: string;
-  c: string;
-  cap: number;
-  sug: string[];
-}
-
-const TIPOS: TipoDef[] = [
-  { id: 'lab', code: 'LAB', name: 'Laboratorio', c: 'var(--t-lab)', cap: 30, sug: ['Lab Turing', 'Lab Lovelace', 'Lab Hopper', 'Lab Knuth'] },
-  { id: 'sala', code: 'SALA', name: 'Sala de clases', c: 'var(--t-sala)', cap: 35, sug: ['Sala Mistral', 'Sala Neruda', 'Sala Parra', 'Sala Huidobro'] },
-  { id: 'aud', code: 'AUD', name: 'Auditorio', c: 'var(--t-aud)', cap: 100, sug: ['Auditorio Atacama', 'Auditorio Patagonia', 'Auditorio Rapa Nui'] },
-  { id: 'conf', code: 'CONF', name: 'Reuniones', c: 'var(--t-conf)', cap: 12, sug: ['Sala Cordillera', 'Sala Altiplano', 'Sala Pehuén'] },
-  { id: 'bib', code: 'BIB', name: 'Biblioteca', c: 'var(--t-bib)', cap: 6, sug: ['Estudio Maipo', 'Estudio Loa', 'Estudio Biobío', 'Estudio Aconcagua'] },
+// --- Catálogo de tipos de sala (dinámico, gestionado por el administrador) ---
+// Los 5 tipos por defecto se listan como respaldo si la API aún no responde.
+const TIPOS_DEFECTO: TipoSalaDef[] = [
+  { id: 'lab', nombre: 'Laboratorio', prefijo: 'LAB', aforo_sugerido: 30, color: '#2563EB', orden: 1 },
+  { id: 'sala', nombre: 'Sala de clases', prefijo: 'SAL', aforo_sugerido: 35, color: '#0D9488', orden: 2 },
+  { id: 'aud', nombre: 'Auditorio', prefijo: 'AUD', aforo_sugerido: 100, color: '#C2410C', orden: 3 },
+  { id: 'conf', nombre: 'Reuniones', prefijo: 'CON', aforo_sugerido: 12, color: '#7C3AED', orden: 4 },
+  { id: 'bib', nombre: 'Biblioteca', prefijo: 'BIB', aforo_sugerido: 6, color: '#BE185D', orden: 5 },
 ];
 
 interface SalaVisual {
@@ -176,6 +168,7 @@ export default function ReservaPage() {
 
   // Salas & Reservas
   const [salas, setSalas] = useState<SalaVisual[]>(SALAS_INICIALES);
+  const [tipos, setTipos] = useState<TipoSalaDef[]>(TIPOS_DEFECTO);
   const [reservas, setReservas] = useState<ReservaVisual[]>([]);
   const [ocupacion, setOcupacion] = useState<Record<string, true>>({});
   const [ocupacionCargando, setOcupacionCargando] = useState(false);
@@ -187,6 +180,17 @@ export default function ReservaPage() {
   const [scanning, setScanning] = useState(false);
   const [manualCodeInput, setManualCodeInput] = useState('');
   const [manualCodeError, setManualCodeError] = useState('');
+
+  // Admin - Tipos de Sala (CRUD catálogo)
+  const [tipoEditandoId, setTipoEditandoId] = useState<string | null>(null);
+  const [tipoNombre, setTipoNombre] = useState('');
+  const [tipoPrefijo, setTipoPrefijo] = useState('');
+  const [tipoAforo, setTipoAforo] = useState(30);
+  const [tipoColor, setTipoColor] = useState('#5B9BD5');
+  const [tipoOrden, setTipoOrden] = useState(0);
+  const [tipoMsg, setTipoMsg] = useState('');
+  const [tipoGuardando, setTipoGuardando] = useState(false);
+  const [tipoEliminandoId, setTipoEliminandoId] = useState<string | null>(null);
 
   // Admin - Nueva Sala (SalaFactory)
   const [adminType, setAdminType] = useState<TipoSala>('lab');
@@ -219,6 +223,8 @@ export default function ReservaPage() {
   const [editSalaGuardando, setEditSalaGuardando] = useState(false);
   const [editSalaError, setEditSalaError] = useState('');
   const [eliminandoSalaCode, setEliminandoSalaCode] = useState<string | null>(null);
+  // Colapso del catálogo de salas por tipo (true = plegado)
+  const [tiposColapsados, setTiposColapsados] = useState<Record<string, true>>({});
 
   // 7 días disponibles
   const days = useMemo(() => {
@@ -257,6 +263,25 @@ export default function ReservaPage() {
       })
       .catch(() => {});
   }, []);
+
+  // Cargar el catálogo de tipos de sala una vez autenticado
+  // (GET /api/tipos-sala requiere sesión; en el arranque anónimo devolvería 401).
+  useEffect(() => {
+    if (!currentUser) {
+      setTipos(TIPOS_DEFECTO);
+      return;
+    }
+
+    const controller = new AbortController();
+    fetch('/api/tipos-sala', { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) setTipos(data);
+      })
+      .catch(() => {});
+
+    return () => controller.abort();
+  }, [currentUser]);
 
   // Cargar las reservas del usuario autenticado (no solo las creadas en esta sesión).
   useEffect(() => {
@@ -868,11 +893,14 @@ export default function ReservaPage() {
 
   // Crear Sala (Admin)
   const nextAdminCode = useMemo(() => {
-    const prefijo = PREFIJOS_SALA[adminType];
+    const prefijo =
+      tipos.find((t) => t.id === adminType)?.prefijo ??
+      adminType.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3).padEnd(3, 'X');
     const existingSame = salas.filter((s) => s.type === adminType);
     const nextNum = existingSame.length + 1;
-    return `${prefijo}-${adminFloor}${nextNum.toString().padStart(2, '0')}`;
-  }, [adminType, adminFloor, salas]);
+    // Mismo esquema que SalaFactory en el servidor (AAA-00 secuencial).
+    return `${prefijo}-${nextNum.toString().padStart(2, '0')}`;
+  }, [adminType, salas, tipos]);
 
   const handleCrearSala = async () => {
     if (!adminName.trim()) {
@@ -1058,6 +1086,127 @@ export default function ReservaPage() {
       showToast('No fue posible conectar con el servidor. Intenta nuevamente.');
     } finally {
       setEliminandoSalaCode(null);
+    }
+  };
+
+  // ---- Gestión de tipos de sala (solo administrador) ----
+
+  const toggleTipoColapso = (id: string) =>
+    setTiposColapsados((prev) => {
+      const next = { ...prev };
+      if (next[id]) delete next[id];
+      else next[id] = true;
+      return next;
+    });
+
+  const recargarTipos = async () => {
+    try {
+      const resp = await fetch('/api/tipos-sala');
+      if (!resp.ok) return;
+      const data = await resp.json();
+      if (Array.isArray(data) && data.length > 0) setTipos(data);
+    } catch {
+      // Silencioso: se mantiene el catálogo actual.
+    }
+  };
+
+  const limpiarFormularioTipo = () => {
+    setTipoEditandoId(null);
+    setTipoNombre('');
+    setTipoPrefijo('');
+    setTipoAforo(30);
+    setTipoColor('#5B9BD5');
+    setTipoOrden(0);
+    setTipoMsg('');
+  };
+
+  const editarTipo = (t: TipoSalaDef) => {
+    setTipoEditandoId(t.id);
+    setTipoNombre(t.nombre);
+    setTipoPrefijo(t.prefijo);
+    setTipoAforo(t.aforo_sugerido);
+    setTipoColor(t.color);
+    setTipoOrden(t.orden);
+    setTipoMsg('');
+  };
+
+  const guardarTipo = async () => {
+    const nombre = tipoNombre.trim();
+    const prefijo = tipoPrefijo.trim().toUpperCase();
+    if (!nombre) {
+      setTipoMsg('Escribe un nombre para el tipo de sala.');
+      return;
+    }
+    if (!/^[A-Za-z]{2,5}$/.test(prefijo)) {
+      setTipoMsg('El prefijo debe tener entre 2 y 5 letras (ej: LAB).');
+      return;
+    }
+    if (!(tipoAforo > 0)) {
+      setTipoMsg('El aforo sugerido debe ser mayor a 0.');
+      return;
+    }
+
+    setTipoGuardando(true);
+    setTipoMsg('');
+    const esEdicion = tipoEditandoId !== null;
+    try {
+      const resp = await fetch('/api/tipos-sala', {
+        method: esEdicion ? 'PATCH' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          esEdicion
+            ? {
+                id: tipoEditandoId,
+                nombre,
+                prefijo,
+                aforo_sugerido: tipoAforo,
+                color: tipoColor,
+                orden: tipoOrden,
+              }
+            : {
+                nombre,
+                prefijo,
+                aforo_sugerido: tipoAforo,
+                color: tipoColor,
+                orden: tipoOrden,
+              }
+        ),
+      });
+      const data = (await resp.json().catch(() => null)) as { error?: string } | null;
+      if (!resp.ok) {
+        setTipoMsg(data?.error || 'No fue posible guardar el tipo de sala.');
+        return;
+      }
+      showToast(esEdicion ? 'Tipo de sala actualizado' : 'Tipo de sala creado');
+      limpiarFormularioTipo();
+      await recargarTipos();
+    } catch {
+      setTipoMsg('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setTipoGuardando(false);
+    }
+  };
+
+  const eliminarTipo = async (t: TipoSalaDef) => {
+    if (!window.confirm(`¿Eliminar el tipo de sala '${t.nombre}' (${t.prefijo})? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+    setTipoEliminandoId(t.id);
+    try {
+      const resp = await fetch(`/api/tipos-sala?id=${encodeURIComponent(t.id)}`, { method: 'DELETE' });
+      const data = (await resp.json().catch(() => null)) as { error?: string } | null;
+      if (!resp.ok) {
+        // El servidor explica por qué no se puede eliminar (reservas activas o salas asociadas).
+        setTipoMsg(data?.error || 'No fue posible eliminar el tipo de sala.');
+        return;
+      }
+      showToast('Tipo de sala eliminado');
+      if (tipoEditandoId === t.id) limpiarFormularioTipo();
+      await recargarTipos();
+    } catch {
+      setTipoMsg('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setTipoEliminandoId(null);
     }
   };
 
@@ -1302,17 +1451,17 @@ export default function ReservaPage() {
                       <section className="panel on">
                         <span className="label">Tipo de espacio</span>
                         <div className="types">
-                          {TIPOS.map((x) => (
+                          {tipos.map((x) => (
                             <button
                               key={x.id}
                               type="button"
                               className="type"
-                              style={{ '--c': x.c } as React.CSSProperties}
+                              style={{ '--c': x.color } as React.CSSProperties}
                               aria-pressed={selectedType === x.id}
                               onClick={() => handleSelectType(x.id)}
                             >
-                              <span className="tag">{x.code}</span>
-                              <strong>{x.name}</strong>
+                              <span className="tag">{x.prefijo}</span>
+                              <strong>{x.nombre}</strong>
                             </button>
                           ))}
                         </div>
@@ -1396,13 +1545,13 @@ export default function ReservaPage() {
                         {freeRooms.length > 0 ? (
                           <div className="rooms">
                             {freeRooms.map((r) => {
-                              const tDef = TIPOS.find((t) => t.id === r.type);
+                              const tDef = tipos.find((t) => t.id === r.type);
                               return (
                                 <button
                                   key={r.code}
                                   type="button"
                                   className="room"
-                                  style={{ '--c': tDef?.c } as React.CSSProperties}
+                                  style={{ '--c': tDef?.color } as React.CSSProperties}
                                   aria-pressed={selectedRoomCode === r.code}
                                   onClick={() => handleSelectRoom(r.code)}
                                 >
@@ -1566,7 +1715,7 @@ export default function ReservaPage() {
                             Atrás
                           </button>
                           <p>
-                            {step === 1 && selectedType && TIPOS.find((t) => t.id === selectedType)?.name}
+                            {step === 1 && selectedType && tipos.find((t) => t.id === selectedType)?.nombre}
                             {step === 2 && selectedBlock !== null && `${days[selectedDayIdx].toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })} · ${BLOQUES_HORARIOS[selectedBlock].inicio}`}
                             {step === 3 && selectedRoom && `${selectedRoom.name} · ${BLOQUES_HORARIOS[selectedBlock!].inicio}`}
                           </p>
@@ -1599,7 +1748,7 @@ export default function ReservaPage() {
                       <div>
                         <dt>Espacio</dt>
                         <dd className={selectedType ? '' : 'e'}>
-                          {selectedType ? TIPOS.find((t) => t.id === selectedType)?.name : '—'}
+                          {selectedType ? tipos.find((t) => t.id === selectedType)?.nombre : '—'}
                         </dd>
                       </div>
                       <div>
@@ -1632,13 +1781,13 @@ export default function ReservaPage() {
                   {reservas.length > 0 ? (
                     reservas.map((r) => {
                       const room = salas.find((s) => s.code === r.room);
-                      const tDef = TIPOS.find((t) => t.id === room?.type);
+                      const tDef = tipos.find((t) => t.id === room?.type);
                       return (
                         <li key={r.id} className="item">
                           <div>
                             <h3>
                               {room?.name || r.room}{' '}
-                              <span className="tag" style={{ '--c': tDef?.c, marginLeft: 6 } as React.CSSProperties}>
+                              <span className="tag" style={{ '--c': tDef?.color, marginLeft: 6 } as React.CSSProperties}>
                                 {r.room}
                               </span>
                             </h3>
@@ -1810,7 +1959,7 @@ export default function ReservaPage() {
                   <section className="card">
                     <span className="label" style={{ marginTop: 0 }}>Tipo de Sala</span>
                     <div className="row">
-                      {TIPOS.map((t) => (
+                      {tipos.map((t) => (
                         <button
                           key={t.id}
                           type="button"
@@ -1818,10 +1967,10 @@ export default function ReservaPage() {
                           aria-pressed={adminType === t.id}
                           onClick={() => {
                             setAdminType(t.id);
-                            setAdminCap(t.cap);
+                            setAdminCap(t.aforo_sugerido);
                           }}
                         >
-                          {t.name}
+                          {t.nombre}
                         </button>
                       ))}
                     </div>
@@ -1841,24 +1990,6 @@ export default function ReservaPage() {
                       maxLength={28}
                       placeholder="Ej: Sala Mistral"
                     />
-
-                    <div className="row" style={{ marginTop: 8 }}>
-                      {TIPOS.find((t) => t.id === adminType)
-                        ?.sug.filter((s) => !salas.some((r) => r.name === s))
-                        .map((s) => (
-                          <button
-                            key={s}
-                            type="button"
-                            className="pill dash"
-                            onClick={() => {
-                              setAdminName(s);
-                              setAdminMsg('');
-                            }}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                    </div>
 
                     <div className="fgrid">
                       <div>
@@ -1909,17 +2040,32 @@ export default function ReservaPage() {
                   {/* Catálogo de Salas */}
                   <section>
                     <div className="list">
-                      {TIPOS.map((t) => {
+                      {tipos.map((t) => {
                         const salasTipo = salas.filter((s) => s.type === t.id);
                         if (salasTipo.length === 0) return null;
+                        const colapsado = !!tiposColapsados[t.id];
                         return (
                           <div key={t.id} style={{ marginBottom: 14 }}>
-                            <span className="label" style={{ margin: '14px 0 6px' }}>
-                              {t.name}
-                            </span>
+                            <button
+                              type="button"
+                              className="tipo-toggle"
+                              onClick={() => toggleTipoColapso(t.id)}
+                              aria-expanded={!colapsado}
+                              aria-controls={`grupo-${t.id}`}
+                            >
+                              <span className="tipo-toggle-label">{t.nombre}</span>
+                              <span className="tipo-toggle-meta">
+                                <span className="num">{salasTipo.length} sala(s)</span>
+                                <svg className={`tipo-toggle-chevron${colapsado ? ' collapsed' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                  <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                              </span>
+                            </button>
+                            {!colapsado && (
+                            <div id={`grupo-${t.id}`}>
                             {salasTipo.map((r) => (
                               <div key={r.code} className="rrow" style={{ marginBottom: 8 }}>
-                                <span className="tag" style={{ '--c': t.c } as React.CSSProperties}>
+                                <span className="tag" style={{ '--c': t.color } as React.CSSProperties}>
                                   {r.code}
                                 </span>
                                 <div>
@@ -1960,6 +2106,137 @@ export default function ReservaPage() {
                                 </div>
                               </div>
                             ))}
+                            </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </section>
+
+                  {/* Gestión de Tipos de Sala (catálogo dinámico) */}
+                  <section className="card" style={{ gridColumn: '1 / -1' }}>
+                    <h2 className="title" style={{ fontSize: 20, margin: '0 0 4px' }}>Tipos de Sala</h2>
+                    <p style={{ color: 'var(--muted)', fontSize: 13, margin: '0 0 14px' }}>
+                      Catálogo gestionable: los tipos por defecto y los creados por ti conviven en la misma lista.
+                      Un tipo no se puede eliminar si tiene salas asociadas con reservas confirmadas futuras.
+                    </p>
+
+                    {/* Formulario crear / editar */}
+                    <div className="fgrid" style={{ marginBottom: 14 }}>
+                      <div>
+                        <label className="label" htmlFor="tipoNombre" style={{ marginTop: 0 }}>
+                          Nombre
+                        </label>
+                        <input
+                          id="tipoNombre"
+                          className="in"
+                          value={tipoNombre}
+                          onChange={(e) => { setTipoNombre(e.target.value); setTipoMsg(''); }}
+                          placeholder="Ej: Laboratorio, Casino, Bodega"
+                          maxLength={60}
+                        />
+                      </div>
+                      <div>
+                        <label className="label" htmlFor="tipoPrefijo" style={{ marginTop: 0 }}>
+                          Prefijo (2-5 letras)
+                        </label>
+                        <input
+                          id="tipoPrefijo"
+                          className="in"
+                          value={tipoPrefijo}
+                          onChange={(e) => { setTipoPrefijo(e.target.value.toUpperCase()); setTipoMsg(''); }}
+                          placeholder="Ej: LAB"
+                          maxLength={5}
+                          style={{ textTransform: 'uppercase' }}
+                        />
+                      </div>
+                      <div>
+                        <label className="label" htmlFor="tipoAforo" style={{ marginTop: 0 }}>
+                          Aforo sugerido
+                        </label>
+                        <input
+                          id="tipoAforo"
+                          type="number"
+                          min={1}
+                          inputMode="numeric"
+                          value={tipoAforo}
+                          onChange={(e) => setTipoAforo(Number(e.target.value))}
+                        />
+                      </div>
+                      <div>
+                        <label className="label" htmlFor="tipoColor" style={{ marginTop: 0 }}>
+                          Color
+                        </label>
+                        <input
+                          id="tipoColor"
+                          type="color"
+                          value={/^#[0-9a-fA-F]{6}$/.test(tipoColor) ? tipoColor : '#5B9BD5'}
+                          onChange={(e) => setTipoColor(e.target.value)}
+                          style={{ height: 44, width: '100%', padding: 4 }}
+                        />
+                      </div>
+                      <div>
+                        <label className="label" htmlFor="tipoOrden" style={{ marginTop: 0 }}>
+                          Orden
+                        </label>
+                        <input
+                          id="tipoOrden"
+                          type="number"
+                          min={0}
+                          inputMode="numeric"
+                          value={tipoOrden}
+                          onChange={(e) => setTipoOrden(Number(e.target.value))}
+                        />
+                      </div>
+                    </div>
+
+                    {tipoMsg && <p className="msg" role="alert" style={{ margin: '0 0 10px' }}>{tipoMsg}</p>}
+
+                    <div className="row" style={{ gap: 8, marginBottom: 16 }}>
+                      <button
+                        className="btn primary"
+                        type="button"
+                        disabled={tipoGuardando}
+                        onClick={guardarTipo}
+                      >
+                        {tipoGuardando ? 'Guardando…' : tipoEditandoId ? 'Guardar cambios' : 'Crear tipo de sala'}
+                      </button>
+                      {tipoEditandoId && (
+                        <button className="btn" type="button" onClick={limpiarFormularioTipo}>
+                          Cancelar edición
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Lista del catálogo (por defecto + creados por el admin) */}
+                    <div className="list">
+                      {tipos.map((t) => {
+                        const salasAsociadas = salas.filter((s) => s.type === t.id).length;
+                        return (
+                          <div key={t.id} className="rrow" style={{ marginBottom: 8 }}>
+                            <span className="tag" style={{ '--c': t.color } as React.CSSProperties}>
+                              {t.prefijo}
+                            </span>
+                            <div>
+                              <strong>{t.nombre}</strong>
+                              <span className="num">
+                                {salasAsociadas} sala(s) · Aforo sugerido {t.aforo_sugerido}
+                              </span>
+                            </div>
+                            <div className="row" style={{ gap: 8 }}>
+                              <button className="btn sm" type="button" onClick={() => editarTipo(t)}>
+                                Editar
+                              </button>
+                              <button
+                                className="btn sm danger"
+                                type="button"
+                                disabled={tipoEliminandoId === t.id}
+                                onClick={() => eliminarTipo(t)}
+                              >
+                                {tipoEliminandoId === t.id ? 'Eliminando…' : 'Eliminar'}
+                              </button>
+                            </div>
                           </div>
                         );
                       })}
@@ -2141,7 +2418,7 @@ export default function ReservaPage() {
               Editar sala {editSala.code}
             </h2>
             <p style={{ margin: '0 0 16px', color: 'var(--muted)', fontSize: 13 }}>
-              {TIPOS.find((t) => t.id === editSala.type)?.name}
+              {tipos.find((t) => t.id === editSala.type)?.nombre}
             </p>
 
             <label className="label" htmlFor="editSalaNombre" style={{ marginTop: 0 }}>

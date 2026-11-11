@@ -69,8 +69,24 @@ export type UsuarioInstitucionUpdate = Partial<
 
 // --- Tabla: public.salas (Factory Method - SalaFactory) ---
 
-/** Tipos de sala válidos según CHECK constraint */
-export type TipoSala = 'lab' | 'sala' | 'aud' | 'conf' | 'bib';
+/**
+ * Tipos de sala: catálogo dinámico administrado en la tabla public.tipos_sala
+ * (DB-Reservas). Ya no es una unión fija — el administrador puede crear,
+ * editar y eliminar tipos desde el panel. Los 5 tipos originales
+ * (lab, sala, aud, conf, bib) existen también como filas de la tabla.
+ */
+export type TipoSala = string;
+
+/** Fila de public.tipos_sala */
+export interface TipoSalaDef {
+  id: string;
+  nombre: string;
+  prefijo: string;
+  aforo_sugerido: number;
+  color: string;
+  orden: number;
+  creado_en?: string;
+}
 
 /** Estados de habilitación válidos según CHECK constraint */
 export type EstadoHabilitacion = 'activo' | 'mantencion' | 'inactivo';
@@ -81,7 +97,7 @@ export interface Sala {
   id_sala: string;
   /** varchar(100), unique, NOT NULL — Ej: 'Laboratorio Turing' */
   nombre_descriptivo: string;
-  /** varchar(30), NOT NULL — 'lab','sala','aud','conf','bib' */
+  /** varchar(30), NOT NULL, FK → tipos_sala.id */
   tipo: TipoSala;
   /** int, NOT NULL, CHECK > 0 */
   aforo: number;
@@ -238,15 +254,6 @@ export const BLOQUES_HORARIOS: Record<number, { inicio: string; fin: string }> =
   15: { inicio: '19:45', fin: '20:30' },
   16: { inicio: '20:30', fin: '21:15' },
   17: { inicio: '21:15', fin: '22:00' },
-};
-
-/** Prefijos de sigla por tipo de sala (SalaFactory) */
-export const PREFIJOS_SALA: Record<TipoSala, string> = {
-  lab:  'LAB',
-  sala: 'SAL',
-  aud:  'AUD',
-  conf: 'CON',
-  bib:  'BIB',
 };
 
 /** Dominios institucionales válidos para validación RN04 */

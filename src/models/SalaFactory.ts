@@ -1,10 +1,10 @@
 // ============================================================
 // SalaFactory — Patrón Factory Method (RF-FUN-12)
 // Genera instancias de Sala con sigla incremental formato 'AAA-00'
+// El prefijo ya no es estático: se lee de public.tipos_sala.
 // ============================================================
 
 import type { Sala, SalaInsert, TipoSala } from '@/types/database';
-import { PREFIJOS_SALA } from '@/types/database';
 import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 
 /**
@@ -13,15 +13,40 @@ import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
  *
  * Ejemplo:
  *   tipo='lab' → busca último LAB-XX → genera LAB-(XX+1)
- *   tipo='aud' → busca último AUD-XX → genera AUD-(XX+1)
+ *   El prefijo proviene de tipos_sala.prefijo; si el tipo no existe,
+ *   se deriva de las primeras letras del slug en mayúscula.
  */
 export class SalaFactory {
+  /** Prefijo del tipo desde la BD; fallback derivado del slug. */
+  static async generarPrefijo(tipo: TipoSala): Promise<string> {
+    const supabase = getSupabaseReservasAdmin();
+    const { data, error } = await supabase
+      .from('tipos_sala')
+      .select('prefijo')
+      .eq('id', tipo)
+      .maybeSingle();
+
+    if (error) {
+      console.error(`[SalaFactory] Error consultando tipos_sala para '${tipo}': ${error.message}`);
+    }
+
+    const prefijo = data?.prefijo as string | undefined;
+    if (prefijo && /^[A-Z]{2,5}$/.test(prefijo)) return prefijo;
+
+    const derivado = String(tipo)
+      .toUpperCase()
+      .replace(/[^A-Z]/g, '')
+      .slice(0, 3)
+      .padEnd(3, 'X');
+    return derivado;
+  }
+
   /**
    * Genera el siguiente id_sala disponible para el tipo dado.
    * Consulta la DB para obtener el último ID y lo incrementa.
    */
   static async generarIdSala(tipo: TipoSala): Promise<string> {
-    const prefijo = PREFIJOS_SALA[tipo];
+    const prefijo = await this.generarPrefijo(tipo);
     const supabase = getSupabaseReservasAdmin();
 
     // Buscar la última sala de este tipo ordenada descendente
@@ -42,7 +67,7 @@ export class SalaFactory {
       const ultimoId = data[0].id_sala; // Ej: 'LAB-05'
       const partes = ultimoId.split('-');
       const ultimoNumero = parseInt(partes[1], 10);
-      siguienteNumero = ultimoNumero + 1;
+      if (Number.isFinite(ultimoNumero)) siguienteNumero = ultimoNumero + 1;
     }
 
     return `${prefijo}-${siguienteNumero.toString().padStart(2, '0')}`;
