@@ -194,6 +194,8 @@ export default function ReservaPage() {
 
   // Admin - Nueva Sala (SalaFactory)
   const [adminType, setAdminType] = useState<TipoSala>('lab');
+  // Tab activo del panel administrativo: 'crear' | 'gestionar' | 'tipos'
+  const [adminTab, setAdminTab] = useState<'crear' | 'gestionar' | 'tipos'>('gestionar');
   const [adminName, setAdminName] = useState('');
   const [adminCap, setAdminCap] = useState(30);
   const [adminFloor, setAdminFloor] = useState(1);
@@ -223,8 +225,8 @@ export default function ReservaPage() {
   const [editSalaGuardando, setEditSalaGuardando] = useState(false);
   const [editSalaError, setEditSalaError] = useState('');
   const [eliminandoSalaCode, setEliminandoSalaCode] = useState<string | null>(null);
-  // Colapso del catálogo de salas por tipo (true = plegado)
-  const [tiposColapsados, setTiposColapsados] = useState<Record<string, true>>({});
+  // Expansión del catálogo de salas por tipo (true = desplegado; todo colapsado por defecto)
+  const [tiposExpandidos, setTiposExpandidos] = useState<Record<string, true>>({});
 
   // 7 días disponibles
   const days = useMemo(() => {
@@ -1091,8 +1093,8 @@ export default function ReservaPage() {
 
   // ---- Gestión de tipos de sala (solo administrador) ----
 
-  const toggleTipoColapso = (id: string) =>
-    setTiposColapsados((prev) => {
+  const toggleTipoExpandir = (id: string) =>
+    setTiposExpandidos((prev) => {
       const next = { ...prev };
       if (next[id]) delete next[id];
       else next[id] = true;
@@ -1955,25 +1957,60 @@ export default function ReservaPage() {
             {view === 'admin' && esAdmin && (
               <div>
                 <h1 className="title">Gestión de Salas e Infraestructura</h1>
-                <div className="admin" style={{ marginTop: 12 }}>
+                <div className="admin-tabs" role="tablist" aria-label="Secciones de administración">
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-admin-crear"
+                    aria-selected={adminTab === 'crear'}
+                    aria-controls="panel-admin-crear"
+                    className={adminTab === 'crear' ? 'on' : ''}
+                    onClick={() => setAdminTab('crear')}
+                  >
+                    Crear sala
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-admin-gestionar"
+                    aria-selected={adminTab === 'gestionar'}
+                    aria-controls="panel-admin-gestionar"
+                    className={adminTab === 'gestionar' ? 'on' : ''}
+                    onClick={() => setAdminTab('gestionar')}
+                  >
+                    Gestionar salas
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-admin-tipos"
+                    aria-selected={adminTab === 'tipos'}
+                    aria-controls="panel-admin-tipos"
+                    className={adminTab === 'tipos' ? 'on' : ''}
+                    onClick={() => setAdminTab('tipos')}
+                  >
+                    Tipos de sala
+                  </button>
+                </div>
+                {adminTab === 'crear' && (
+                <div className="admin" id="panel-admin-crear" role="tabpanel" aria-labelledby="tab-admin-crear" style={{ marginTop: 12, gridTemplateColumns: 'minmax(0, 480px)' }}>
                   <section className="card">
-                    <span className="label" style={{ marginTop: 0 }}>Tipo de Sala</span>
-                    <div className="row">
+                    <label className="label" htmlFor="adType" style={{ marginTop: 0 }}>Tipo de Sala</label>
+                    <select
+                      id="adType"
+                      className="in"
+                      value={adminType}
+                      onChange={(e) => {
+                        const id = e.target.value;
+                        const t = tipos.find((x) => x.id === id);
+                        setAdminType(id);
+                        if (t) setAdminCap(t.aforo_sugerido);
+                      }}
+                    >
                       {tipos.map((t) => (
-                        <button
-                          key={t.id}
-                          type="button"
-                          className="pill"
-                          aria-pressed={adminType === t.id}
-                          onClick={() => {
-                            setAdminType(t.id);
-                            setAdminCap(t.aforo_sugerido);
-                          }}
-                        >
-                          {t.nombre}
-                        </button>
+                        <option key={t.id} value={t.id}>{t.nombre}</option>
                       ))}
-                    </div>
+                    </select>
 
                     <label className="label" htmlFor="adName">
                       Nombre descriptivo
@@ -2037,19 +2074,23 @@ export default function ReservaPage() {
                     </button>
                   </section>
 
+                </div>
+                )}
+                {adminTab === 'gestionar' && (
+                <div className="admin" id="panel-admin-gestionar" role="tabpanel" aria-labelledby="tab-admin-gestionar" style={{ marginTop: 12, gridTemplateColumns: 'minmax(0, 760px)' }}>
                   {/* Catálogo de Salas */}
                   <section>
                     <div className="list">
                       {tipos.map((t) => {
                         const salasTipo = salas.filter((s) => s.type === t.id);
                         if (salasTipo.length === 0) return null;
-                        const colapsado = !!tiposColapsados[t.id];
+                        const colapsado = !tiposExpandidos[t.id];
                         return (
                           <div key={t.id} style={{ marginBottom: 14 }}>
                             <button
                               type="button"
                               className="tipo-toggle"
-                              onClick={() => toggleTipoColapso(t.id)}
+                              onClick={() => toggleTipoExpandir(t.id)}
                               aria-expanded={!colapsado}
                               aria-controls={`grupo-${t.id}`}
                             >
@@ -2114,6 +2155,10 @@ export default function ReservaPage() {
                     </div>
                   </section>
 
+                </div>
+                )}
+                {adminTab === 'tipos' && (
+                <div className="admin admin-tipos" id="panel-admin-tipos" role="tabpanel" aria-labelledby="tab-admin-tipos" style={{ marginTop: 12, gridTemplateColumns: 'minmax(0, 760px)' }}>
                   {/* Gestión de Tipos de Sala (catálogo dinámico) */}
                   <section className="card" style={{ gridColumn: '1 / -1' }}>
                     <h2 className="title" style={{ fontSize: 20, margin: '0 0 4px' }}>Tipos de Sala</h2>
@@ -2243,6 +2288,7 @@ export default function ReservaPage() {
                     </div>
                   </section>
                 </div>
+                )}
               </div>
             )}
           </>
