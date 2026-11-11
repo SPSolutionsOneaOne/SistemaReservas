@@ -440,7 +440,7 @@ export default function ReservaPage() {
       }
 
       setEstudianteValido(data.usuario);
-      setEstudianteMsg(`✅ Estudiante verificado: ${data.usuario.nombre_completo} (${data.usuario.carrera_o_departamento || 'INACAP'})`);
+      setEstudianteMsg(`✅ Estudiante verificado: ${data.usuario.nombre_completo} (${data.usuario.carrera_o_departamento || 'Institución'})`);
     } catch {
       setEstudianteValido(null);
       setEstudianteMsg('No fue posible validar al estudiante. Intenta nuevamente.');
@@ -1173,12 +1173,9 @@ export default function ReservaPage() {
           <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-10 px-4">
             <div className="card shadow-lg w-full max-w-md p-8 border border-slate-200/80">
               <div className="text-center mb-6">
-                <span className="inline-block bg-red-600 text-white font-extrabold px-3 py-1 rounded text-lg tracking-wider mb-2">
-                  INACAP
-                </span>
                 <h1 className="title" style={{ margin: '4px 0 6px', fontSize: 28 }}>Acceso Institucional</h1>
                 <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>
-                  Portal Integrado de Reservas e Infraestructura
+                  Portal de Reservas e Infraestructura
                 </p>
               </div>
 
@@ -1196,7 +1193,7 @@ export default function ReservaPage() {
                   required
                 />
                 <p className="hint" style={{ textAlign: 'left', marginTop: 8 }}>
-                  También puedes ingresar con tu correo @inacapmail.cl
+                  También puedes ingresar con tu correo institucional
                 </p>
 
                 <label className="label" htmlFor="logPass">

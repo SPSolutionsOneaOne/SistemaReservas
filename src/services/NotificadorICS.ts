@@ -46,11 +46,11 @@ export class GeneradorICS {
     return [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//INACAP//Sistema de Reservas v1.0//ES',
+      'PRODID:-//Sistema de Reservas//Sistema v1.0//ES',
       'CALSCALE:GREGORIAN',
       'METHOD:REQUEST',
       'BEGIN:VEVENT',
-      `UID:${reserva.codigo_reserva}-${reserva.id_reserva}@inacap.cl`,
+      `UID:${reserva.codigo_reserva}-${reserva.id_reserva}@institucion.cl`,
       `DTSTAMP:${dtStamp}`,
       `DTSTART:${dtStart}`,
       `DTEND:${dtEnd}`,

@@ -32,7 +32,7 @@ Se corrigieron los diez puntos de seguridad identificados. La aplicación pasó 
 ```mermaid
 flowchart LR
     U[Usuario] --> B[Navegador]
-    B -->|HTTPS + cookie inacap_session| N[Next.js]
+    B -->|HTTPS + cookie institucion_session| N[Next.js]
     N -->|Verifica HMAC + rol + titularidad| N
     N -->|HTTPS / service_role| I[(DB-Institucional)]
     N -->|HTTPS / service_role| R[(DB-Reservas)]
@@ -40,7 +40,7 @@ flowchart LR
 
 ### Capas de defensa
 
-1. **Cookie de sesión firmada:** `inacap_session` contiene `{ rut, rol, iat, exp }` firmado con HMAC-SHA256.
+1. **Cookie de sesión firmada:** `institucion_session` contiene `{ rut, rol, iat, exp }` firmado con HMAC-SHA256.
 2. **Middleware fail-closed:** si la ruta está protegida y no hay sesión válida, responde `401`.
 3. **Autorización en la ruta API:** cada endpoint vuelve a validar sesión y rol (defensa en profundidad).
 4. **Autorización por titularidad:** un usuario no administrativo solo opera sobre sus propias reservas.
@@ -71,10 +71,10 @@ flowchart LR
 
 ### Punto 1 — Cookies de sesión sin firmar
 
-**Problema:** `inacap_session_rol` e `inacap_session_rut` eran cookies planas. Cualquiera podía escribir `inacap_session_rol=administrador` y asumir ese rol.
+**Problema:** `institucion_session_rol` e `institucion_session_rut` eran cookies planas. Cualquiera podía escribir `institucion_session_rol=administrador` y asumir ese rol.
 
 **Solución:**
-- Se reemplazaron por una única cookie `inacap_session`.
+- Se reemplazaron por una única cookie `institucion_session`.
 - El valor es un token `base64url(payload).base64url(HMAC-SHA256)`.
 - El payload contiene `rut`, `rol`, `iat` y `exp`.
 - `verifySession()` valida firma, formato, expiración, rol permitido y coherencia de fechas.
@@ -86,7 +86,7 @@ flowchart LR
 - `src/app/api/auth/logout/route.ts`
 - `src/middleware.ts`
 
-**Verificación:** un token con el rol alterado pero con la firma original responde `401`. Una cookie `inacap_session_rol=administrador` sin token firmado responde `401`.
+**Verificación:** un token con el rol alterado pero con la firma original responde `401`. Una cookie `institucion_session_rol=administrador` sin token firmado responde `401`.
 
 **Resultado:** ✅ Aprobado.
 

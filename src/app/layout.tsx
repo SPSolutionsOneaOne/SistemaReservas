@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Reserva de Salas — INACAP',
+  title: 'Reserva de Salas',
   description: 'Sistema de Gestión y Reserva de Salas, Laboratorios y Auditorios',
 };
 

@@ -46,8 +46,8 @@ export function validarRutChileno(rut: string): boolean {
 }
 
 /**
- * Valida que el correo pertenezca a un dominio institucional válido (RN04).
- * Dominios: @institucion.cl, @inacapmail.cl
+ * Valida que el correo pertenezca al dominio institucional (RN04).
+ * Dominio: @institucion.cl
  */
 export function validarCorreoInstitucional(correo: string): boolean {
   const correoLower = correo.toLowerCase().trim();

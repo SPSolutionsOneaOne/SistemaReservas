@@ -19,9 +19,13 @@ export interface SessionPayload {
   exp: number;
 }
 
-export const SESSION_COOKIE = 'inacap_session';
+export const SESSION_COOKIE = 'institucion_session';
 export const SESSION_TTL_SECONDS = 60 * 60 * 8; // 8 horas
-export const LEGACY_SESSION_COOKIES = ['inacap_session_rol', 'inacap_session_rut'];
+export const LEGACY_SESSION_COOKIES = [
+  'inacap_session_rol',
+  'inacap_session_rut',
+  'inacap_session',
+];
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();

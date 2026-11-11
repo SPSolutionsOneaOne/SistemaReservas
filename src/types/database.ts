@@ -30,7 +30,7 @@ export interface UsuarioInstitucion {
   apellido_materno: string | null;
   /** nombre_completo es una columna GENERATED: concatena los 4 campos */
   nombre_completo: string;
-  /** varchar(150), unique, NOT NULL — Dominio @institucion.cl / @inacapmail.cl */
+  /** varchar(150), unique, NOT NULL — Dominio @institucion.cl */
   correo_institucional: string;
   /** text, NOT NULL — Cifrado con Argon2id (ISO/IEC 27002:2022) */
   password_hash: string;
@@ -252,7 +252,6 @@ export const PREFIJOS_SALA: Record<TipoSala, string> = {
 /** Dominios institucionales válidos para validación RN04 */
 export const DOMINIOS_INSTITUCIONALES = [
   '@institucion.cl',
-  '@inacapmail.cl',
 ] as const;
 
 /** Máximo de ausencias antes de bloqueo */
