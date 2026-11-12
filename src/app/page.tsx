@@ -10,7 +10,7 @@ import {
   UsuarioInstitucion,
   BLOQUES_HORARIOS,
 } from '@/types/database';
-import { validarRutChileno } from '@/lib/validators';
+import { validarRutChileno, BLOQUE_MAXIMO, BLOQUE_MAXIMO_SABADO } from '@/lib/validators';
 
 // --- Catálogo de tipos de sala (dinámico, gestionado por el administrador) ---
 // Los 5 tipos por defecto se listan como respaldo si la API aún no responde.
@@ -590,6 +590,26 @@ export default function ReservaPage() {
     const day = days[selectedDayIdx];
     return salas.filter((r) => r.type === selectedType && r.estado === 'activo' && isRoomFree(r, day, selectedBlock));
   }, [salas, selectedType, selectedDayIdx, selectedBlock, days, isRoomFree]);
+
+  /**
+   * Próximo bloque disponible HOY para el tipo seleccionado (mismo día, mismo tipo).
+   * Cálculo local: usa ocupación y catálogo ya cargados; sin requests extra.
+   * null si hoy no hay ninguno o no hay tipo elegido.
+   */
+  const proximoBloqueDisponible = useMemo(() => {
+    if (!selectedType) return null;
+    const day = days[selectedDayIdx];
+    if (!day) return null;
+    if (day.getDay() === 0) return null; // domingo cerrado
+    const maxBloque = day.getDay() === 6 ? BLOQUE_MAXIMO_SABADO : BLOQUE_MAXIMO;
+    for (let b = 0; b <= maxBloque; b++) {
+      const hayLibres = salas.some(
+        (r) => r.type === selectedType && r.estado === 'activo' && isRoomFree(r, day, b)
+      );
+      if (hayLibres) return b;
+    }
+    return null;
+  }, [selectedType, selectedDayIdx, days, salas, isRoomFree]);
 
   const handleSelectType = (tipo: TipoSala) => {
     setSelectedType(tipo);
@@ -1802,6 +1822,29 @@ export default function ReservaPage() {
                             </div>
                           </div>
                         ))}
+
+                        {/* Sugerencia: próximo bloque hoy disponible para este tipo */}
+                        {proximoBloqueDisponible !== null ? (
+                          <p className="hint-proximo">
+                            Próximo disponible hoy: {BLOQUES_HORARIOS[proximoBloqueDisponible].inicio} – {BLOQUES_HORARIOS[proximoBloqueDisponible].fin}
+                            {selectedBlock !== proximoBloqueDisponible && (
+                              <>
+                                {' '}
+                                <button
+                                  type="button"
+                                  className="hint-proximo-btn"
+                                  onClick={() => handleSelectBlock(proximoBloqueDisponible)}
+                                >
+                                  Ir al bloque →
+                                </button>
+                              </>
+                            )}
+                          </p>
+                        ) : (
+                          <p className="hint-proximo">
+                            No hay salas de este tipo disponibles hoy. Prueba con otro día o tipo de sala.
+                          </p>
+                        )}
                       </section>
                     )}
 
@@ -1832,7 +1875,29 @@ export default function ReservaPage() {
                             })}
                           </div>
                         ) : (
-                          <div className="empty">No quedan salas libres a esta hora.</div>
+                          <div className="empty">
+                            <p style={{ margin: '0 0 10px' }}>No quedan salas libres a esta hora.</p>
+                            {proximoBloqueDisponible !== null ? (
+                              <p className="hint" style={{ margin: 0 }}>
+                                Próximo bloque disponible hoy: {BLOQUES_HORARIOS[proximoBloqueDisponible].inicio} – {BLOQUES_HORARIOS[proximoBloqueDisponible].fin}{' '}
+                                <button
+                                  type="button"
+                                  className="hint-proximo-btn"
+                                  onClick={() => {
+                                    setSelectedBlock(proximoBloqueDisponible);
+                                    setSelectedRoomCode(null);
+                                    setStep(1);
+                                  }}
+                                >
+                                  Volver y elegir →
+                                </button>
+                              </p>
+                            ) : (
+                              <p className="hint" style={{ margin: 0 }}>
+                                Sin disponibilidad hoy para este tipo; prueba con otro día o tipo de sala.
+                              </p>
+                            )}
+                          </div>
                         )}
                       </section>
                     )}

@@ -1414,3 +1414,24 @@ textarea {
 .print-qr img, .print-qr svg { width: 320px; height: auto; display: block; margin: 0 auto 10px; }
 .print-foot { font-size: 13px; color: #333; line-height: 1.5; margin: 0 0 10px; }
 .print-manual { font-size: 44px; font-weight: 800; letter-spacing: 0.3em; }
+
+/* Sugerencia de próximo bloque disponible */
+.hint-proximo {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.hint-proximo-btn {
+  background: none;
+  border: 0;
+  padding: 0 2px;
+  font: inherit;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.hint-proximo-btn:hover {
+  filter: brightness(0.9);
+}
