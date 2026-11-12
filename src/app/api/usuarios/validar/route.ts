@@ -72,27 +72,17 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 3. Minimización de datos:
-    //    - Personal administrativo: nombre y carrera para confirmar al estudiante.
-    //    - Alumnos/docentes: solo confirmación de validez, sin datos personales.
-    if (ROLES_STAFF.includes(auth.session.rol)) {
-      return NextResponse.json(
-        {
-          usuario: {
-            rut: usuario.rut,
-            nombre_completo: usuario.nombre_completo,
-            carrera_o_departamento: usuario.carrera_o_departamento,
-            estado_activo: usuario.estado_activo,
-          },
-          bloqueado,
-          mensajeBloqueo,
-        },
-        { headers: { 'Cache-Control': 'no-store' } }
-      );
-    }
+    // 3. Todos los usuarios autenticados ven RUT + nombre al validar un
+    //    asistente (RF-USA-06: la identidad se obtiene de la sesión y el
+    //    padrón, sin ingreso manual). Carrera y correo se reservan al
+    //    personal administrativo; nunca se entregan fuera de sesión.
+    const base = { rut: usuario.rut, nombre_completo: usuario.nombre_completo };
+    const enriquecido = ROLES_STAFF.includes(auth.session.rol)
+      ? { ...base, carrera_o_departamento: usuario.carrera_o_departamento, estado_activo: usuario.estado_activo }
+      : { ...base, estado_activo: usuario.estado_activo };
 
     return NextResponse.json(
-      { valido: true },
+      { usuario: enriquecido, bloqueado, mensajeBloqueo },
       { headers: { 'Cache-Control': 'no-store' } }
     );
   } catch (err: unknown) {
