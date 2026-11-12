@@ -21,10 +21,14 @@ export async function GET(request: NextRequest) {
     const id_sala = searchParams.get('id_sala');
 
     const supabase = getSupabaseReservasAdmin();
+    // Cache-buster post-INSERT: variar la URL (limit aleatorio) para no
+    // traer la respuesta cacheada exacta de una consulta anterior.
+    const limite = 10000 + Math.floor(Math.random() * 1000);
     let query = supabase
       .from('salas')
       .select('id_sala, nombre_descriptivo, tipo, aforo, piso, estado_habilitacion, qr_token, codigo_manual, tipos_sala(color)')
-      .order('id_sala', { ascending: true });
+      .order('id_sala', { ascending: true })
+      .limit(limite);
 
     if (id_sala) query = query.eq('id_sala', id_sala);
 

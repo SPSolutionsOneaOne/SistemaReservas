@@ -15,7 +15,11 @@ export async function GET(request: NextRequest) {
 
     // No exponer qr_token/codigo_manual: son secretos de asistencia presencial.
     const supabase = getSupabaseReservasAdmin();
-    let query = supabase.from('salas').select('id_sala, tipo, nombre_descriptivo, aforo, piso, estado_habilitacion');
+    // Limite aleatorio: la capa de red de Supabase cachea GET por URL
+    // exacta; sin esto, tras un INSERT una query idéntica devuelve filas
+    // vencidas (p. ej., la sala recién creada no aparece en la lista).
+    const limite = 10000 + Math.floor(Math.random() * 1000);
+    let query = supabase.from('salas').select('id_sala, tipo, nombre_descriptivo, aforo, piso, estado_habilitacion').limit(limite);
 
     if (tipo) query = query.eq('tipo', tipo);
     if (piso) query = query.eq('piso', parseInt(piso, 10));

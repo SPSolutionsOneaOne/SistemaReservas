@@ -6,6 +6,21 @@
 
 import type { Sala, SalaInsert, TipoSala } from '@/types/database';
 import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
+import { randomBytes, randomInt } from 'crypto';
+
+/** Token QR: 12 chars alfanuméricos en mayúscula (p. ej. 'RESERVA-SALAS|TOKEN'). */
+function generarQrToken(): string {
+  const alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const bytes = randomBytes(12);
+  let token = '';
+  for (let i = 0; i < 12; i++) token += alfabeto[bytes[i] % alfabeto.length];
+  return token;
+}
+
+/** Código manual: 6 dígitos, relleno con ceros. */
+function generarCodigoManual(): string {
+  return String(randomInt(0, 1000000)).padStart(6, '0');
+}
 
 /**
  * Factory Method para la creación de Salas.
@@ -74,7 +89,9 @@ export class SalaFactory {
   }
 
   /**
-   * Crea una nueva sala con id autogenerado.
+   * Crea una nueva sala con id autogenerado y QR/código manual únicos.
+   * Reintenta hasta 5 veces si hay colisión de unicidad en qr_token o
+   * codigo_manual (improbable, pero posible).
    * @returns La sala insertada completa.
    */
   static async crearSala(
@@ -83,22 +100,34 @@ export class SalaFactory {
     const supabase = getSupabaseReservasAdmin();
     const idSala = await this.generarIdSala(params.tipo);
 
-    const nuevaSala: SalaInsert = {
-      id_sala: idSala,
-      ...params,
-    };
+    for (let intento = 0; intento < 5; intento++) {
+      const nuevaSala = {
+        id_sala: idSala,
+        qr_token: generarQrToken(),
+        codigo_manual: generarCodigoManual(),
+        ...params,
+      };
 
-    const { data, error } = await supabase
-      .from('salas')
-      .insert(nuevaSala)
-      .select()
-      .single();
+      const { data, error } = await supabase
+        .from('salas')
+        .insert(nuevaSala)
+        .select()
+        .single();
 
-    if (error) {
+      if (!error) {
+        return data as Sala;
+      }
+
+      // 23505 = unique_violation: regenerar token/código y reintentar.
+      if (error.code === '23505' && intento < 4) {
+        console.warn(`[SalaFactory] Colisión de unicidad QR/código manual (intento ${intento + 1}); regenerando…`);
+        continue;
+      }
+
       throw new Error(`[SalaFactory] Error al crear sala: ${error.message}`);
     }
 
-    return data as Sala;
+    throw new Error('[SalaFactory] No se pudo crear la sala: no fue posible garantizar códigos únicos');
   }
 }
 

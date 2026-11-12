@@ -1119,6 +1119,8 @@ export default function ReservaPage() {
       setAdminName('');
       setAdminMsg('');
       showToast(`Sala creada: ${salaCreada.code}`);
+      // Refrescar el módulo QR (la nueva sala ya trae QR/código manual)
+      recargarQrSalas();
       openQrModal(salaCreada);
     } catch {
       setAdminMsg('No fue posible conectar con el servidor. Intenta nuevamente.');
