@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import QRCode from 'qrcode';
+import jsQR from 'jsqr';
 import {
   TipoSala,
   TipoSalaDef,
@@ -28,6 +29,22 @@ interface SalaVisual {
   cap: number;
   floor: number;
   estado: EstadoHabilitacion;
+  /** Solo presentes cuando la respuesta proviene del servidor con datos del QR */
+  qrToken?: string;
+  codigoManual?: string;
+}
+
+/** Datos completos de un QR físico (solo administrador) */
+interface SalaQR {
+  id_sala: string;
+  nombre_descriptivo: string;
+  tipo: TipoSala;
+  aforo: number;
+  piso: number;
+  estado_habilitacion?: EstadoHabilitacion;
+  qr_token: string;
+  codigo_manual: string;
+  color?: string;
 }
 
 const SALAS_INICIALES: SalaVisual[] = [
@@ -107,15 +124,6 @@ function formatearIdentificadorLogin(v: string): string {
   return fmtRut(v);
 }
 
-function hashCode(str: string): number {
-  let hash = 2166136261;
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0) / 4294967296;
-}
-
 /**
  * Fecha local en formato YYYY-MM-DD.
  * No usar toISOString(): convierte a UTC y puede desplazar el día.
@@ -129,6 +137,91 @@ function toLocalDateStr(date: Date): string {
 
 function claveOcupacion(fecha: string, idSala: string, bloque: number): string {
   return `${fecha}|${idSala}|${bloque}`;
+}
+
+/** Tarjeta gigante print-only: QR + datos de la sala para imprenta */
+function PrintArea({ sala }: { sala: SalaQR }) {
+  const [svg, setSvg] = React.useState('');
+
+  useEffect(() => {
+    let cancel = false;
+    QRCode.toString(`RESERVA-SALAS|${sala.qr_token}`, {
+      type: 'svg',
+      margin: 2,
+      width: 512,
+      color: { dark: '#000000', light: '#ffffff' },
+    })
+      .then((s) => { if (!cancel) setSvg(s); })
+      .catch(() => {});
+    return () => { cancel = true; };
+  }, [sala.qr_token]);
+
+  return (
+    <div className="print-area" aria-hidden="true">
+      <div className="print-card">
+        <div className="print-head">
+          <span className="print-brand">Reserva de Salas</span>
+          <span className="print-sala">{sala.id_sala}</span>
+        </div>
+        <h1 className="print-nombre">{sala.nombre_descriptivo}</h1>
+        <div className="print-qr" dangerouslySetInnerHTML={{ __html: svg }} />
+        <p className="print-foot">
+          Escanea el código al ingresar para registrar tu asistencia.
+          <br />
+          ¿Sin cámara? Usa el código manual:
+        </p>
+        <div className="print-manual num">{sala.codigo_manual}</div>
+      </div>
+    </div>
+  );
+}
+
+/** Tarjeta compacta de QR para el módulo "QR de Salas" */
+function QrSalaCard({
+  sala,
+  onPng,
+  onSvg,
+  onPrint,
+}: {
+  sala: SalaQR;
+  onPng: (s: SalaQR) => void;
+  onSvg: (s: SalaQR) => void;
+  onPrint: (s: SalaQR) => void;
+}) {
+  const [svg, setSvg] = React.useState('');
+
+  useEffect(() => {
+    let cancel = false;
+    QRCode.toString(`RESERVA-SALAS|${sala.qr_token}`, {
+      type: 'svg',
+      margin: 2,
+      color: { dark: '#000000', light: '#ffffff' },
+    })
+      .then((s) => { if (!cancel) setSvg(s); })
+      .catch(() => {});
+    return () => { cancel = true; };
+  }, [sala.qr_token]);
+
+  return (
+    <div className="qr-card">
+      <div className="qr-card-tag" style={{ '--c': sala.color ?? '#5B9BD5' } as React.CSSProperties}>
+        {sala.id_sala}
+      </div>
+      <strong className="qr-card-name">{sala.nombre_descriptivo}</strong>
+      <span className="qr-card-meta">Aforo {sala.aforo} · Piso {sala.piso}</span>
+
+      <div className="qr-card-code" dangerouslySetInnerHTML={{ __html: svg }} />
+
+      <span className="qr-card-label">Código manual</span>
+      <span className="qr-card-manual num">{sala.codigo_manual}</span>
+
+      <div className="row" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <button className="btn sm" type="button" onClick={() => onPng(sala)}>PNG</button>
+        <button className="btn sm" type="button" onClick={() => onSvg(sala)}>SVG</button>
+        <button className="btn sm primary" type="button" onClick={() => onPrint(sala)}>Imprimir</button>
+      </div>
+    </div>
+  );
 }
 
 export default function ReservaPage() {
@@ -195,14 +288,19 @@ export default function ReservaPage() {
   // Admin - Nueva Sala (SalaFactory)
   const [adminType, setAdminType] = useState<TipoSala>('lab');
   // Tab activo del panel administrativo: 'crear' | 'gestionar' | 'tipos'
-  const [adminTab, setAdminTab] = useState<'crear' | 'gestionar' | 'tipos'>('gestionar');
+  const [adminTab, setAdminTab] = useState<'crear' | 'gestionar' | 'tipos' | 'qr'>('gestionar');
   const [adminName, setAdminName] = useState('');
   const [adminCap, setAdminCap] = useState(30);
   const [adminFloor, setAdminFloor] = useState(1);
   const [adminMsg, setAdminMsg] = useState('');
 
-  // Modal QR
-  const [qrModalData, setQrModalData] = useState<{ room: SalaVisual; qrSvg: string; code: string } | null>(null);
+  // Modal QR (descargar/imprimir la tarjeta de una sala)
+  const [qrModalData, setQrModalData] = useState<{ room: SalaQR; qrSvg: string } | null>(null);
+  // Módulo QR de Salas: catálogo completo para imprimir
+  const [qrSalas, setQrSalas] = useState<SalaQR[]>([]);
+  const [qrSalasCargando, setQrSalasCargando] = useState(false);
+  const [qrSalasError, setQrSalasError] = useState('');
+  const [printSala, setPrintSala] = useState<SalaQR | null>(null);
 
   // Edición / Eliminación de reserva (CRUD)
   const [editando, setEditando] = useState<ReservaVisual | null>(null);
@@ -387,9 +485,7 @@ export default function ReservaPage() {
     setTimeout(() => setToastMsg(null), 3000);
   };
 
-  const getManualCode = (roomCode: string): string => {
-    return String(100000 + Math.floor(hashCode('qr' + roomCode) * 899999));
-  };
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -684,42 +780,40 @@ export default function ReservaPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Check-in
+  // Check-in con código real de la sala (QR o código manual)
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const [cameraError, setCameraError] = useState<string>('');
+
   const openAsistencia = (res: ReservaVisual) => {
     setAsistenciaReserva(res);
     setAsistModo('scan');
     setScanning(false);
     setManualCodeInput('');
     setManualCodeError('');
+    setCameraError('');
     setView('asist');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSimularScan = () => {
-    setScanning(true);
-    setTimeout(() => {
-      setScanning(false);
-      completarAsistencia();
-    }, 1300);
-  };
-
   const handleManualCodeSubmit = () => {
     if (!asistenciaReserva) return;
-    const expected = getManualCode(asistenciaReserva.room);
-    if (manualCodeInput.trim() === expected) {
-      completarAsistencia();
-    } else {
-      setManualCodeError(`Código incorrecto. Pista: ${expected}`);
+    const codigo = manualCodeInput.replace(/\D/g, '').slice(0, 6);
+    if (codigo.length !== 6) {
+      setManualCodeError('Ingresa el código de 6 dígitos de la sala.');
+      return;
     }
+    completarAsistencia({ codigo_manual: codigo });
   };
 
-  const completarAsistencia = async () => {
+  const completarAsistencia = async (prueba: { qr_token?: string; codigo_manual?: string }) => {
     if (!asistenciaReserva) return;
+    setScanning(true);
     try {
       const resp = await fetch('/api/reservas/check-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ codigo_reserva: asistenciaReserva.code }),
+        body: JSON.stringify({ codigo_reserva: asistenciaReserva.code, ...prueba }),
       });
 
       const data = (await resp.json().catch(() => null)) as { error?: string } | null;
@@ -740,8 +834,65 @@ export default function ReservaPage() {
       setAsistModo('ok');
     } catch {
       setManualCodeError('No fue posible conectar con el servidor. Intenta nuevamente.');
+    } finally {
+      setScanning(false);
     }
   };
+
+  // Escáner QR real (cámara + jsQR). Solo activo en la vista de check-in.
+  useEffect(() => {
+    if (view !== 'asist' || asistModo !== 'scan' || !asistenciaReserva) return;
+
+    let cancelado = false;
+    let stream: MediaStream | null = null;
+    let raf = 0;
+
+    const tick = () => {
+      if (cancelado) return;
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      if (video && canvas && video.readyState === video.HAVE_ENOUGH_DATA && video.videoWidth > 0) {
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (ctx) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imagen = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const codigo = jsQR(imagen.data, imagen.width, imagen.height);
+          if (codigo?.data) {
+            completarAsistencia({ qr_token: codigo.data });
+            return;
+          }
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    navigator.mediaDevices?.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+      .then((s) => {
+        if (cancelado) {
+          s.getTracks().forEach((t) => t.stop());
+          return;
+        }
+        stream = s;
+        if (videoRef.current) {
+          videoRef.current.srcObject = s;
+          videoRef.current.play().catch(() => {});
+        }
+        raf = requestAnimationFrame(tick);
+      })
+      .catch(() => {
+        setCameraError('No se pudo acceder a la cámara. Puedes ingresar el código manual impreso en la tarjeta de la sala.');
+      });
+
+    return () => {
+      cancelado = true;
+      cancelAnimationFrame(raf);
+      if (stream) stream.getTracks().forEach((t) => t.stop());
+      if (videoRef.current) videoRef.current.srcObject = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, asistModo, asistenciaReserva?.id]);
 
   // ---- CRUD: Editar y Eliminar reserva ----
 
@@ -943,6 +1094,8 @@ export default function ReservaPage() {
             tipo?: TipoSala;
             aforo?: number;
             piso?: number;
+            qr_token?: string;
+            codigo_manual?: string;
           }
         | null;
 
@@ -958,6 +1111,8 @@ export default function ReservaPage() {
         type: data?.tipo || nuevaSala.type,
         cap: data?.aforo ?? nuevaSala.cap,
         floor: data?.piso ?? nuevaSala.floor,
+        qrToken: data?.qr_token,
+        codigoManual: data?.codigo_manual,
       };
 
       setSalas([...salas, salaCreada]);
@@ -971,22 +1126,130 @@ export default function ReservaPage() {
   };
 
   const openQrModal = async (room: SalaVisual) => {
+    if (!room.qrToken || !room.codigoManual) {
+      // Lista de salas no trae el secreto: se pide bajo demanda al admin.
+      try {
+        const resp = await fetch(`/api/salas/qr?id_sala=${encodeURIComponent(room.code)}`);
+        const data = (await resp.json().catch(() => null)) as (SalaQR & { error?: string }) | null;
+        if (!resp.ok || !data || !data.qr_token) {
+          showToast(data?.error || 'No fue posible obtener los datos del QR');
+          return;
+        }
+        await mostrarQrSala({
+          id_sala: data.id_sala,
+          nombre_descriptivo: data.nombre_descriptivo,
+          tipo: data.tipo,
+          aforo: data.aforo,
+          piso: data.piso,
+          estado_habilitacion: data.estado_habilitacion,
+          qr_token: data.qr_token,
+          codigo_manual: data.codigo_manual,
+        });
+      } catch {
+        showToast('No fue posible obtener los datos del QR');
+      }
+      return;
+    }
+    await mostrarQrSala({
+      id_sala: room.code,
+      nombre_descriptivo: room.name,
+      tipo: room.type,
+      aforo: room.cap,
+      piso: room.floor,
+      estado_habilitacion: room.estado,
+      qr_token: room.qrToken,
+      codigo_manual: room.codigoManual,
+    });
+  };
+
+  // Renderiza el modal (o cambia printSala) con los datos reales del QR.
+  const mostrarQrSala = async (sala: SalaQR) => {
     try {
-      const qrData = `RESERVA-SALAS|${room.code}`;
-      const svg = await QRCode.toString(qrData, {
+      const svg = await QRCode.toString(`RESERVA-SALAS|${sala.qr_token}`, {
         type: 'svg',
         margin: 2,
         color: { dark: '#000000', light: '#ffffff' },
       });
-      setQrModalData({
-        room,
-        qrSvg: svg,
-        code: getManualCode(room.code),
-      });
+      setQrModalData({ room: sala, qrSvg: svg });
     } catch {
       showToast('Error generando QR');
     }
   };
+
+  // Descarga/Impresión desde el modal o desde el módulo QR de salas.
+  const descargarQrPng = async (sala: SalaQR) => {
+    try {
+      const dataUrl = await QRCode.toDataURL(`RESERVA-SALAS|${sala.qr_token}`, {
+        width: 640,
+        margin: 2,
+        color: { dark: '#000000', light: '#ffffff' },
+      });
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `QR-${sala.id_sala}.png`;
+      a.click();
+    } catch {
+      showToast('No fue posible generar el PNG');
+    }
+  };
+
+  const descargarQrSvg = async (sala: SalaQR) => {
+    try {
+      const svg = await QRCode.toString(`RESERVA-SALAS|${sala.qr_token}`, {
+        type: 'svg',
+        margin: 2,
+        color: { dark: '#000000', light: '#ffffff' },
+      });
+      const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `QR-${sala.id_sala}.svg`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      showToast('No fue posible generar el SVG');
+    }
+  };
+
+  // Recarga el módulo QR (normalmente al entrar a la pestaña)
+  const recargarQrSalas = async () => {
+    setQrSalasCargando(true);
+    setQrSalasError('');
+    try {
+      const resp = await fetch('/api/salas/qr');
+      const data = (await resp.json().catch(() => null)) as (SalaQR[] & { error?: string }) | { error?: string } | null;
+      if (!resp.ok) {
+        setQrSalasError((data as { error?: string })?.error || 'No fue posible cargar los QR de salas');
+        return;
+      }
+      setQrSalas(Array.isArray(data) ? (data as SalaQR[]) : []);
+    } catch {
+      setQrSalasError('No fue posible conectar con el servidor');
+    } finally {
+      setQrSalasCargando(false);
+    }
+  };
+
+  // La pestaña QR carga sus datos al activarse
+  useEffect(() => {
+    if (adminTab === 'qr' && currentUser?.rol === 'administrador') {
+      recargarQrSalas();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminTab, currentUser?.rol]);
+
+  // Impresión de la tarjeta QR (área print-only en el DOM)
+  useEffect(() => {
+    if (!printSala) return;
+    const onAfter = () => setPrintSala(null);
+    window.addEventListener('afterprint', onAfter);
+    const t = window.setTimeout(() => window.print(), 80);
+    return () => {
+      window.removeEventListener('afterprint', onAfter);
+      window.clearTimeout(t);
+    };
+  }, [printSala]);
 
   // ---- Gestión de salas (solo administrador) ----
 
@@ -1860,19 +2123,16 @@ export default function ReservaPage() {
 
                   {asistModo === 'scan' && (
                     <div>
-                      <div className={`scan ${scanning ? 'go' : ''}`}>
-                        <i></i><i></i><i></i><i></i>
-                        <span>Apunta la cámara al código QR de la sala</span>
+                      <div className="qr-scanner">
+                        <video ref={videoRef} playsInline muted autoPlay />
+                        <canvas ref={canvasRef} hidden />
+                        <div className="qr-reticle" aria-hidden="true" />
+                        <p className="qr-scanner-hint">Apunta la cámara al QR de la sala</p>
                       </div>
-                      <button
-                        className="btn primary"
-                        type="button"
-                        style={{ width: '100%' }}
-                        onClick={handleSimularScan}
-                        disabled={scanning}
-                      >
-                        {scanning ? 'Escaneando...' : 'Escanear QR'}
-                      </button>
+                      {cameraError && (
+                        <p className="msg" role="alert">{cameraError}</p>
+                      )}
+                      {scanning && !cameraError && <p className="hint center">Validando QR…</p>}
                       <p className="center" style={{ margin: '14px 0 0' }}>
                         <button
                           className="pill dash"
@@ -1926,7 +2186,7 @@ export default function ReservaPage() {
                         </button>
                       </p>
                       <p className="hint">
-                        Código de prueba de esta sala: <b>{getManualCode(asistenciaReserva.room)}</b>
+                        El código impreso en la tarjeta de la sala (6 dígitos).
                       </p>
                     </div>
                   )}
@@ -1979,6 +2239,17 @@ export default function ReservaPage() {
                     onClick={() => setAdminTab('gestionar')}
                   >
                     Gestionar salas
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-admin-qr"
+                    aria-selected={adminTab === 'qr'}
+                    aria-controls="panel-admin-qr"
+                    className={adminTab === 'qr' ? 'on' : ''}
+                    onClick={() => setAdminTab('qr')}
+                  >
+                    QR de salas
                   </button>
                   <button
                     type="button"
@@ -2289,6 +2560,36 @@ export default function ReservaPage() {
                   </section>
                 </div>
                 )}
+                {adminTab === 'qr' && (
+                <div className="admin" id="panel-admin-qr" role="tabpanel" aria-labelledby="tab-admin-qr" style={{ marginTop: 12, gridTemplateColumns: 'minmax(0, 1fr)' }}>
+                  {/* Módulo QR de Salas: tarjetas imprimibles */}
+                  <section className="card">
+                    <h2 className="title" style={{ fontSize: 20, margin: '0 0 4px' }}>QR de Salas</h2>
+                    <p style={{ color: 'var(--muted)', fontSize: 13, margin: '0 0 14px' }}>
+                      Tarjeta imprimible por sala: al escanearla se valida la asistencia. Si el teléfono no puede usar la cámara, se ingresa el código manual de 6 dígitos impreso. Descarga en PNG o SVG para imprenta.
+                    </p>
+
+                    {qrSalasCargando && <p className="hint">Cargando QR de salas…</p>}
+                    {qrSalasError && <p className="msg" role="alert">{qrSalasError}</p>}
+
+                    <div className="qr-grid">
+                      {qrSalas.map((s) => (
+                        <QrSalaCard
+                          key={s.id_sala}
+                          sala={s}
+                          onPng={descargarQrPng}
+                          onSvg={descargarQrSvg}
+                          onPrint={setPrintSala}
+                        />
+                      ))}
+                    </div>
+
+                    {!qrSalasCargando && qrSalas.length === 0 && !qrSalasError && (
+                      <p className="hint">No hay salas registradas. Crea una desde la pestaña “Crear sala”.</p>
+                    )}
+                  </section>
+                </div>
+                )}
               </div>
             )}
           </>
@@ -2307,10 +2608,10 @@ export default function ReservaPage() {
         >
           <div className="card">
             <h2 className="title" style={{ margin: 0 }}>
-              {qrModalData.room.name}
+              {qrModalData.room.nombre_descriptivo}
             </h2>
             <span className="tag" style={{ color: 'var(--accent)', fontWeight: 600 }}>
-              {qrModalData.room.code}
+              {qrModalData.room.id_sala}
             </span>
 
             <div
@@ -2321,9 +2622,32 @@ export default function ReservaPage() {
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: 13 }}>
               Código manual de asistencia
             </p>
-            <div className="code num">{qrModalData.code}</div>
+            <div className="code num">{qrModalData.room.codigo_manual}</div>
 
-            <div>
+            <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+              <button
+                className="btn sm"
+                type="button"
+                onClick={() => descargarQrPng(qrModalData.room)}
+              >
+                PNG
+              </button>
+              <button
+                className="btn sm"
+                type="button"
+                onClick={() => descargarQrSvg(qrModalData.room)}
+              >
+                SVG
+              </button>
+              <button
+                className="btn sm primary"
+                type="button"
+                onClick={() => setPrintSala(qrModalData.room)}
+              >
+                Imprimir
+              </button>
+            </div>
+            <div style={{ marginTop: 10 }}>
               <button
                 className="btn"
                 type="button"
@@ -2564,6 +2888,9 @@ export default function ReservaPage() {
           {toastMsg}
         </div>
       )}
+
+      {/* Área print-only: tarjeta QR gigante para imprimir */}
+      {printSala && <PrintArea sala={printSala} />}
     </div>
   );
 }

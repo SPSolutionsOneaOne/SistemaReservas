@@ -107,6 +107,10 @@ export interface Sala {
   estado_habilitacion: EstadoHabilitacion;
   /** timestamp, default now() */
   creado_en: string;
+  /** Token secreto del QR de la sala ('RESERVA-SALAS|<token>') */
+  qr_token?: string;
+  /** Código manual de 6 dígitos para asistencia presencial */
+  codigo_manual?: string;
 }
 
 /** DTO para inserción — el id_sala se genera por SalaFactory */

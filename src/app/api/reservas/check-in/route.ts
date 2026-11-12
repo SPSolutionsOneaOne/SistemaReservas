@@ -4,6 +4,18 @@ import { resetearAusencias } from '@/controllers/reservasController';
 import { authorize, ROLES_STAFF } from '@/lib/authz';
 import { checkinPermitido } from '@/lib/horarios';
 
+/**
+ * Acepta 'RESERVA-SALAS|TOKEN' (contenido del QR) o el token suelto.
+ * Devuelve null si el formato no es válido.
+ */
+function extraerToken(qr: string): string | null {
+  const limpio = qr.trim().toUpperCase();
+  const token = limpio.includes('|')
+    ? limpio.split('|').pop()?.trim() ?? ''
+    : limpio;
+  return /^[A-Z0-9]{6,20}$/.test(token) ? token : null;
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Cualquier usuario autenticado puede hacer check-in, pero solo de sus
@@ -12,7 +24,20 @@ export async function POST(request: NextRequest) {
     if (!auth.ok) return auth.response;
 
     const body = await request.json();
-    const { id_reserva, codigo_reserva } = body;
+    const { id_reserva, codigo_reserva, qr_token, codigo_manual } = body;
+
+    // El escaneo/ingreso debe ir siempre acompañado del QR o código
+    // manual de la sala (LIMPIEZA DEL VALIDADOR: ya no hay códigos de prueba).
+    const tokenEntrada = typeof qr_token === 'string' ? extraerToken(qr_token) : null;
+    const manualEntrada =
+      typeof codigo_manual === 'string' ? codigo_manual.trim() : null;
+
+    if (!tokenEntrada && !manualEntrada) {
+      return NextResponse.json(
+        { error: 'Debe escanear el QR de la sala o ingresar su código manual de 6 dígitos' },
+        { status: 400 }
+      );
+    }
 
     if (!id_reserva && !codigo_reserva) {
       return NextResponse.json(
@@ -22,6 +47,22 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = getSupabaseReservasAdmin();
+
+    // Resolver la sala real desde el QR o el código manual.
+    const querySala = supabase
+      .from('salas')
+      .select('id_sala, nombre_descriptivo, qr_token, codigo_manual');
+    const { data: salaValidada, error: errSalaVal } = tokenEntrada
+      ? await querySala.eq('qr_token', tokenEntrada).maybeSingle()
+      : await querySala.eq('codigo_manual', manualEntrada as string).maybeSingle();
+
+    if (errSalaVal || !salaValidada) {
+      return NextResponse.json(
+        { error: 'Código QR o código manual no válido: no corresponde a una sala del sistema' },
+        { status: 404 }
+      );
+    }
+
     let query = supabase.from('reservas').select('*');
 
     if (id_reserva) {
@@ -34,6 +75,16 @@ export async function POST(request: NextRequest) {
 
     if (errBusqueda || !reserva) {
       return NextResponse.json({ error: 'Reserva no encontrada' }, { status: 404 });
+    }
+
+    // El QR/código manual debe corresponder a la MISMA sala de la reserva.
+    if (salaValidada.id_sala !== reserva.id_sala) {
+      return NextResponse.json(
+        {
+          error: `El código corresponde a la sala ${salaValidada.id_sala} (${salaValidada.nombre_descriptivo}), no a la de esta reserva (${reserva.id_sala}).`,
+        },
+        { status: 409 }
+      );
     }
 
     // El titular solo puede registrar su propia asistencia.

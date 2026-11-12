@@ -34,6 +34,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Datos de QR/códigos manuales: solo Administrador.
+  if (pathname === '/api/salas/qr') {
+    const sessionCheck = await getSessionFromRequest(request);
+    if (!sessionCheck) {
+      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+    }
+    if (sessionCheck.rol !== 'administrador') {
+      return NextResponse.json(
+        { error: 'Acceso denegado: solo el Administrador puede ver los QR de salas' },
+        { status: 403 }
+      );
+    }
+    return NextResponse.next();
+  }
+
   const session = await getSessionFromRequest(request);
 
   if (!session) {
@@ -72,6 +87,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/api/salas',
+    '/api/salas/qr',
     '/api/tipos-sala',
     '/api/bitacora/:path*',
     '/api/reservas',

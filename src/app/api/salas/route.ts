@@ -13,8 +13,9 @@ export async function GET(request: NextRequest) {
     const piso = searchParams.get('piso');
     const estado = searchParams.get('estado') as EstadoHabilitacion | null;
 
+    // No exponer qr_token/codigo_manual: son secretos de asistencia presencial.
     const supabase = getSupabaseReservasAdmin();
-    let query = supabase.from('salas').select('*');
+    let query = supabase.from('salas').select('id_sala, tipo, nombre_descriptivo, aforo, piso, estado_habilitacion');
 
     if (tipo) query = query.eq('tipo', tipo);
     if (piso) query = query.eq('piso', parseInt(piso, 10));
