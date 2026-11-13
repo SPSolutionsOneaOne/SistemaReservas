@@ -530,7 +530,6 @@ export default function ReservaPage() {
     setLoginPass('');
     setAttendees([]);
     setNombresAsistentes({});
-    showToast('Sesión cerrada');
   };
 
   // Verificar Estudiante Afectado para Encargado Administrativo
