@@ -2126,7 +2126,9 @@ export default function ReservaPage() {
                             <p className="num">
                               {r.dateStr} · {BLOQUES_HORARIOS[r.block]?.inicio} – {BLOQUES_HORARIOS[r.block]?.fin} · Código: <b>{r.code}</b>
                             </p>
-                            {r.estado === 'no_asistio' ? (
+                            {r.estado === 'cancelada' ? (
+                              <span className="state num">Cancelada</span>
+                            ) : r.estado === 'no_asistio' ? (
                               <span className="state warn num">No asististe</span>
                             ) : r.attended ? (
                               <span className="state ok num">

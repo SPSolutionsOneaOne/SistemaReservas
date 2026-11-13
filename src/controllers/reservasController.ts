@@ -395,13 +395,16 @@ export async function editarReservaConValidacion(
   return { exito: true, reserva: actualizada as Reserva };
 }
 
-// ---- Reservas: Eliminación (DELETE físico) ----
+// ---- Reservas: Eliminación (borrado lógico) ----
 
 /**
- * Elimina físicamente la reserva: libera el bloque al instante (compatible
- * con la restricción UNIQUE(id_sala, fecha, bloque_horario)).
+ * Marca la reserva como 'cancelada' (soft delete / borrado lógico).
+ * El bloque se libera de inmediato porque el índice parcial
+ * UNIQUE(id_sala, fecha, bloque_horario) WHERE estado IN ('confirmada','completada')
+ * excluye a las canceladas, y todas las lecturas de ocupación filtran
+ * del mismo modo.
  * Reglas: solo el titular o un rol staff; solo reservas confirmadas y sin
- * asistencia registrada. Si un staff elimina la reserva de un tercero,
+ * asistencia registrada. Si un staff cancela la reserva de un tercero,
  * queda auditada en bitácora (RF-SEC-04).
  */
 export async function eliminarReservaConValidacion(
@@ -443,22 +446,22 @@ export async function eliminarReservaConValidacion(
     };
   }
 
-  // 3. Eliminar físicamente
-  const { error: errDelete } = await supabaseReservas
+  // 3. Borrado lógico: marcar como 'cancelada'
+  const { error: errCancel } = await supabaseReservas
     .from('reservas')
-    .delete()
+    .update({ estado: 'cancelada' })
     .eq('id_reserva', idReserva);
 
-  if (errDelete) {
-    console.error('[reservas DELETE] Error al eliminar reserva:', errDelete);
-    return { exito: false, error: 'Error interno al eliminar la reserva', httpCode: 500 };
+  if (errCancel) {
+    console.error('[reservas DELETE] Error al cancelar la reserva:', errCancel);
+    return { exito: false, error: 'Error interno al cancelar la reserva', httpCode: 500 };
   }
 
   // 4. Auditoría si un staff elimina la reserva de un tercero (RF-SEC-04)
   if (esStaff && reservaActual.usuario_rut !== actorRut) {
     await registrarBitacora({
       encargado_rut: actorRut,
-      accion: `Reserva eliminada: sala ${reservaActual.id_sala}, fecha ${reservaActual.fecha}, bloque ${reservaActual.bloque_horario}. Código: ${reservaActual.codigo_reserva}`,
+      accion: `Reserva cancelada: sala ${reservaActual.id_sala}, fecha ${reservaActual.fecha}, bloque ${reservaActual.bloque_horario}. Código: ${reservaActual.codigo_reserva}`,
       rut_estudiante_afectado: reservaActual.usuario_rut,
     });
   }
