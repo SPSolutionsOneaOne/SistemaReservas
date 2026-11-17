@@ -69,6 +69,20 @@ export function checkinPermitido(
 }
 
 /**
+ * ¿Ya inició el bloque (fecha y hora, reloj de pared de Santiago)?
+ * Útil para impedir reservar bloques pasados (hoy u otro día previo).
+ */
+export function bloqueIniciado(
+  fecha: string,
+  bloque: number,
+  pared: FechaHoraPared = ahoraSantiago()
+): boolean {
+  if (fecha < pared.fecha) return true;
+  if (fecha > pared.fecha) return false;
+  return pared.minutos >= inicioBloqueMinutos(bloque);
+}
+
+/**
  * ¿Ya venció la gracia tras el inicio del bloque? (para el barrido
  * automático de inasistencias).
  */

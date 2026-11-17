@@ -29,7 +29,7 @@ import {
   validarCorreoInstitucional,
 } from '@/lib/validators';
 import { notificadorGlobal } from '@/services/NotificadorICS';
-import { ahoraSantiago, vencidaGracia } from '@/lib/horarios';
+import { ahoraSantiago, bloqueIniciado, vencidaGracia } from '@/lib/horarios';
 
 /**
  * Límite aleatorio para que la URL de PostgREST varíe en cada consulta:
@@ -131,6 +131,15 @@ export async function crearReservaConValidacion(
     return {
       exito: false,
       error: 'La fecha debe estar dentro del mes en curso',
+      httpCode: 422,
+    };
+  }
+
+  // 2c. No se puede reservar un bloque que ya inició (hoy u otros días pasados)
+  if (bloqueIniciado(params.fecha, params.bloque_horario)) {
+    return {
+      exito: false,
+      error: 'No se puede reservar un bloque que ya ha iniciado',
       httpCode: 422,
     };
   }
@@ -326,6 +335,19 @@ export async function editarReservaConValidacion(
       error: 'La fecha debe estar dentro del mes en curso',
       httpCode: 422,
     };
+  }
+
+  // 2b-bis. No se puede mover la reserva a un bloque ya iniciado
+  if (datos.fecha !== undefined || datos.bloque_horario !== undefined) {
+    const fechaEfectiva = datos.fecha ?? reservaActual.fecha;
+    const bloqueEfectivo = datos.bloque_horario ?? reservaActual.bloque_horario;
+    if (bloqueIniciado(fechaEfectiva, bloqueEfectivo)) {
+      return {
+        exito: false,
+        error: 'No se puede mover la reserva a un bloque que ya ha iniciado',
+        httpCode: 422,
+      };
+    }
   }
 
   // 2c. El bloque efectivo debe existir en la fecha efectiva

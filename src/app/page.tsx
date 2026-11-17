@@ -11,6 +11,7 @@ import {
   BLOQUES_HORARIOS,
 } from '@/types/database';
 import { validarRutChileno, BLOQUE_MAXIMO, BLOQUE_MAXIMO_SABADO } from '@/lib/validators';
+import { bloqueIniciado } from '@/lib/horarios';
 
 // --- Catálogo de tipos de sala (dinámico, gestionado por el administrador) ---
 // Los 5 tipos por defecto se listan como respaldo si la API aún no responde.
@@ -600,8 +601,10 @@ export default function ReservaPage() {
     const day = days[selectedDayIdx];
     if (!day) return null;
     if (day.getDay() === 0) return null; // domingo cerrado
+    const fechaLocal = toLocalDateStr(day);
     const maxBloque = day.getDay() === 6 ? BLOQUE_MAXIMO_SABADO : BLOQUE_MAXIMO;
     for (let b = 0; b <= maxBloque; b++) {
+      if (bloqueIniciado(fechaLocal, b)) continue;
       const hayLibres = salas.some(
         (r) => r.type === selectedType && r.estado === 'activo' && isRoomFree(r, day, b)
       );
@@ -1801,6 +1804,7 @@ export default function ReservaPage() {
                                 (blk) => {
                                   const bInfo = BLOQUES_HORARIOS[blk];
                                   const day = days[selectedDayIdx];
+                                  const bloquePasado = bloqueIniciado(toLocalDateStr(day), blk);
                                   const hayLibres = salas.some(
                                     (r) => r.type === selectedType && r.estado === 'activo' && isRoomFree(r, day, blk)
                                   );
@@ -1810,7 +1814,7 @@ export default function ReservaPage() {
                                       type="button"
                                       className="blk"
                                       aria-pressed={selectedBlock === blk}
-                                      disabled={ocupacionCargando || !hayLibres}
+                                      disabled={ocupacionCargando || !hayLibres || bloquePasado}
                                       onClick={() => handleSelectBlock(blk)}
                                     >
                                       {bInfo.inicio} – {bInfo.fin}

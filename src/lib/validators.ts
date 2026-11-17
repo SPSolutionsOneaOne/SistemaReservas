@@ -128,24 +128,32 @@ export function esFechaValida(fecha: string): boolean {
   );
 }
 
+/** Fecha actual en reloj de pared America/Santiago, formato YYYY-MM-DD. */
+function hoySantiagoIso(): string {
+  const partes = new Intl.DateTimeFormat('es-CL', {
+    timeZone: 'America/Santiago',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+
+  const v = (t: string): string => partes.find((p) => p.type === t)?.value ?? '';
+  return `${v('year')}-${v('month')}-${v('day')}`;
+}
+
 /**
- * Valida que la fecha ('YYYY-MM-DD') sea hoy o dentro del mes en curso.
- * Regla del sistema: no se agenda más allá del mes presente.
- * Tolera ±1 día entre la hora del servidor (UTC) y la hora local del usuario
- * para no rechazar fechas válidas en los bordes del mes.
+ * Valida que la fecha ('YYYY-MM-DD') esté entre hoy (America/Santiago)
+ * y el fin del mes en curso. Regla del sistema: no se agenda en el
+ * pasado ni más allá del mes presente.
  */
 export function validarFechaMesEnCurso(fecha: string): boolean {
   if (!esFechaValida(fecha)) return false;
 
-  const MS_POR_DIA = 24 * 60 * 60 * 1000;
-  const ahora = Date.now();
-  const diaMinimo = new Date(ahora - MS_POR_DIA).toISOString().split('T')[0];
-  const manana = new Date(ahora + MS_POR_DIA);
-  const diaMaximo = new Date(
-    Date.UTC(manana.getUTCFullYear(), manana.getUTCMonth() + 1, 0)
-  )
-    .toISOString()
-    .split('T')[0];
+  const hoyLocal = hoySantiagoIso();
+  if (fecha < hoyLocal) return false;
 
-  return fecha >= diaMinimo && fecha <= diaMaximo;
+  const [anio, mes] = hoyLocal.split('-').map(Number);
+  const finMes = new Date(Date.UTC(anio, mes, 0)).getUTCDate();
+  const max = `${anio}-${String(mes).padStart(2, '0')}-${String(finMes).padStart(2, '0')}`;
+  return fecha <= max;
 }
