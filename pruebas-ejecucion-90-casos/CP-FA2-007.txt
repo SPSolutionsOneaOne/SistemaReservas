@@ -1,0 +1,6 @@
+Caso: CP-FA2-007
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Alumno B intenta DELETE sobre reserva de Alumno A -> HTTP 404

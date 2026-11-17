@@ -1,0 +1,7 @@
+Caso: CP-FA4-018
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+POST con Origin malicioso y sin cookie -> HTTP 401
+El sistema se apoya en SameSite=Lax (cookies no enviadas cross-site para POST) + Content-Type JSON; no hay token CSRF dedicado.

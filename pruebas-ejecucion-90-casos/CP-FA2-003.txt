@@ -1,0 +1,8 @@
+Caso: CP-FA2-003
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Motor: {"error":"No autorizado"}
+Penalización: "no creada"
+Reserva (alumno bloqueado): HTTP 201

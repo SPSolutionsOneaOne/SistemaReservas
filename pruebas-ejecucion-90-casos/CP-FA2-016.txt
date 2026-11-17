@@ -1,0 +1,6 @@
+Caso: CP-FA2-016
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Docente POST /api/salas -> HTTP 403

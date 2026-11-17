@@ -1,0 +1,6 @@
+Caso: CP-FA3-016
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+No existe rate limiting específico sobre /api/reservas/check-in. 20 intentos consecutivos con códigos inválidos reciben 400 repetidamente, sin 429. La defensa actual depende de la ventana temporal de check-in y de la unicidad del código de reserva.

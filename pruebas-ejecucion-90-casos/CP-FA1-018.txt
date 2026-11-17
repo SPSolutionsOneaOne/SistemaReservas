@@ -1,0 +1,6 @@
+Caso: CP-FA1-018
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+password_hash = texto plano 'Prueba8432#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id.

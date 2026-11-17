@@ -1,0 +1,6 @@
+Caso: CP-FA4-020
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_IMPL
+
+Detalle:
+El service worker implementado cubre navegación y assets estáticos con fallback a caché, pero no implementa background sync de peticiones en cola (no hay Background Sync API ni cola persistente). Funcionalidad pendiente de MVP.

@@ -1,0 +1,6 @@
+Caso: CP-FA4-005
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+No es auditable desde el API pública. Supabase cifra el disco gestionado en AES-256 (servicio gestionado, retención bajo su certificado de seguridad). Verificación requiere consola del proveedor / SOC2.

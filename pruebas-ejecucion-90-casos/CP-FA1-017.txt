@@ -1,0 +1,6 @@
+Caso: CP-FA1-017
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Cookie con firma alterada -> GET /api/reservas -> HTTP 401

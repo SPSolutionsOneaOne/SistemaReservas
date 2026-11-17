@@ -1,0 +1,6 @@
+Caso: CP-FA4-021
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+La restauración de respaldos sólo es verificable desde la consola de Supabase (backups gestionados), no desde la app. Requiere proyecto de staging aislado o dump | restore en entorno controlado.

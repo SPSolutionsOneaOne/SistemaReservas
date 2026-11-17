@@ -1,0 +1,6 @@
+Caso: CP-FA2-023
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Reserva creada en — bloque — (HTTP 409); cancelar propia -> HTTP 400

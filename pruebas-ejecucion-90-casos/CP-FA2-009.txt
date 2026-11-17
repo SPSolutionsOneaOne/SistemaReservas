@@ -1,0 +1,6 @@
+Caso: CP-FA2-009
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Mover a bloque ocupado -> HTTP 400

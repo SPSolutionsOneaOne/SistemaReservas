@@ -1,0 +1,7 @@
+Caso: CP-FA2-011
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: INFO
+
+Detalle:
+Texto crudo almacenado en proposito: "(no leído)".
+React escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React.

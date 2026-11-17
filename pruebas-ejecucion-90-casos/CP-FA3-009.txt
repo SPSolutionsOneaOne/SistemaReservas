@@ -1,0 +1,6 @@
+Caso: CP-FA3-009
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Requiere recorrido manual por teclado (Tab/Enter) en un navegador. La wizard usa botones estándar con focus-visible visible; el recorrido de 4 pasos es manual. Verificación manual pendiente de ejecución.

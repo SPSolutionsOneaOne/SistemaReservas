@@ -1,0 +1,6 @@
+Caso: CP-FA3-008
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+/manifest.json -> 200, name=Reserva de Salas; /sw.js -> 200; icon-192.png -> 200

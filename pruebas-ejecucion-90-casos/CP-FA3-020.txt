@@ -1,0 +1,6 @@
+Caso: CP-FA3-020
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Encargado cancela reserva de alumno -> HTTP 200

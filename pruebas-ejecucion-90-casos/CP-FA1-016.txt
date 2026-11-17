@@ -1,0 +1,6 @@
+Caso: CP-FA1-016
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+GET /api/reservas anónimo -> HTTP 401

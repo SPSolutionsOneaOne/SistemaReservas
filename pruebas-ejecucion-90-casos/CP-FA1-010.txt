@@ -1,0 +1,6 @@
+Caso: CP-FA1-010
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Token vencido firmado localmente -> GET /api/reservas -> HTTP 401

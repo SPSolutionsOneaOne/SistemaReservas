@@ -1,0 +1,6 @@
+Caso: CP-FA3-012
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: INFO
+
+Detalle:
+El código manual de 6 dígitos no tiene TTL propio: se deriva de forma determinista del código de la sala. La protección temporal real está en la ventana de check-in (±10 min del inicio del bloque), no en un token de 15 min. Sin caducidad técnica de QR a los 15 min.

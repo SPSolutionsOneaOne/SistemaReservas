@@ -1,0 +1,6 @@
+Caso: CP-FA1-013
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Opacidad (usuario inexistente vs clave incorrecta): true; HTTP 401/401

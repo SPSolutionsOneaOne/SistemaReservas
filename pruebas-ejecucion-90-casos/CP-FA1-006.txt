@@ -1,0 +1,6 @@
+Caso: CP-FA1-006
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Tras 6 intentos fallidos sobre la misma cuenta, el último fue HTTP 429 (esperado 429).

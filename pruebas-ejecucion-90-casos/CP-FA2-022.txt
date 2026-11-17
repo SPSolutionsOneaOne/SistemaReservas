@@ -1,0 +1,6 @@
+Caso: CP-FA2-022
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Usuario penalizado intenta reservar -> HTTP 403

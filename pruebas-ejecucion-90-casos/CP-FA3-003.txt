@@ -1,0 +1,6 @@
+Caso: CP-FA3-003
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+El escaneo por cámara está simulado en el MVP (handleSimularScan), no hay entrada de cámara real. Verificable manualmente en un dispositivo con cámara desde la interfaz PWA.

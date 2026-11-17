@@ -1,0 +1,7 @@
+Caso: CP-FA4-015
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Origin: https://evil-site-example.com -> Access-Control-Allow-Origin: (ausente)
+Las rutas API no reflejan orígenes ajenos (same-origin por defecto).

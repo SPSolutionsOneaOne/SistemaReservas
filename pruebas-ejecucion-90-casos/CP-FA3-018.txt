@@ -1,0 +1,6 @@
+Caso: CP-FA3-018
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Cron marcó — ausencias; bloqueado_hasta=—

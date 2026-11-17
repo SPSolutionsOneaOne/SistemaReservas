@@ -1,0 +1,7 @@
+Caso: CP-FA2-001
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+RUT no válido como asistente -> HTTP 422
+{"error":"Asistentes no autorizados: 99.999.999-9 (No registrado en el padrón institucional)"}

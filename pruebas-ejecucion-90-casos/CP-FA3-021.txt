@@ -1,0 +1,6 @@
+Caso: CP-FA3-021
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: INFO
+
+Detalle:
+codigo_reserva se genera secuencialmente (RES-xxxx a partir del conteo); el código manual se deriva determinísticamente del código de la sala (hashCode). No son CSPRNG; el código manual es un artefacto de demostración por sala, no un token de sesión.

@@ -1,0 +1,6 @@
+Caso: CP-FA3-004
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+La entrada manual requiere una reserva vigente del bloque actual. La ventana de check-in es ±10 min alrededor del inicio del bloque y no es reproducible fuera de ese rango. Verificable manualmente en ventana real.

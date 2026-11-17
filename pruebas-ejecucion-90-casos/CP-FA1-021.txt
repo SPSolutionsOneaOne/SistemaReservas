@@ -1,0 +1,6 @@
+Caso: CP-FA1-021
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+12 intentos rápidos en la misma cuenta -> último HTTP 429 (esperado 429).

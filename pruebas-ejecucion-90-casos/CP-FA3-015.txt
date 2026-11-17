@@ -1,0 +1,6 @@
+Caso: CP-FA3-015
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Código inexistente -> HTTP 400: Debe escanear el QR de la sala o ingresar su código manual de 6 dígitos

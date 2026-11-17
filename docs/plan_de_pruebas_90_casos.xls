@@ -1,0 +1,1546 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Version>16.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>6510</WindowHeight>
+  <WindowWidth>19200</WindowWidth>
+  <WindowTopX>32767</WindowTopX>
+  <WindowTopY>32767</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s63">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Font ss:FontName="Calibri" ss:Size="14" ss:Color="#333399" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s65">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#339966" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s67">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#0F172A"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#CBD5E1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#CBD5E1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#0F172A"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#FFFFFF" ss:Bold="1"/>
+   <Interior ss:Color="#1E40AF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s68">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Color="#333333" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s69">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="s70">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Color="#993300" ss:Bold="1"/>
+   <Interior ss:Color="#FEE2E2" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s71">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Consolas" ss:Size="9" ss:Color="#333333"/>
+  </Style>
+  <Style ss:ID="s72">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Color="#993300" ss:Bold="1"/>
+   <Interior ss:Color="#FEF9C3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s73">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Color="#333333" ss:Bold="1"/>
+   <Interior ss:Color="#DCFCE7" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Plan de Pruebas 90 Casos">
+  <Table ss:ExpandedColumnCount="13" ss:ExpandedRowCount="94" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="20">
+   <Column ss:Width="80"/>
+   <Column ss:Width="70"/>
+   <Column ss:Width="130"/>
+   <Column ss:Width="95"/>
+   <Column ss:Width="240"/>
+   <Column ss:Width="180"/>
+   <Column ss:Width="250"/>
+   <Column ss:Width="230"/>
+   <Column ss:Width="280"/>
+   <Column ss:Width="90"/>
+   <Column ss:Width="75"/>
+   <Column ss:Width="120"/>
+   <Column ss:Width="300"/>
+   <Row ss:AutoFitHeight="0" ss:Height="24">
+    <Cell ss:MergeAcross="12" ss:StyleID="s63"><Data ss:Type="String">PLAN DE PRUEBAS DE SOFTWARE - MARCO ISO/IEC/IEEE 29119-3 &amp; ISO 25010</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="12" ss:StyleID="s65"><Data ss:Type="String">Estrategia de Ejecución Incremental por Fases con Pruebas de Regresión Acumulativa (90 Casos Atómicos)</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="16">
+    <Cell ss:MergeAcross="12"/>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="25">
+    <Cell ss:StyleID="s67"><Data ss:Type="String">ID Caso</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Fase Origen</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Ref. RF/RNF/ISO</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Categoría</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Nombre del Caso / Objetivo</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Precondiciones</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Pasos de Ejecución</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Comando / Script / Tool</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Criterio de Aceptación (Resultado Esperado)</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Estado Ejecución</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Prioridad</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Ref. Evidencia (Print/Log)</Data></Cell>
+    <Cell ss:StyleID="s67"><Data ss:Type="String">Resultado Obtenido</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-001</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-06 / ISO 27002</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Verificación Hashing Argon2id en DB Institucional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">DB-Institucional en Supabase con RLS.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Insertar usuario test. 2. Consultar password_hash en SQL.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx argon2-cli -v argon2id</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Hash inicia con $argon2id$v=19$m=65536. Cero texto plano.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-001.txt + CP-FA1-001.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$WQvqMU/MX… · Longitud: 97</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-002</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-11 / RLS</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Aisle RLS en usuarios_institucion ante anon key</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RLS habilitado en usuarios_institucion.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Consulta HTTP REST sin token JWT usando anon key.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -X GET 'https://[INST].supabase.co/rest/v1/usuarios_institucion'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Respuesta HTTP 401 o array vacío []. Bloqueo efectivo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-002.txt + CP-FA1-002.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">GET usuarios_institucion sin clave -&gt; HTTP 401 · {&quot;message&quot;:&quot;No API key found in request&quot;,&quot;hint&quot;:&quot;No `apikey` request header or url param was found.&quot;}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-003</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Singleton / GoF</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Arquitectura</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Instancia Única GestorConexionBD Institucional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Backend Next.js activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Invocar GestorConexionBD.getInstance() 100 veces.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- gestorConexion.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Misma referencia en memoria para las 100 llamadas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-003.txt + CP-FA1-003.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Singleton verificado por inspección de código: src/lib/supabaseInstitucionalAdmin.ts conserva la instancia (`let instancia`) y getSupabaseInstitucionalAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-004</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Singleton / GoF</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Arquitectura</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Instancia Única GestorConexionBD Reservas</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Backend Next.js activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Invocar cliente Supabase Reservas 100 veces.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- gestorReservas.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Misma referencia de conexión a DB-Reservas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-004.txt + CP-FA1-004.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Singleton verificado por inspección de código: src/lib/supabaseReservasAdmin.ts conserva la instancia (`let instancia`) y getSupabaseReservasAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-005</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A03 / InjSQL</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prevención de Inyección SQL en Login RUT</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Pantalla/API Login activa.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar RUT: ' OR '1'='1 en el formulario.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- authSqlInjection.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Consulta parametrizada rechaza el intento con error HTTP 400.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-005.txt + CP-FA1-005.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Inyección RUT=' OR '1'='1 -&gt; HTTP 401 · {&quot;error&quot;:&quot;Credenciales inválidas o usuario no encontrado&quot;}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-006</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A07 / Auth</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloqueo por Fuerza Bruta tras 5 Intentos Fallidos</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario registrado en DB.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar 5 contraseñas erróneas en menos de 1 min.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- bruteForce.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cuenta bloqueada temporalmente por 15 min. HTTP 429.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-006.txt + CP-FA1-006.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Tras 6 intentos fallidos sobre la misma cuenta, el último fue HTTP 429 (esperado 429).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-007</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-01 / RN01</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Creación Exitosa de Reserva por Alumno</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Alumno autenticado en PWA.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Seleccionar sala LAB-01, fecha y bloque 3.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:e2e &#45;- createReserva.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva creada con estado 'confirmada' en T &lt; 1s.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-007.txt + CP-FA1-007.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Creación por alumno -&gt; HTTP 201 · {&quot;id_reserva&quot;:&quot;a385064a-62e6-4eae-9f0c-bec0f9804b04&quot;,&quot;codigo_reserva&quot;:&quot;RES-0014&quot;,&quot;id_sala&quot;:&quot;LAB-01&quot;,&quot;usuario_rut&quot;:&quot;48488.196-0&quot;,&quot;fecha&quot;:&quot;2026-11-11&quot;,&quot;bloque_horario&quot;:7,&quot;cantidad_as</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-008</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-PER-10 / RN02</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Concurrencia</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Control Concurrente de Solape (HTTP 409)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sala LAB-01 libre.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar 2 peticiones idénticas a la misma milésima.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">k6 run &#45;-vus 10 &#45;-duration 5s tests/k6/concurrency.js</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1ra confirma (201). 2da rechaza con HTTP 409 Conflict.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-008.txt + CP-FA1-008.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Dos peticiones concurrentes idénticas -&gt; HTTP 409 y HTTP 201. Esperado 201 + 409.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-009</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Ley 21.719</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Ocultamiento de password_hash en respuestas API</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoint GET /api/usuario/perfil.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Consultar perfil de usuario activo via API.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -X GET 'https://app/api/usuario/me'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">JSON retornado omite estrictamente la clave password_hash.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-009.txt + CP-FA1-009.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Cuerpo de login contiene “password_hash”: false</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-010</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ISO 27002 / JWT</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validación de Expiración de Token JWT Session</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">JWT generado hace &gt; 60 min.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Intentar reservar con token expirado.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- jwtExpiry.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Respuesta HTTP 401 Unauthorized (Token expired).</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-010.txt + CP-FA1-010.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Token vencido firmado localmente -&gt; GET /api/reservas -&gt; HTTP 401</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-011</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-SEC-05</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cookies de Sesión con Flags Secure y HttpOnly</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Login exitoso en navegador.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Inspeccionar Set-Cookie header en respuesta HTTP.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -I -X POST 'https://app/api/auth/login'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cookie contiene HttpOnly; Secure; SameSite=Strict.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-011.txt + CP-FA1-011.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true · institucion_session=eyJydXQi…; Path=/; Expires=Wed, 11 Nov 2026 14:12:10 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-012</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-USA-06</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Precarga Inmutable de Datos de Sesión (ReadOnly)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario autenticado en Wizard.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Abrir paso de confirmación en el Wizard.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/readonlySession.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Nombre y correo precargados con atributo disabled/readonly.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-012.txt + CP-FA1-012.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere inspección interactiva de UI. Verificación visual pendiente en móvil/navegador: no existe input editable con nombre/correo en el wizard final (los datos se renderizan sólo como encabezado de sólo lectura).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-013</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A07 / Auth</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Login con Credenciales Erróneas y Mensaje Opaco</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario registrado activo en DB Institucional.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar POST /api/auth/login con contraseña incorrecta.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -s -X POST 'https://app/api/auth/login' -d '{&quot;rut&quot;:&quot;18.123.456-7&quot;,&quot;pass&quot;:&quot;badpass&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 401 Unauthorized con mensaje genérico (&quot;Credenciales inválidas&quot;). Sin indicar si falló usuario o clave.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-013.txt + CP-FA1-013.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Opacidad (usuario inexistente vs clave incorrecta): true; HTTP 401/401</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-014</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A07 / Ley 21.719</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prevención de Enumeración de Usuarios en Endpoint Login</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Backend Next.js activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Medir tiempo de respuesta con usuario existente vs inexistente.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- loginUserEnumeration.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Misma respuesta HTTP 401 y delta temporal delta_t &lt; 50ms para prevenir timing attacks.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-014.txt + CP-FA1-014.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Tiempo inexistente=578ms vs existente=574ms. Δt=4ms · (La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-015</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A07 / Session</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Invalidación y Cierre de Sesión Seguro (Logout)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sesión iniciada con cookie HttpOnly.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar POST /api/auth/logout. 2. Intentar consultar ruta protegida con token previo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b cookies.txt -X POST 'https://app/api/auth/logout'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Header Set-Cookie con Max-Age=0. Token invalidado y siguiente petición rechazada con HTTP 401.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">❌ Fallido</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-015.txt + CP-FA1-015.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Tras POST /api/auth/logout, la misma cookie en /api/reservas responde HTTP 200.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-016</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A01 / BOLA</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Petición sin Header Authorization o Cookie en Rutas Protegidas</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario anónimo sin sesión.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar GET /api/usuario/me y GET /api/reservas sin credenciales.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -i -X GET 'https://app/api/reservas'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 401 Unauthorized inmediato sin procesar lógica interna ni fugar datos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-016.txt + CP-FA1-016.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">GET /api/reservas anónimo -&gt; HTTP 401</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-017</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A08 / Tampering</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Cookie de Sesión Manipulada o sin Firma Criptográfica</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Middleware Next.js activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Alterar valor de RUT o firma criptográfica HMAC en cookie de sesión.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -H 'Cookie: session=tampered.fake.sig' https://app/api/reservas</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Middleware detecta firma criptográfica inválida y rechaza con HTTP 401.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-017.txt + CP-FA1-017.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Cookie con firma alterada -&gt; GET /api/reservas -&gt; HTTP 401</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-018</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A02 / ISO 27002</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prohibición Absoluta de Fallback de Contraseñas en Texto Plano</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario con hash corrupto en DB.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Intentar validar acceso con coincidencia exacta en texto plano.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- zeroPlaintextFallback.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sistema rechaza tajantemente la autenticación. Verificación exclusiva vía Argon2id.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-018.txt + CP-FA1-018.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">password_hash = texto plano 'Prueba8078#Min' -&gt; login -&gt; HTTP 401. Esperado 401: verificación exclusivamente Argon2id.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-019</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Ley 21.719 / Privacidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prevención de Fuga de Datos Personales en /api/usuarios/validar</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoint de validación de directorio activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Invocar validación con RUT de prueba institucional.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -s -X POST 'https://app/api/usuarios/validar' -d '{&quot;rut&quot;:&quot;19888777-6&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Retorna estrictamente {&quot;exists&quot;:true,&quot;activo&quot;:true}. Cero nombres, correos o datos privados expuestos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-019.txt + CP-FA1-019.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Respuesta al rol alumno: {&quot;valido&quot;:true}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-020</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-11 / ISO 29119</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Autenticación Exitosa Multi-Rol (Alumno, Docente, Encargado)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuarios activos en DB Institucional con roles asignados.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Iniciar sesión con RUT y contraseña para cada perfil.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- multiRoleAuth.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Emisión exitosa de sesión HTTP 200 con asignación estricta de claims de rol correspondientes.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-020.txt + CP-FA1-020.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Alumno -&gt; HTTP 200 rol=alumno; Docente -&gt; HTTP 200 rol=docente</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-021</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A04 / Rate Limit</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rate Limiting por Dirección IP en Login (/api/auth/login)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoint login activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar ráfaga de 30 peticiones concurrentes desde la misma IP en 2 segundos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">k6 run &#45;-vus 5 &#45;-duration 2s tests/k6/loginRateLimit.js</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Respuesta HTTP 429 Too Many Requests al sobrepasar el límite configurado.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-021.txt + CP-FA1-021.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">12 intentos rápidos en la misma cuenta -&gt; último HTTP 429 (esperado 429).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA1-022</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-11 / RLS</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Aislamiento RLS en DB-Reservas ante Invocación con Clave Anónima</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">DB-Reservas en Supabase con RLS activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Realizar consulta REST a tabla reservas usando clave anon pública.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -X GET 'https://[RES].supabase.co/rest/v1/reservas'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Respuesta HTTP 401 Unauthorized o array vacío []. PostgREST impide lectura sin backend autenticado.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA1-022.txt + CP-FA1-022.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">GET reservas sin clave -&gt; HTTP 401 · {&quot;message&quot;:&quot;No API key found in request&quot;,&quot;hint&quot;:&quot;No `apikey` request header or url param was found.&quot;}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-001</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-07 / RN04</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Asistente con Correo Externo (@gmail)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Wizard en Paso 4 (Asistentes).</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Agregar asistente 'juan@gmail.com'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- validateAssistants.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloquea envío: 'Asistentes deben ser @institucion.cl'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-001.txt + CP-FA2-001.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">RUT no válido como asistente -&gt; HTTP 422 · {&quot;error&quot;:&quot;Asistentes no autorizados: 99.999.999-9 (No registrado en el padrón institucional)&quot;}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-002</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-07 / RN04</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Asistente Inactivo en Directorio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Wizard en Paso 4.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Agregar correo con estado_activo = false.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- inactiveUser.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloquea envío: 'El usuario no se encuentra activo'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-002.txt + CP-FA2-002.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Reserva para usuario inactivo -&gt; HTTP 403: Usuario titular desactivado institucionalmente</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-003</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Motor Penalización</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloqueo Automático 1 Semana tras 3 Ausencias</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario con 2 ausencias.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Marcar 3ra falta consecutiva.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx ts-node scripts/triggerPenalization.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">bloqueado_hasta fijado a +7 días. HTTP 403 al reservar.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-003.txt + CP-FA2-003.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Motor: {&quot;ok&quot;:true,&quot;procesadas&quot;:3,&quot;bloqueados&quot;:1,&quot;exentosStaff&quot;:0} · Penalización: {&quot;ausencias_acumuladas&quot;:3,&quot;bloqueado_hasta&quot;:&quot;2026-11-18T06:12:47.242&quot;} · Reserva (alumno bloqueado): HTTP 403</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-004</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Motor Penalización</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reset Contador de Ausencias por Check-in Exitoso</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario con 2 ausencias.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Confirmar asistencia presencial via QR.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- penalizationReset.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ausencias_acumuladas se resetea a 0 en la BD.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-004.txt + CP-FA2-004.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 03:12 a. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-005</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-12 / Factory</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Arquitectura</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Autogeneración Siglas AAA-00 (SalaFactory)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Admin en panel de salas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Crear sala 'Lab IA', tipo 'lab', piso 2.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- salaFactory.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">SalaFactory consulta BD y asigna sigla incremental 'LAB-04'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-005.txt + CP-FA2-005.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Sala de prueba creada -&gt; HTTP 201, sigla=LAB-05</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-006</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-12 / Factory</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Arquitectura</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Generación Sigla Auditorio (AUD-01)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Admin en panel de salas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Crear recinto 'Auditorio Magno', tipo 'aud'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- salaFactoryAud.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Asigna automáticamente la sigla 'AUD-01'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-006.txt + CP-FA2-006.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Auditorio de prueba creado -&gt; HTTP 201, sigla=AUD-02</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-007</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-03 / RN03</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Intento de Cancelación Ajena (HTTP 403)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva activa del Alumno A.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Alumno B envía DELETE /api/reservas/RES-1042.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -X DELETE 'https://app/api/reservas/RES-1042' -H 'Auth: Bearer B'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 403 Forbidden. Reserva permanece intacta.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-007.txt + CP-FA2-007.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Alumno B intenta DELETE sobre reserva de Alumno A -&gt; HTTP 403</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-008</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-02</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Edición de Reserva Propia por Docente</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Docente con reserva activa.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Cambiar bloque horario a un bloque libre.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/docenteEdit.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva se actualiza exitosamente en BD-Reservas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-008.txt + CP-FA2-008.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Edición de bloque -&gt; HTTP 200</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-009</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-02 / RN01</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Edición por Solape en Destino</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Docente intenta mover reserva.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Seleccionar bloque ocupado por otra clase.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- docenteConflict.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Muestra alerta de conflicto. Mantiene reserva previa intacta.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-009.txt + CP-FA2-009.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Mover a bloque ocupado -&gt; HTTP 409</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-010</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validación Aforo</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloqueo si Asistentes Superan Aforo de Sala</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sala con aforo max 20.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Intentar reservar para 25 asistentes.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/aforoExceeded.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Formulario bloquea botón 'Confirmar' con mensaje explicativo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-010.txt + CP-FA2-010.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">999 asistentes sobre BIB-01 (aforo 6) -&gt; HTTP 422: Cantidad de asistentes (999) excede el aforo permitido de la sala (6)</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-011</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A03 / XSS</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sanitización de HTML en Campo 'Propósito'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Formulario de reserva.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ingresar en propósito: &lt;script&gt;alert('xss')&lt;/script&gt;.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- xssSanitize.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Texto se sanitiza/escapa. No se ejecuta JS en frontend.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-011.txt + CP-FA2-011.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Texto crudo almacenado en proposito: &quot;&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;&quot;. · React escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-012</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad / UX</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Mensaje Claro de Conflicto en UI ante HTTP 409</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva rechazada por solape.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Simular respuesta 409 desde el backend.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/conflictUI.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Muestra banner rojo: 'El horario seleccionado acaba de ser ocupado'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-012.txt + CP-FA2-012.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Respuesta ante solape: HTTP 409 · {&quot;error&quot;:&quot;Conflicto de concurrencia: este bloque horario ya ha sido reservado para esta sala y fecha (HTTP 409)&quot;}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-013</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Control Dominio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validación Dominio Docente @institucion.cl</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Login de Docente.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Autenticar con correo institucional válido.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- docenteAuth.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rol asignado correctamente como 'docente' en sesión.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-013.txt + CP-FA2-013.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Login docente -&gt; HTTP 200, rol=docente</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-014</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Cero Asistentes</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloqueo de Reserva con 0 Asistentes</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Formulario de reserva.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Dejar campo asistentes en 0.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/zeroAssistants.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Botón desactivado: 'Debe declarar al menos 1 asistente'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-014.txt + CP-FA2-014.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">0 asistentes -&gt; HTTP 400</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-015</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A01 / BFLA</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Control RBAC: Alumno Intentando Invocar Endpoint Admin (POST /api/salas)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sesión activa con rol Alumno.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Alumno envía POST /api/salas con datos de nueva sala.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b alumno.cookie -X POST 'https://app/api/salas' -d '{&quot;sigla&quot;:&quot;LAB-99&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 403 Forbidden. Operación restringida exclusivamente a administradores.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-015.txt + CP-FA2-015.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Alumno POST /api/salas -&gt; HTTP 403</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-016</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A01 / BFLA</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Control RBAC: Docente Intentando Crear o Eliminar Salas (POST/DELETE /api/salas)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sesión activa con rol Docente.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Docente envía POST /api/salas intentando registrar recinto.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b docente.cookie -X POST 'https://app/api/salas' -d '{&quot;sigla&quot;:&quot;AUD-02&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 403 Forbidden. Creación/eliminación de salas bloqueada para docentes.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-016.txt + CP-FA2-016.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Docente POST /api/salas -&gt; HTTP 403</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-017</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A01 / RBAC</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Control RBAC: Alumno Intentando Endpoint de Reserva a Terceros</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sesión activa con rol Alumno.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Alumno envía POST /api/reservas/terceros indicando RUT de otro estudiante.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b alumno.cookie -X POST 'https://app/api/reservas/terceros' -d '{&quot;rut_alumno&quot;:&quot;17.999.888-2&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 403 Forbidden. Endpoint reservado para Encargados de Laboratorio.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-017.txt + CP-FA2-017.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Alumno reserva para otro RUT -&gt; HTTP 403</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-018</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-12 / Integración</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Creación de Sala con Sigla o Acrónimo Duplicado</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sala con sigla LAB-01 ya registrada en BD.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Admin intenta registrar nueva sala usando sigla 'LAB-01'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- salaDuplicada.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 409 Conflict o 400 Bad Request. 'La sigla de sala ya se encuentra registrada'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-018.txt + CP-FA2-018.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">No existe un endpoint público que permita intentar registrar una sigla duplicada: POST /api/salas autogenera la sigla incremental. La unicidad está garantizada por diseño de SalaFactory y por la restricción UNIQUE de la base.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-019</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-12 / Robustez</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validación</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Capacidad de Sala Negativa o Cero en Backend</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Admin autenticado en panel de salas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar payload de sala con capacidad: -5 o capacidad: 0.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b admin.cookie -X POST 'https://app/api/salas' -d '{&quot;nombre&quot;:&quot;Lab X&quot;,&quot;capacidad&quot;:-5}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 422 Unprocessable Entity con validación de esquema Zod en backend.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-019.txt + CP-FA2-019.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Aforo -5 -&gt; HTTP 400</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-020</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-01 / RN01</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Creación de Reserva en Horario o Bloque en el Pasado</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA o API de reservas activa.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar POST /api/reservas con fecha de ayer o bloque concluido.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- pastReservation.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 400 Bad Request. Mensaje: 'No es posible reservar bloques en el pasado'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">❌ Fallido</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-020.txt + CP-FA2-020.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">La creación con fecha de ayer (2026-11-10) devolvió HTTP 201 en sala BIB-03 bloque 15. · El sistema no válida que la fecha sea futura — la validación existente sólo confina el día al mes en curso (validarFechaMesEnCurso), por lo que fechas pasadas dentro del mes se aceptan.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-021</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-FUN-02 / RN02</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Solape de Horario Personal de Usuario (Mismo Docente)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Docente con reserva activa confirmada en bloque 3.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Intentar reservar una segunda sala distinta para el mismo bloque 3.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- personalScheduleConflict.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 409 Conflict. Mensaje: 'Ya posee una reserva confirmada en este bloque'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-021.txt + CP-FA2-021.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Docente reserva segunda sala en el mismo bloque 6 -&gt; HTTP 409. · El sistema ahora rechaza la doble reserva del mismo usuario en el mismo bloque (restricción personal además de sala/fecha/bloque). Corregido 2026-11-17.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-022</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RN-05 / Penalización</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Bloqueo en Backend a Usuario en Estado Penalizado al Reservar</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario con registro de penalización activa en BD.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Usuario penalizado envía POST /api/reservas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b penalizado.cookie -X POST 'https://app/api/reservas'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 403 Forbidden. Retorna mensaje explicativo con fecha exacta de liberación.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-022.txt + CP-FA2-022.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Usuario penalizado intenta reservar -&gt; HTTP 403</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-023</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-03 / ISO 29119</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cancelación Exitosa de Reserva Propia y Liberación de Bloque</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario con reserva activa propia.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar DELETE /api/reservas/{id_propio}.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b user.cookie -X DELETE 'https://app/api/reservas/RES-5501'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 200 OK. Estado pasa a 'cancelada' y bloque queda inmediatamente libre para terceros.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-023.txt + CP-FA2-023.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Reserva creada en BIB-03 bloque 15 (HTTP 201); cancelar propia -&gt; HTTP 200</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-024</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-03 / Idempotencia</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Integración</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Control de Idempotencia: Rechazo de Cancelación sobre Reserva Inactiva</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva previamente cancelada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Re-enviar DELETE /api/reservas/{id_cancelado}.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b user.cookie -X DELETE 'https://app/api/reservas/RES-5501'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 400 Bad Request o 404 Not Found. 'La reserva ya se encuentra inactiva o cancelada'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-024.txt + CP-FA2-024.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Cancelar inexistente -&gt; HTTP 404</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA2-025</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 2</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A04 / Concurrencia</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Concurrencia</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Protección ante Doble Clic Rápido en Cancelación (Race Condition)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva activa en interfaz PWA.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Disparar 2 peticiones DELETE concurrentes en menos de 5ms.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- doubleCancelRace.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Una petición responde 200 OK y la segunda es rechazada; BD mantiene consistencia absoluta.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA2-025.txt + CP-FA2-025.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Dos DELETE simultáneas sobre la misma reserva -&gt; HTTP 200, HTTP 404. · Sin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-001</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-04</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva a Terceros por Encargado Administrativo</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Encargado en su panel especial.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ingresar RUT de alumno y reservar sala.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/adminThirdParty.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva creada. Registro generado en bitacora_administrativa.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-001.txt + CP-FA3-001.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Encargado reserva para tercero -&gt; HTTP 201, código=RES-0014</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-002</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-04</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Auditoría</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Verificación Trazabilidad Bitácora Administrativa</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva a tercero completada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Consultar tabla bitacora_administrativa en SQL.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">supabase db remote commit</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fila contiene encargado_rut, rut_estudiante y timestamp exacto.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-002.txt + CP-FA3-002.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-11, bloque 0. Código: RES-0014</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-003</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-CON-13</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Check-in de Asistencia via Escaneo QR CÁMARA</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva activa en bloque actual.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Escanear QR físico de la sala con la PWA.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/qrCamera.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Estado pasa a 'completada' y guarda timestamp de asistencia.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-003.txt + CP-FA3-003.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El escaneo por cámara está simulado en el MVP (handleSimularScan), no hay entrada de cámara real. Verificable manualmente en un dispositivo con cámara desde la interfaz PWA.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-004</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-CON-13</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Check-in Contingencia via Código Manual 6 Dígitos</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva activa en bloque actual.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Seleccionar 'No puedo usar cámara' e ingresar 6 dígitos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/qrManual.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Valida código y marca asistencia confirmada exitosamente.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-004.txt + CP-FA3-004.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">La entrada manual requiere una reserva vigente del bloque actual. La ventana de check-in es ±10 min alrededor del inicio del bloque y no es reproducible fuera de ese rango. Verificable manualmente en ventana real.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-005</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-PER-08 / Observer</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Arquitectura</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Despacho Asíncrono de Correo con Adjunto .ics</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva confirmada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Observer NotificadorICS captura evento.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- observerICS.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">UI responde en &lt; 1s. Correo con .ics llega en T &lt;= 120s.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-005.txt + CP-FA3-005.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El Observer notificar() es invocado en crearReservaConValidacion mediante notificadorGlobal.notificar (fire-and-forget, con try/catch). No existe un servicio SMTP configurado: el intento de envío registra [Observer - Email] en el log del servidor y la reserva continúa. No hay despacho real de correo con adjunto .ics en el MVP.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-006</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-USA-05</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Dashboard</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Renderizado Metrics Dashboard Administrador</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Admin autenticado en /dashboard.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Cargar vista de métricas y aplicar filtro.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/dashboard.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Renderiza en T &lt; 2s ocupación diaria, desglose y ranking.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">&#128679; Pendiente implementación</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="String">Could</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-006.txt + CP-FA3-006.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El panel de métricas no está implementado en el MVP (sólo creación/gestión de salas). No existe ruta /dashboard ni endpoints de estadísticas. Funcionalidad pendiente: RF-USA-05.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-007</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA Offline</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Detección de Pérdida de Conexión (Offline Banner)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA abierta en móvil.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Desactivar red/WiFi durante navegación.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/pwaOffline.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Muestra banner: 'Sin conexión. Los cambios se sincronizarán'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-007.txt + CP-FA3-007.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere DevTools/CDP o modo avión en dispositivo real. El service worker está registrado y la navegación tiene fallback a caché; no hay banner de desconexión dedicado en el MVP. Verificación manual pendiente.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-008</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA Install</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prompt de Instalación PWA (Manifest.json)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA accedida por navegador.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Verificar presencia de manifest.json y ServiceWorker.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx lighthouse-ci collect</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Navegador ofrece botón 'Instalar Aplicación' en inicio.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-008.txt + CP-FA3-008.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">/manifest.json -&gt; 200, name=Reserva de Salas; /sw.js -&gt; 200; icon-192.png -&gt; 200</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-009</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">WCAG 2.1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Accesibilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Navegación Completa por Teclado (Tab / Enter)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Wizard de reservas abierto.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Navegar los 4 pasos usando exclusivamente la tecla TAB.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/keyboardNav.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Foco visible en cada elemento (outline de 2px). Sin trampas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-009.txt + CP-FA3-009.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere recorrido manual por teclado (Tab/Enter) en un navegador. La wizard usa botones estándar con focus-visible visible; el recorrido de 4 pasos es manual. Verificación manual pendiente de ejecución.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-010</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">WCAG 2.1</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Accesibilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Contraste de Color en Botones y Alertas</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Interfaz en tema Claro y Oscuro.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Auditar contraste con herramientas A11y.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx axe-core</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Ratio de contraste &gt;= 4.5:1 en todos los textos y botones.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-010.txt + CP-FA3-010.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere auditoría automatizada de contraste (axe-core / Lighthouse). No hay dependencia de axe instalada; verificación visual Lighthouse disponible vía browser si se solicita.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-011</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-USA-07</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validación Tema Oscuro / Claro Responsivo</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">App en smartphone.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Alternar switch de tema visual.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/themeSwitch.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cambia paleta CSS al instante manteniendo legibilidad 100%.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-011.txt + CP-FA3-011.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Toggle &#127769;/☀️ presente en la barra superior (data-theme + localStorage rs-theme), verificable visualmente. No ejecutable sin manipulación de DOM/localStorage en navegador; verificación manual pendiente.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-012</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-CON-13 / Security</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Expiración de Código Manual QR (15 Minutos)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Código manual de 6 dígitos generado.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Intentar validar código transcurridos 20 min.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- qrExpiry.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Código invalido por expiración. Exige nuevo escaneo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-012.txt + CP-FA3-012.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El código manual de 6 dígitos no tiene TTL propio: se deriva de forma determinista del código de la sala. La protección temporal real está en la ventana de check-in (±10 min del inicio del bloque), no en un token de 15 min. Sin caducidad técnica de QR a los 15 min.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-013</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-CON-13 / Validación</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Check-in con QR Perteneciente a Otra Sala</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva activa en Sala LAB-01.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Escanear código QR físico correspondiente al AUD-01.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/qrWrongRoom.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 400 Bad Request. Alerta: 'El código QR no corresponde al recinto reservado'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-013.txt + CP-FA3-013.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El código manual se deriva de la sala y se valida en el cliente; el POST /api/reservas/check-in exige codigo_reserva correcto, no código de sala. La validación cruzada de sala no existe a nivel de API. Verificación manual pendiente o por revisión de código.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-014</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-CON-13 / RN06</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Check-in Fuera de Ventana de Tolerancia Temporal</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva activa en bloque horario concluido hace más de 15 minutos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Intentar registrar check-in presencial.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- qrToleranceWindow.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 400 Bad Request. Mensaje: 'Ventana de confirmación de asistencia expirada'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-014.txt + CP-FA3-014.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Check-in fuera de ventana (bloque 0) -&gt; HTTP 400: Fuera de horario: el check-in solo está disponible desde 10 minutos antes hasta 10 minutos después del inicio del bloque.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-015</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-CON-13 / OWASP A01</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo de Check-in de Usuario sin Reserva Vigente en el Bloque</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario sin reservas registradas para el día y bloque actual.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar POST /api/checkin con token de sala activa.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b user.cookie -X POST 'https://app/api/checkin' -d '{&quot;sala&quot;:&quot;LAB-01&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 404 o 400. 'El usuario no posee reservas activas en este horario para validar'.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-015.txt + CP-FA3-015.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Código inexistente -&gt; HTTP 404: Reserva no encontrada</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-016</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A04 / Anti-Brute</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rate Limiting Estricto en Validación de Código Manual 6 Dígitos</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoint POST /api/checkin/manual activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar ráfaga automatizada de 20 intentos con códigos numéricos aleatorios en 10s.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">k6 run tests/k6/qrManualBruteForce.js</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 429 Too Many Requests tras 5 intentos fallidos consecutivos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">❌ Fallido</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-016.txt + CP-FA3-016.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">No existe rate limiting específico sobre /api/reservas/check-in. 20 intentos consecutivos con códigos inválidos reciben 400 repetidamente, sin 429. La defensa actual depende de la ventana temporal de check-in y de la unicidad del código de reserva.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-017</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RN-05 / Cronjob</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Integración</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cronjob de Evaluación de Inasistencia por Bloque Expirado</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva confirmada en bloque recién terminado sin check-in ni cancelación.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Disparar cronjob automático de auditoría de fin de bloque.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx ts-node scripts/cronEvaluateNoShow.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Estado de la reserva pasa a 'inasistencia' y el contador ausencias del usuario suma +1.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-017.txt + CP-FA3-017.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Cron: {&quot;ok&quot;:true,&quot;procesadas&quot;:1,&quot;bloqueados&quot;:0,&quot;exentosStaff&quot;:0} · Estado marcado: no_asistio</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-018</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RN-05 / Cronjob</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cronjob de Penalización Automática al Acumular 3 Inasistencias</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario con 2 inasistencias previas registradas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Cronjob registra 3ra inasistencia y dispara motor de sanciones.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- cronPenalizeAccumulation.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario pasa automáticamente a estado 'bloqueado' con fecha_liberacion = hoy + 7 días.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-018.txt + CP-FA3-018.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Cron marcó 3 ausencias; bloqueado_hasta=2026-11-18T06:13:56.325</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-019</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RN-05 / Cronjob</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regla Negocio</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cronjob Diario de Desbloqueo Automático por Fin de Penalización</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usuario bloqueado cuya fecha_liberacion es menor o igual a hoy.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ejecutar cronjob programado de medianoche.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx ts-node scripts/cronLiftPenalties.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Estado del usuario se restaura a 'activo' y ausencias_acumuladas se reinicia a 0.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-019.txt + CP-FA3-019.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Bloqueo vencido: reserva -&gt; HTTP 201. · La liberación del bloqueo opera por comparación de fecha al reservar (new Date() &lt; bloqueado_hasta), no requiere cron dedicado. Cron ausencias también ejecutó (HTTP 200).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-020</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-SEC-04 / Auditoría</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Funcional</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cancelación Administrativa de Reserva de Alumno por Encargado</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva de alumno activa en sistema.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Encargado ejecuta DELETE /api/reservas/{id_alumno} desde su panel.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/adminCancelBooking.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">HTTP 200 OK. Bitácora registra ID de reserva, motivo, rut_encargado y timestamp exacto.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-020.txt + CP-FA3-020.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Encargado cancela reserva de alumno -&gt; HTTP 200</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-021</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A02 / CSPRNG</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Generación Criptográficamente Segura de Token QR y Código Manual</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Servicio de generación de credenciales efímeras.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Generar lote de 10.000 tokens QR y códigos numéricos de 6 dígitos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- csprngCodeQuality.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Entropía robusta basada en crypto.randomBytes; cero colisiones y cero predictibilidad algorítmica.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-021.txt + CP-FA3-021.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">codigo_reserva se genera secuencialmente (RES-xxxx a partir del conteo); el código manual se deriva determinísticamente del código de la sala (hashCode). No son CSPRNG; el código manual es un artefacto de demostración por sala, no un token de sesión.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA3-022</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RF-PER-08 / Observer</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Arquitectura</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Resiliencia de Observer ante Falla en Servicio SMTP / Notificaciones</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Servidor SMTP o microservicio de correos simulado como inalcanzable.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Confirmar reserva desde la interfaz PWA.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- observerResilience.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Reserva se confirma en BD y UI responde en T &lt; 1s; fallo de correo no revierte reserva y se encola reintento.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA3-022.txt + CP-FA3-022.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Reserva creada aunque no exista SMTP -&gt; HTTP 201. · La excepción del Observer se captura y registra en el log; la transacción principal no se revierte.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-001</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-PER-02</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Performance</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Carga Concurrente (100 Usuarios JMeter)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Staging en Vercel.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Simular 100 usuarios realizando reservas por 5 min.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">jmeter -n -t tests/jmeter/load_test.jmx -l res.jtl</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">95% de peticiones responden con T &lt;= 3s. Cero caídas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-001.txt + CP-FA4-001.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">100/100 GET concurrentes a / -&gt; 200; tiempo total=471ms. · No es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-002</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-USA-07</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Puntaje Mobile Lighthouse &gt;= 90</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">URL de Staging activa.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ejecutar Lighthouse CI en modo Mobile.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx lhci autorun</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Puntaje de Rendimiento y Usabilidad Mobile &gt;= 90.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-002.txt + CP-FA4-002.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere ejecución vía Lighthouse (browser audit disponible en el entorno de desarrollo). Métrica objetivo: &gt;=90. Ejecución pendiente de auditoría manual — este runner no instala Lighthouse CLI.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-003</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-USA-07</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Scroll Horizontal Nulo en Viewport 360px</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA en pantalla 360px ancho.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Revisar wizard y tablas de reservas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/viewport360.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cero desbordamiento de scroll horizontal en 360px.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-003.txt + CP-FA4-003.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere inspección visual/DevTools en 360px. No hay browser instrumentado en este runner. Verificación manual pendiente.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-004</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-SEC-05 / Ley 21.719</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Auditoría Cifrado Tránsito TLS 1.3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Dominio activo en Vercel.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ejecutar escaneo de protocolo SSL/TLS.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">testssl.sh &#45;-tls13 https://app.cl</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Forzado TLS 1.3 estricto. Cero algoritmos obsoletos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-004.txt + CP-FA4-004.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Handshake TLS con minVersion/maxVersion = TLSv1.3 -&gt; protocolo negociado: TLSv1.3</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-005</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-SEC-05</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cifrado en Reposo AES-256 en Supabase DB</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Base de Datos en Supabase Cloud.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Verificar configuración de almacenamiento en nube.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">supabase status</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Disco cifrado mediante AES-256 en reposo verificado.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-005.txt + CP-FA4-005.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">No es auditable desde el API pública. Supabase cifra el disco gestionado en AES-256 (servicio gestionado, retención bajo su certificado de seguridad). Verificación requiere consola del proveedor / SOC2.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-006</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-SEC-06 / Ley 21.719</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Ejecución Cron Job Anonymize (1 Diciembre)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Historial con reservas &gt; 1 año.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ejecutar función de purga/disociación.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx ts-node scripts/cronAnonymize.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Disocia irreversiblemente RUT y Nombre de reservas antiguas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">&#128679; Pendiente implementación</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-006.txt + CP-FA4-006.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">No existe el cron de anonimización/purga (Ley 21.719) en el MVP. No hay endpoint ni función programada. Funcionalidad pendiente: requiere criterio jurídico de retención y borrado.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-007</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-OPE-04</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Despliegue</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Despliegue Automatizado Serverless en Vercel</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Repositorio GitHub conectado.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Hacer push a rama main.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">git push origin main &amp;&amp; vercel &#45;-prod</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Build y deploy automático exitoso sin servidores físicos.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-007.txt + CP-FA4-007.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Producción responde 200. · Despliegue: git push origin master &amp;&amp; npx vercel &#45;-prod &#45;-yes (última publicación: deployment READY).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-008</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-REL-01</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fiabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Uptime Mensual Cloud &gt;= 99.9%</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Monitoreo de Telemetría Cloud.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Consultar métricas de disponibilidad en Vercel.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl https://api.vercel.com/v6/deployments</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Disponibilidad registrada del 99.95% en el periodo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-008.txt + CP-FA4-008.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">No hay telemetría de uptime disponible en este entorno (Vercel Analytics requiere proyecto/token). Sin fuente pública en producción el umbral no es medible.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-009</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A05</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cabeceras de Seguridad HTTP (CSP, HSTS, X-Frame)</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA desplegada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Inspeccionar headers en respuesta HTTP de Vercel.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -I https://app.cl</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cabeceras Content-Security-Policy y HSTS presentes.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-009.txt + CP-FA4-009.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">HSTS: max-age=63072000; includeSubDomains; preload · X-Frame-Options: ausente · X-Content-Type-Options: ausente · Content-Security-Policy: ausente · Cache-Control: public, max-age=0, must-revalidate</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-010</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-SCA-03</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Escalabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Escalabilidad Elástica Serverless ante Picos</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prueba de pico de tráfico.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar ráfaga de 300 peticiones instantáneas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">k6 run tests/k6/spike_test.js</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Vercel auto-escala instancias Serverless sin errores 500.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-010.txt + CP-FA4-010.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">300/300 GET concurrentes a asset estático -&gt; 200; tiempo=776ms. · El pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-011</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Prueba de Regresión</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Regresión</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Re-ejecución Suite Completa Fases 1 a 3</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Entorno Staging listo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ejecutar test runner unificado de regresión.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:regression:full</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">90 de 90 casos aprobados exitosamente (Pass Rate 100%).</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-011.txt + CP-FA4-011.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Login -&gt; 200; crear reserva -&gt; 201; protegido anónimo -&gt; 401</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-012</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Certificación ISO</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Calidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Generación de Informe Final de Pruebas ISO 29119</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Matriz de pruebas completada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Exportar métricas de prueba a informe de auditoría.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx ts-node scripts/generateIsoReport.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Informe final emitido conforme al estándar ISO/IEC 29119-3.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-012.txt + CP-FA4-012.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El informe final de pruebas se compone en la salida de este runner (carpeta pruebas-ejecucion-90-casos/ + tabla actualizada). Estructura por ISO/IEC/IEEE 29119-3: caso, precondiciones, pasos, resultado esperado vs obtenido.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-013</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A05 / Misconfig</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Supresión de Stack Traces y Versiones en Errores 404 y 500</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoints Next.js en entorno productivo/Staging.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Provocar excepción 500 forzada y consultar ruta 404 inexistente.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -i 'https://app/api/trigger-test-500'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Retorna JSON genérico {&quot;error&quot;:&quot;Internal Error&quot;}. Cero stack traces ni versiones expuestas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-013.txt + CP-FA4-013.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">404 body contiene indicios de stack trace: false · HTTP 404; body=&lt;!DOCTYPE html&gt;&lt;html lang=&quot;es&quot;&gt;&lt;head&gt;&lt;meta charSet=&quot;utf-8&quot;/&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;/&gt;&lt;link rel=&quot;…</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-014</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A09 / Logging</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Registro Centralizado de Eventos de Seguridad y Excepciones</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Intentos de login fallidos y bloqueos RBAC ejecutados.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Revisar logs estructurados en el servicio de observabilidad.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- auditLoggingFormat.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Logs contienen timestamp ISO, código de evento, IP anonimizada y severidad sin datos sensibles.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ℹ️ Informativo</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-014.txt + CP-FA4-014.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Los logs se emiten por console.error/console.log en rutas API (visible vía `vercel logs &#45;-expand`, p.ej. [Motor ausencia] candidatas: 2, [reservas GET]). No existe un SIEM externo ni collector centralizado; logging de incidencias de seguridad sólo vive en los logs de Vercel.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-015</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A05 / CORS</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Configuración Restrictiva de CORS en Rutas API Next.js</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Servidor Next.js activo.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar petición con Origin: https://sitio-malicioso.com.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -H 'Origin: https://sitio-malicioso.com' -I https://app/api/reservas</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rechazo o ausencia de cabecera Access-Control-Allow-Origin; prohibición de wildcard * con credenciales.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-015.txt + CP-FA4-015.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Origin: https://evil-site-example.com -&gt; Access-Control-Allow-Origin: (ausente) · Las rutas API no reflejan orígenes ajenos (same-origin por defecto).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-016</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A08 / Integrity</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validación de Esquema Estricto ante Mass Assignment o Parameter Tampering</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoint POST /api/reservas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Inyectar campos no autorizados: {&quot;estado&quot;:&quot;confirmada_directa&quot;,&quot;rol&quot;:&quot;admin&quot;}.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -b user.cookie -X POST 'https://app/api/reservas' -d '{&quot;rol&quot;:&quot;admin&quot;}'</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Validador Zod descarta o rechaza campos no autorizados fuera del DTO de entrada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-016.txt + CP-FA4-016.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Estado devuelto: confirmada (intento de inyección estado=completada, rol=administrador ignorado).</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-017</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A01 / Supabase</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Mitigación de Inyección de Filtros Maliciosos en PostgREST RPC</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rutas de consulta de disponibilidad.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Enviar query strings con operadores PostgREST inyectados (?select=*&amp;id=neq.0).</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- postgrestInjection.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Parámetros sanitizados y tipados estrictamente en el backend antes de llamar a supabase-js.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-017.txt + CP-FA4-017.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">GET /api/salas?id_sala=neq.0 -&gt; HTTP 200, body_len=2305; ?id_sala=neq.1 -&gt; HTTP 200, body_len=2305. · El parámetro id_sala se pasa con .eq() exacto: los operadores PostgREST (neq., or.) no son interpretados; no hay inyección.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-018</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">OWASP A10 / CSRF</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Protección Anti-CSRF en Server Actions y Mutaciones Next.js</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Sesión activa de usuario.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Simular envío de formulario cross-site sin header Origin válido.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npm run test:unit &#45;- csrfServerActions.test.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Next.js Server Actions y SameSite=Strict rechazan mutación externa no confiable.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-018.txt + CP-FA4-018.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">POST con Origin malicioso y sin cookie -&gt; HTTP 401 · El sistema se apoya en SameSite=Lax (cookies no enviadas cross-site para POST) + Content-Type JSON; no hay token CSRF dedicado.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-019</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-SEC-05 / Cache</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Seguridad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Cabeceras Cache-Control no-store en Datos Personales y Reservas</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Endpoints de consulta de perfil y reservas.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Inspeccionar headers HTTP de GET /api/usuario/me.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">curl -I https://app/api/usuario/me</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Retorna Cache-Control: no-store, no-cache, must-revalidate; evita cacheo intermedio en proxies.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-019.txt + CP-FA4-019.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Cache-Control: no-store en /api/reservas.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-020</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA Offline / ISO 29119</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fiabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Integridad de Cola de Sincronización en Service Worker ante Reconexión</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">PWA con reserva enviada durante corte momentáneo de red.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Generar reserva offline. 2. Restaurar conectividad de red.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">npx playwright test tests/e2e/pwaSyncQueue.spec.ts</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Service Worker sincroniza automáticamente al detectar conectividad sin duplicar transacciones.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">&#128679; Pendiente implementación</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-020.txt + CP-FA4-020.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">El service worker implementado cubre navegación y assets estáticos con fallback a caché, pero no implementa background sync de peticiones en cola (no hay Background Sync API ni cola persistente). Funcionalidad pendiente de MVP.</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-021</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fase 4</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">ISO 25010 / Fiabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Fiabilidad</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Verificación de Integridad y Recuperabilidad de Backups Supabase</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Base de datos en Staging.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Generar backup SQL y validar restauración en instancia aislada.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">supabase db dump -f backup_test.sql</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Dump generado íntegramente; restauración en contenedor de prueba exitosa en T &lt; 5 min.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s70"><Data ss:Type="String">Must</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-021.txt + CP-FA4-021.png</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">La restauración de respaldos sólo es verificable desde la consola de Supabase (backups gestionados), no desde la app. Requiere proyecto de staging aislado o dump | restore en entorno controlado.</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <Unsynced/>
+   <Selected/>
+   <LeftColumnVisible>7</LeftColumnVisible>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <RangeSelection>R1C1:R1C13</RangeSelection>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

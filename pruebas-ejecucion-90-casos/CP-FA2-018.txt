@@ -1,0 +1,6 @@
+Caso: CP-FA2-018
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+No existe un endpoint público que permita intentar registrar una sigla duplicada: POST /api/salas autogenera la sigla incremental. La unicidad está garantizada por diseño de SalaFactory y por la restricción UNIQUE de la base.

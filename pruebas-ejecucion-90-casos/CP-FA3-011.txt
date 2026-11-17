@@ -1,0 +1,6 @@
+Caso: CP-FA3-011
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Toggle 🌙/☀️ presente en la barra superior (data-theme + localStorage rs-theme), verificable visualmente. No ejecutable sin manipulación de DOM/localStorage en navegador; verificación manual pendiente.

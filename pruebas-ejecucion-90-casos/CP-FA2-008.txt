@@ -1,0 +1,6 @@
+Caso: CP-FA2-008
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Edición de bloque -> HTTP 400

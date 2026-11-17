@@ -1,0 +1,7 @@
+Caso: CP-FA4-017
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+GET /api/salas?id_sala=neq.0 -> HTTP 200, body_len=1592; ?id_sala=neq.1 -> HTTP 200, body_len=1592.
+El parámetro id_sala se pasa con .eq() exacto: los operadores PostgREST (neq., or.) no son interpretados; no hay inyección.

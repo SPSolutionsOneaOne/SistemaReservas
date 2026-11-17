@@ -1,0 +1,7 @@
+Caso: CP-FA1-022
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+GET reservas sin clave -> HTTP 401
+{"message":"No API key found in request","hint":"No `apikey` request header or url param was found."}

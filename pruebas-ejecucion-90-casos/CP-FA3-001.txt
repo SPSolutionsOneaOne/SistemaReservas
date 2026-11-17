@@ -1,0 +1,6 @@
+Caso: CP-FA3-001
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Encargado reserva para tercero -> HTTP 201, código=RES-0019

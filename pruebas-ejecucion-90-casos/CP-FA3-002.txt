@@ -1,0 +1,6 @@
+Caso: CP-FA3-002
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-17, bloque 0. Código: RES-0019

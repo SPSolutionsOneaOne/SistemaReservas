@@ -1,0 +1,6 @@
+Caso: CP-FA2-005
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Sala de prueba creada -> HTTP 201, sigla=LAB-04

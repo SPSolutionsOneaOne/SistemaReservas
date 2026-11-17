@@ -1,0 +1,6 @@
+Caso: CP-FA4-012
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+El informe final de pruebas se compone en la salida de este runner (carpeta pruebas-ejecucion-90-casos/ + tabla actualizada). Estructura por ISO/IEC/IEEE 29119-3: caso, precondiciones, pasos, resultado esperado vs obtenido.

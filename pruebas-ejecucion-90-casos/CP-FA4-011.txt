@@ -1,0 +1,6 @@
+Caso: CP-FA4-011
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Login -> 200; crear reserva -> 201; protegido anónimo -> 401

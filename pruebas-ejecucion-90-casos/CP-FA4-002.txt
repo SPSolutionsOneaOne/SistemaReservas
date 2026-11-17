@@ -1,0 +1,6 @@
+Caso: CP-FA4-002
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Requiere ejecución vía Lighthouse (browser audit disponible en el entorno de desarrollo). Métrica objetivo: >=90. Ejecución pendiente de auditoría manual — este runner no instala Lighthouse CLI.

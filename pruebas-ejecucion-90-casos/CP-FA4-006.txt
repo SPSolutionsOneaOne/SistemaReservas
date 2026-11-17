@@ -1,0 +1,6 @@
+Caso: CP-FA4-006
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_IMPL
+
+Detalle:
+No existe el cron de anonimización/purga (Ley 21.719) en el MVP. No hay endpoint ni función programada. Funcionalidad pendiente: requiere criterio jurídico de retención y borrado.

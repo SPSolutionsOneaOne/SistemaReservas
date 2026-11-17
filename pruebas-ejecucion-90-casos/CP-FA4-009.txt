@@ -1,0 +1,10 @@
+Caso: CP-FA4-009
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: INFO
+
+Detalle:
+HSTS: max-age=63072000; includeSubDomains; preload
+X-Frame-Options: ausente
+X-Content-Type-Options: ausente
+Content-Security-Policy: ausente
+Cache-Control: public, max-age=0, must-revalidate

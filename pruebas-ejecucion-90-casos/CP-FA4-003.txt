@@ -1,0 +1,6 @@
+Caso: CP-FA4-003
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Requiere inspección visual/DevTools en 360px. No hay browser instrumentado en este runner. Verificación manual pendiente.

@@ -1,0 +1,6 @@
+Caso: CP-FA2-014
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+0 asistentes -> HTTP 400

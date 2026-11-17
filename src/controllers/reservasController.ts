@@ -167,6 +167,36 @@ export async function crearReservaConValidacion(
     }
   }
 
+  // 4bis. Solape personal: un mismo usuario no puede ocupar dos recintos
+  // en el mismo bloque/fecha. Aplica al titular (RF-FUN-02 / RN02) y a
+  // cualquier asistente de la reserva, ya que el bloque es indisponible
+  // físicamente para la persona — un bloque ocupa una única sala por persona.
+  const rutsInvolucrados = [params.usuario_rut, ...asistentesRuts];
+  const { data: ocupadas, error: errSolape } = await supabaseReservas
+    .from('reservas')
+    .select('id_reserva, usuario_rut, codigo_reserva')
+    .eq('fecha', params.fecha)
+    .eq('bloque_horario', params.bloque_horario)
+    .in('usuario_rut', rutsInvolucrados)
+    .neq('estado', 'cancelada');
+
+  if (errSolape) {
+    console.error('[reservas POST] Error verificando solape personal:', errSolape);
+    return { exito: false, error: 'Error interno al verificar conflictos de horario', httpCode: 500 };
+  }
+
+  const conflictoPersonal = (ocupadas ?? [])[0];
+  if (conflictoPersonal) {
+    const esTitular = conflictoPersonal.usuario_rut === params.usuario_rut;
+    return {
+      exito: false,
+      error: esTitular
+        ? 'Ya posee una reserva confirmada en este bloque'
+        : `El asistente con RUT ${conflictoPersonal.usuario_rut} ya posee una reserva confirmada en este bloque`,
+      httpCode: 409,
+    };
+  }
+
   // 5. Verificar penalizaciones en DB-Reservas
   const { data: penal } = await supabaseReservas
     .from('historial_penalizaciones')
@@ -246,9 +276,45 @@ export async function crearReservaConValidacion(
 
   if (errInsert) {
     if (errInsert.code === '23505') {
+      // 23505 puede provenir del índice único parcial de sala (id_sala,
+      // fecha, bloque_horario) o del índice único parcial de solape personal
+      // (usuario_rut, fecha, bloque_horario). Se distingue consultando antes
+      // de responder, para devolver el mensaje correcto al cliente.
+      const [{ data: conflSala }, { data: conflPersonal }] = await Promise.all([
+        supabaseReservas
+          .from('reservas')
+          .select('id_reserva')
+          .eq('id_sala', params.id_sala)
+          .eq('fecha', params.fecha)
+          .eq('bloque_horario', params.bloque_horario)
+          .neq('estado', 'cancelada')
+          .limit(1),
+        supabaseReservas
+          .from('reservas')
+          .select('id_reserva')
+          .eq('usuario_rut', params.usuario_rut)
+          .eq('fecha', params.fecha)
+          .eq('bloque_horario', params.bloque_horario)
+          .neq('estado', 'cancelada')
+          .limit(1),
+      ]);
+      if (conflPersonal && conflPersonal.length > 0) {
+        return {
+          exito: false,
+          error: 'Ya posee una reserva confirmada en este bloque',
+          httpCode: 409,
+        };
+      }
+      if (conflSala && conflSala.length > 0) {
+        return {
+          exito: false,
+          error: 'Conflicto de concurrencia: este bloque horario ya ha sido reservado para esta sala y fecha (HTTP 409)',
+          httpCode: 409,
+        };
+      }
       return {
         exito: false,
-        error: 'Conflicto de concurrencia: este bloque horario ya ha sido reservado para esta sala y fecha (HTTP 409)',
+        error: 'Conflicto de concurrencia (HTTP 409)',
         httpCode: 409,
       };
     }

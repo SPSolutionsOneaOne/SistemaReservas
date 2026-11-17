@@ -1,0 +1,6 @@
+Caso: CP-FA4-014
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: INFO
+
+Detalle:
+Los logs se emiten por console.error/console.log en rutas API (visible vía `vercel logs --expand`, p.ej. [Motor ausencia] candidatas: 2, [reservas GET]). No existe un SIEM externo ni collector centralizado; logging de incidencias de seguridad sólo vive en los logs de Vercel.

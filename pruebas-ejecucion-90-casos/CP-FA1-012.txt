@@ -1,0 +1,6 @@
+Caso: CP-FA1-012
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Requiere inspección interactiva de UI. Verificación visual pendiente en móvil/navegador: no existe input editable con nombre/correo en el wizard final (los datos se renderizan sólo como encabezado de sólo lectura).

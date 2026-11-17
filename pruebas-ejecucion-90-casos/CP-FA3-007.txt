@@ -1,0 +1,6 @@
+Caso: CP-FA3-007
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Requiere DevTools/CDP o modo avión en dispositivo real. El service worker está registrado y la navegación tiene fallback a caché; no hay banner de desconexión dedicado en el MVP. Verificación manual pendiente.

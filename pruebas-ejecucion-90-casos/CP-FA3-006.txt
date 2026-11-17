@@ -1,0 +1,6 @@
+Caso: CP-FA3-006
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_IMPL
+
+Detalle:
+El panel de métricas no está implementado en el MVP (sólo creación/gestión de salas). No existe ruta /dashboard ni endpoints de estadísticas. Funcionalidad pendiente: RF-USA-05.

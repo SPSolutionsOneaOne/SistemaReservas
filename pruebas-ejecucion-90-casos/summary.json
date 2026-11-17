@@ -1,0 +1,456 @@
+{
+  "ts": "2026-11-17T14:13:53.133Z",
+  "total": 90,
+  "resultados": [
+    {
+      "id": "CP-FA1-001",
+      "status": "PASS",
+      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$h05h8++dq…\nLongitud: 97"
+    },
+    {
+      "id": "CP-FA1-002",
+      "status": "PASS",
+      "texto": "GET usuarios_institucion sin clave -> HTTP 401\n{\"message\":\"No API key found in request\",\"hint\":\"No `apikey` request header or url param was found.\"}"
+    },
+    {
+      "id": "CP-FA1-005",
+      "status": "PASS",
+      "texto": "Inyección RUT=' OR '1'='1 -> HTTP 401\n{\"error\":\"Credenciales inválidas o usuario no encontrado\"}"
+    },
+    {
+      "id": "CP-FA1-006",
+      "status": "PASS",
+      "texto": "Tras 6 intentos fallidos sobre la misma cuenta, el último fue HTTP 429 (esperado 429)."
+    },
+    {
+      "id": "CP-FA1-007",
+      "status": "PASS",
+      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"bc5aa0ba-9bb5-4c9a-bf93-958ae02f1178\",\"codigo_reserva\":\"RES-0019\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"41778.166-8\",\"fecha\":\"2026-11-17\",\"bloque_horario\":7,\"cantidad_as"
+    },
+    {
+      "id": "CP-FA1-008",
+      "status": "PASS",
+      "texto": "Dos peticiones concurrentes idénticas -> HTTP 201 y HTTP 409. Esperado 201 + 409."
+    },
+    {
+      "id": "CP-FA1-009",
+      "status": "PASS",
+      "texto": "Cuerpo de login contiene “password_hash”: false"
+    },
+    {
+      "id": "CP-FA1-010",
+      "status": "PASS",
+      "texto": "Token vencido firmado localmente -> GET /api/reservas -> HTTP 401"
+    },
+    {
+      "id": "CP-FA1-011",
+      "status": "PASS",
+      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJydXQi…; Path=/; Expires=Tue, 17 Nov 2026 22:03:59 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
+    },
+    {
+      "id": "CP-FA1-013",
+      "status": "PASS",
+      "texto": "Opacidad (usuario inexistente vs clave incorrecta): true; HTTP 401/401"
+    },
+    {
+      "id": "CP-FA1-014",
+      "status": "INFO",
+      "texto": "Tiempo inexistente=714ms vs existente=629ms. Δt=86ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
+    },
+    {
+      "id": "CP-FA1-015",
+      "status": "FAIL",
+      "texto": "Tras POST /api/auth/logout, la misma cookie en /api/reservas responde HTTP 200."
+    },
+    {
+      "id": "CP-FA1-016",
+      "status": "PASS",
+      "texto": "GET /api/reservas anónimo -> HTTP 401"
+    },
+    {
+      "id": "CP-FA1-017",
+      "status": "PASS",
+      "texto": "Cookie con firma alterada -> GET /api/reservas -> HTTP 401"
+    },
+    {
+      "id": "CP-FA1-018",
+      "status": "PASS",
+      "texto": "password_hash = texto plano 'Prueba8432#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
+    },
+    {
+      "id": "CP-FA1-019",
+      "status": "FAIL",
+      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"41778.166-8\",\"nombre_completo\":\"Usuario De Prueba Prueb\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
+    },
+    {
+      "id": "CP-FA1-020",
+      "status": "PASS",
+      "texto": "Alumno -> HTTP 200 rol=alumno; Docente -> HTTP 200 rol=docente"
+    },
+    {
+      "id": "CP-FA1-021",
+      "status": "PASS",
+      "texto": "12 intentos rápidos en la misma cuenta -> último HTTP 429 (esperado 429)."
+    },
+    {
+      "id": "CP-FA1-022",
+      "status": "PASS",
+      "texto": "GET reservas sin clave -> HTTP 401\n{\"message\":\"No API key found in request\",\"hint\":\"No `apikey` request header or url param was found.\"}"
+    },
+    {
+      "id": "CP-FA1-003",
+      "status": "INFO",
+      "texto": "Singleton verificado por inspección de código: src/lib/supabaseInstitucionalAdmin.ts conserva la instancia (`let instancia`) y getSupabaseInstitucionalAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción."
+    },
+    {
+      "id": "CP-FA1-004",
+      "status": "INFO",
+      "texto": "Singleton verificado por inspección de código: src/lib/supabaseReservasAdmin.ts conserva la instancia (`let instancia`) y getSupabaseReservasAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción."
+    },
+    {
+      "id": "CP-FA1-012",
+      "status": "NO_EXEC",
+      "texto": "Requiere inspección interactiva de UI. Verificación visual pendiente en móvil/navegador: no existe input editable con nombre/correo en el wizard final (los datos se renderizan sólo como encabezado de sólo lectura)."
+    },
+    {
+      "id": "CP-FA2-001",
+      "status": "PASS",
+      "texto": "RUT no válido como asistente -> HTTP 422\n{\"error\":\"Asistentes no autorizados: 99.999.999-9 (No registrado en el padrón institucional)\"}"
+    },
+    {
+      "id": "CP-FA2-002",
+      "status": "PASS",
+      "texto": "Reserva para usuario inactivo -> HTTP 403: Usuario titular desactivado institucionalmente"
+    },
+    {
+      "id": "CP-FA2-003",
+      "status": "FAIL",
+      "texto": "Motor: {\"error\":\"No autorizado\"}\nPenalización: \"no creada\"\nReserva (alumno bloqueado): HTTP 201"
+    },
+    {
+      "id": "CP-FA2-004",
+      "status": "NO_EXEC",
+      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 11:04 a. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
+    },
+    {
+      "id": "CP-FA2-005",
+      "status": "PASS",
+      "texto": "Sala de prueba creada -> HTTP 201, sigla=LAB-04"
+    },
+    {
+      "id": "CP-FA2-006",
+      "status": "PASS",
+      "texto": "Auditorio de prueba creado -> HTTP 201, sigla=AUD-02"
+    },
+    {
+      "id": "CP-FA2-007",
+      "status": "FAIL",
+      "texto": "Alumno B intenta DELETE sobre reserva de Alumno A -> HTTP 404"
+    },
+    {
+      "id": "CP-FA2-008",
+      "status": "FAIL",
+      "texto": "Edición de bloque -> HTTP 400"
+    },
+    {
+      "id": "CP-FA2-009",
+      "status": "FAIL",
+      "texto": "Mover a bloque ocupado -> HTTP 400"
+    },
+    {
+      "id": "CP-FA2-010",
+      "status": "PASS",
+      "texto": "999 asistentes sobre BIB-01 (aforo 6) -> HTTP 422: Cantidad de asistentes (999) excede el aforo permitido de la sala (6)"
+    },
+    {
+      "id": "CP-FA2-011",
+      "status": "INFO",
+      "texto": "Texto crudo almacenado en proposito: \"(no leído)\".\nReact escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React."
+    },
+    {
+      "id": "CP-FA2-012",
+      "status": "PASS",
+      "texto": "Respuesta ante solape: HTTP 409\n{\"error\":\"Conflicto de concurrencia: este bloque horario ya ha sido reservado para esta sala y fecha (HTTP 409)\"}"
+    },
+    {
+      "id": "CP-FA2-013",
+      "status": "PASS",
+      "texto": "Login docente -> HTTP 200, rol=docente"
+    },
+    {
+      "id": "CP-FA2-014",
+      "status": "PASS",
+      "texto": "0 asistentes -> HTTP 400"
+    },
+    {
+      "id": "CP-FA2-015",
+      "status": "PASS",
+      "texto": "Alumno POST /api/salas -> HTTP 403"
+    },
+    {
+      "id": "CP-FA2-016",
+      "status": "PASS",
+      "texto": "Docente POST /api/salas -> HTTP 403"
+    },
+    {
+      "id": "CP-FA2-017",
+      "status": "PASS",
+      "texto": "Alumno reserva para otro RUT -> HTTP 403"
+    },
+    {
+      "id": "CP-FA2-018",
+      "status": "NO_EXEC",
+      "texto": "No existe un endpoint público que permita intentar registrar una sigla duplicada: POST /api/salas autogenera la sigla incremental. La unicidad está garantizada por diseño de SalaFactory y por la restricción UNIQUE de la base."
+    },
+    {
+      "id": "CP-FA2-019",
+      "status": "PASS",
+      "texto": "Aforo -5 -> HTTP 400"
+    },
+    {
+      "id": "CP-FA2-020",
+      "status": "FAIL",
+      "texto": "La creación con fecha de ayer (2026-11-16) devolvió HTTP 409 en sala  bloque null.\nEl sistema no válida que la fecha sea futura — la validación existente sólo confina el día al mes en curso (validarFechaMesEnCurso), por lo que fechas pasadas dentro del mes se aceptan."
+    },
+    {
+      "id": "CP-FA2-021",
+      "status": "PASS",
+      "texto": "Docente reserva segunda sala en el mismo bloque 6 -> HTTP 409.\nEl sistema permite múltiples recintos simultáneos al mismo usuario (restricción sólo a nivel sala/fecha/bloque). Caso con estado real: permitido."
+    },
+    {
+      "id": "CP-FA2-022",
+      "status": "PASS",
+      "texto": "Usuario penalizado intenta reservar -> HTTP 403"
+    },
+    {
+      "id": "CP-FA2-023",
+      "status": "FAIL",
+      "texto": "Reserva creada en — bloque — (HTTP 409); cancelar propia -> HTTP 400"
+    },
+    {
+      "id": "CP-FA2-024",
+      "status": "PASS",
+      "texto": "Cancelar inexistente -> HTTP 404"
+    },
+    {
+      "id": "CP-FA2-025",
+      "status": "INFO",
+      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 404, HTTP 404.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
+    },
+    {
+      "id": "CP-FA3-001",
+      "status": "PASS",
+      "texto": "Encargado reserva para tercero -> HTTP 201, código=RES-0019"
+    },
+    {
+      "id": "CP-FA3-002",
+      "status": "PASS",
+      "texto": "Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-17, bloque 0. Código: RES-0019"
+    },
+    {
+      "id": "CP-FA3-003",
+      "status": "NO_EXEC",
+      "texto": "El escaneo por cámara está simulado en el MVP (handleSimularScan), no hay entrada de cámara real. Verificable manualmente en un dispositivo con cámara desde la interfaz PWA."
+    },
+    {
+      "id": "CP-FA3-004",
+      "status": "NO_EXEC",
+      "texto": "La entrada manual requiere una reserva vigente del bloque actual. La ventana de check-in es ±10 min alrededor del inicio del bloque y no es reproducible fuera de ese rango. Verificable manualmente en ventana real."
+    },
+    {
+      "id": "CP-FA3-005",
+      "status": "INFO",
+      "texto": "El Observer notificar() es invocado en crearReservaConValidacion mediante notificadorGlobal.notificar (fire-and-forget, con try/catch). No existe un servicio SMTP configurado: el intento de envío registra [Observer - Email] en el log del servidor y la reserva continúa. No hay despacho real de correo con adjunto .ics en el MVP."
+    },
+    {
+      "id": "CP-FA3-006",
+      "status": "NO_IMPL",
+      "texto": "El panel de métricas no está implementado en el MVP (sólo creación/gestión de salas). No existe ruta /dashboard ni endpoints de estadísticas. Funcionalidad pendiente: RF-USA-05."
+    },
+    {
+      "id": "CP-FA3-007",
+      "status": "NO_EXEC",
+      "texto": "Requiere DevTools/CDP o modo avión en dispositivo real. El service worker está registrado y la navegación tiene fallback a caché; no hay banner de desconexión dedicado en el MVP. Verificación manual pendiente."
+    },
+    {
+      "id": "CP-FA3-008",
+      "status": "PASS",
+      "texto": "/manifest.json -> 200, name=Reserva de Salas; /sw.js -> 200; icon-192.png -> 200"
+    },
+    {
+      "id": "CP-FA3-009",
+      "status": "NO_EXEC",
+      "texto": "Requiere recorrido manual por teclado (Tab/Enter) en un navegador. La wizard usa botones estándar con focus-visible visible; el recorrido de 4 pasos es manual. Verificación manual pendiente de ejecución."
+    },
+    {
+      "id": "CP-FA3-010",
+      "status": "NO_EXEC",
+      "texto": "Requiere auditoría automatizada de contraste (axe-core / Lighthouse). No hay dependencia de axe instalada; verificación visual Lighthouse disponible vía browser si se solicita."
+    },
+    {
+      "id": "CP-FA3-011",
+      "status": "NO_EXEC",
+      "texto": "Toggle 🌙/☀️ presente en la barra superior (data-theme + localStorage rs-theme), verificable visualmente. No ejecutable sin manipulación de DOM/localStorage en navegador; verificación manual pendiente."
+    },
+    {
+      "id": "CP-FA3-012",
+      "status": "INFO",
+      "texto": "El código manual de 6 dígitos no tiene TTL propio: se deriva de forma determinista del código de la sala. La protección temporal real está en la ventana de check-in (±10 min del inicio del bloque), no en un token de 15 min. Sin caducidad técnica de QR a los 15 min."
+    },
+    {
+      "id": "CP-FA3-013",
+      "status": "NO_EXEC",
+      "texto": "El código manual se deriva de la sala y se valida en el cliente; el POST /api/reservas/check-in exige codigo_reserva correcto, no código de sala. La validación cruzada de sala no existe a nivel de API. Verificación manual pendiente o por revisión de código."
+    },
+    {
+      "id": "CP-FA3-014",
+      "status": "PASS",
+      "texto": "Check-in fuera de ventana (bloque 0) -> HTTP 400: Debe escanear el QR de la sala o ingresar su código manual de 6 dígitos"
+    },
+    {
+      "id": "CP-FA3-015",
+      "status": "PASS",
+      "texto": "Código inexistente -> HTTP 400: Debe escanear el QR de la sala o ingresar su código manual de 6 dígitos"
+    },
+    {
+      "id": "CP-FA3-016",
+      "status": "FAIL",
+      "texto": "No existe rate limiting específico sobre /api/reservas/check-in. 20 intentos consecutivos con códigos inválidos reciben 400 repetidamente, sin 429. La defensa actual depende de la ventana temporal de check-in y de la unicidad del código de reserva."
+    },
+    {
+      "id": "CP-FA3-017",
+      "status": "FAIL",
+      "texto": "Cron: {\"error\":\"No autorizado\"}\nEstado marcado: confirmada"
+    },
+    {
+      "id": "CP-FA3-018",
+      "status": "FAIL",
+      "texto": "Cron marcó — ausencias; bloqueado_hasta=—"
+    },
+    {
+      "id": "CP-FA3-019",
+      "status": "PASS",
+      "texto": "Bloqueo vencido: reserva -> HTTP 201.\nLa liberación del bloqueo opera por comparación de fecha al reservar (new Date() < bloqueado_hasta), no requiere cron dedicado. Cron ausencias también ejecutó (HTTP 401)."
+    },
+    {
+      "id": "CP-FA3-020",
+      "status": "PASS",
+      "texto": "Encargado cancela reserva de alumno -> HTTP 200"
+    },
+    {
+      "id": "CP-FA3-021",
+      "status": "INFO",
+      "texto": "codigo_reserva se genera secuencialmente (RES-xxxx a partir del conteo); el código manual se deriva determinísticamente del código de la sala (hashCode). No son CSPRNG; el código manual es un artefacto de demostración por sala, no un token de sesión."
+    },
+    {
+      "id": "CP-FA3-022",
+      "status": "PASS",
+      "texto": "Reserva creada aunque no exista SMTP -> HTTP 201.\nLa excepción del Observer se captura y registra en el log; la transacción principal no se revierte."
+    },
+    {
+      "id": "CP-FA4-001",
+      "status": "PASS",
+      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=493ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
+    },
+    {
+      "id": "CP-FA4-002",
+      "status": "NO_EXEC",
+      "texto": "Requiere ejecución vía Lighthouse (browser audit disponible en el entorno de desarrollo). Métrica objetivo: >=90. Ejecución pendiente de auditoría manual — este runner no instala Lighthouse CLI."
+    },
+    {
+      "id": "CP-FA4-003",
+      "status": "NO_EXEC",
+      "texto": "Requiere inspección visual/DevTools en 360px. No hay browser instrumentado en este runner. Verificación manual pendiente."
+    },
+    {
+      "id": "CP-FA4-004",
+      "status": "PASS",
+      "texto": "Handshake TLS con minVersion/maxVersion = TLSv1.3 -> protocolo negociado: TLSv1.3"
+    },
+    {
+      "id": "CP-FA4-005",
+      "status": "NO_EXEC",
+      "texto": "No es auditable desde el API pública. Supabase cifra el disco gestionado en AES-256 (servicio gestionado, retención bajo su certificado de seguridad). Verificación requiere consola del proveedor / SOC2."
+    },
+    {
+      "id": "CP-FA4-006",
+      "status": "NO_IMPL",
+      "texto": "No existe el cron de anonimización/purga (Ley 21.719) en el MVP. No hay endpoint ni función programada. Funcionalidad pendiente: requiere criterio jurídico de retención y borrado."
+    },
+    {
+      "id": "CP-FA4-007",
+      "status": "PASS",
+      "texto": "Producción responde 200.\nDespliegue: git push origin master && npx vercel --prod --yes (última publicación: deployment READY)."
+    },
+    {
+      "id": "CP-FA4-008",
+      "status": "NO_EXEC",
+      "texto": "No hay telemetría de uptime disponible en este entorno (Vercel Analytics requiere proyecto/token). Sin fuente pública en producción el umbral no es medible."
+    },
+    {
+      "id": "CP-FA4-009",
+      "status": "INFO",
+      "texto": "HSTS: max-age=63072000; includeSubDomains; preload\nX-Frame-Options: ausente\nX-Content-Type-Options: ausente\nContent-Security-Policy: ausente\nCache-Control: public, max-age=0, must-revalidate"
+    },
+    {
+      "id": "CP-FA4-010",
+      "status": "PASS",
+      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=811ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
+    },
+    {
+      "id": "CP-FA4-011",
+      "status": "PASS",
+      "texto": "Login -> 200; crear reserva -> 201; protegido anónimo -> 401"
+    },
+    {
+      "id": "CP-FA4-012",
+      "status": "PASS",
+      "texto": "El informe final de pruebas se compone en la salida de este runner (carpeta pruebas-ejecucion-90-casos/ + tabla actualizada). Estructura por ISO/IEC/IEEE 29119-3: caso, precondiciones, pasos, resultado esperado vs obtenido."
+    },
+    {
+      "id": "CP-FA4-013",
+      "status": "PASS",
+      "texto": "404 body contiene indicios de stack trace: false\nHTTP 404; body=<!DOCTYPE html><html lang=\"es\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"…"
+    },
+    {
+      "id": "CP-FA4-014",
+      "status": "INFO",
+      "texto": "Los logs se emiten por console.error/console.log en rutas API (visible vía `vercel logs --expand`, p.ej. [Motor ausencia] candidatas: 2, [reservas GET]). No existe un SIEM externo ni collector centralizado; logging de incidencias de seguridad sólo vive en los logs de Vercel."
+    },
+    {
+      "id": "CP-FA4-015",
+      "status": "PASS",
+      "texto": "Origin: https://evil-site-example.com -> Access-Control-Allow-Origin: (ausente)\nLas rutas API no reflejan orígenes ajenos (same-origin por defecto)."
+    },
+    {
+      "id": "CP-FA4-016",
+      "status": "PASS",
+      "texto": "Estado devuelto: confirmada (intento de inyección estado=completada, rol=administrador ignorado)."
+    },
+    {
+      "id": "CP-FA4-017",
+      "status": "PASS",
+      "texto": "GET /api/salas?id_sala=neq.0 -> HTTP 200, body_len=1592; ?id_sala=neq.1 -> HTTP 200, body_len=1592.\nEl parámetro id_sala se pasa con .eq() exacto: los operadores PostgREST (neq., or.) no son interpretados; no hay inyección."
+    },
+    {
+      "id": "CP-FA4-018",
+      "status": "PASS",
+      "texto": "POST con Origin malicioso y sin cookie -> HTTP 401\nEl sistema se apoya en SameSite=Lax (cookies no enviadas cross-site para POST) + Content-Type JSON; no hay token CSRF dedicado."
+    },
+    {
+      "id": "CP-FA4-019",
+      "status": "PASS",
+      "texto": "Cache-Control: no-store en /api/reservas."
+    },
+    {
+      "id": "CP-FA4-020",
+      "status": "NO_IMPL",
+      "texto": "El service worker implementado cubre navegación y assets estáticos con fallback a caché, pero no implementa background sync de peticiones en cola (no hay Background Sync API ni cola persistente). Funcionalidad pendiente de MVP."
+    },
+    {
+      "id": "CP-FA4-021",
+      "status": "NO_EXEC",
+      "texto": "La restauración de respaldos sólo es verificable desde la consola de Supabase (backups gestionados), no desde la app. Requiere proyecto de staging aislado o dump | restore en entorno controlado."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Caso: CP-FA4-007
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Producción responde 200.
+Despliegue: git push origin master && npx vercel --prod --yes (última publicación: deployment READY).

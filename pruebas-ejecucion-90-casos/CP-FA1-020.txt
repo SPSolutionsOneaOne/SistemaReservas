@@ -1,0 +1,6 @@
+Caso: CP-FA1-020
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Alumno -> HTTP 200 rol=alumno; Docente -> HTTP 200 rol=docente

@@ -1,0 +1,6 @@
+Caso: CP-FA3-013
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+El código manual se deriva de la sala y se valida en el cliente; el POST /api/reservas/check-in exige codigo_reserva correcto, no código de sala. La validación cruzada de sala no existe a nivel de API. Verificación manual pendiente o por revisión de código.

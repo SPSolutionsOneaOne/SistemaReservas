@@ -1,0 +1,6 @@
+Caso: CP-FA2-010
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+999 asistentes sobre BIB-01 (aforo 6) -> HTTP 422: Cantidad de asistentes (999) excede el aforo permitido de la sala (6)

@@ -1,0 +1,7 @@
+Caso: CP-FA3-022
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Reserva creada aunque no exista SMTP -> HTTP 201.
+La excepción del Observer se captura y registra en el log; la transacción principal no se revierte.

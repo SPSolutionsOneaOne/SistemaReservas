@@ -1,0 +1,6 @@
+Caso: CP-FA3-010
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+Requiere auditoría automatizada de contraste (axe-core / Lighthouse). No hay dependencia de axe instalada; verificación visual Lighthouse disponible vía browser si se solicita.

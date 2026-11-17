@@ -1,0 +1,6 @@
+Caso: CP-FA1-015
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Tras POST /api/auth/logout, la misma cookie en /api/reservas responde HTTP 200.

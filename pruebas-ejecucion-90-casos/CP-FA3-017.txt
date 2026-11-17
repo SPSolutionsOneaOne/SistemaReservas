@@ -1,0 +1,7 @@
+Caso: CP-FA3-017
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: FAIL
+
+Detalle:
+Cron: {"error":"No autorizado"}
+Estado marcado: confirmada

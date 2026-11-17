@@ -1505,7 +1505,7 @@ export default function ReservaPage() {
   const esEncargado = userRol === 'encargado_administrativo';
 
   return (
-    <div>
+    <main>
       {/* Barra Superior */}
       <header className="top">
         <div className="wrap">
@@ -2963,6 +2963,6 @@ export default function ReservaPage() {
 
       {/* Área print-only: tarjeta QR gigante para imprimir */}
       {printSala && <PrintArea sala={printSala} />}
-    </div>
+    </main>
   );
 }

@@ -1,0 +1,6 @@
+Caso: CP-FA1-008
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Dos peticiones concurrentes idénticas -> HTTP 201 y HTTP 409. Esperado 201 + 409.

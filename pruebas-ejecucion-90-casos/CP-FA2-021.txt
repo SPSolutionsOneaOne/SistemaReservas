@@ -1,0 +1,7 @@
+Caso: CP-FA2-021
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Docente reserva segunda sala en el mismo bloque 6 -> HTTP 409.
+El sistema permite múltiples recintos simultáneos al mismo usuario (restricción sólo a nivel sala/fecha/bloque). Caso con estado real: permitido.

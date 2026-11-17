@@ -1,0 +1,6 @@
+Caso: CP-FA4-008
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: NO_EXEC
+
+Detalle:
+No hay telemetría de uptime disponible en este entorno (Vercel Analytics requiere proyecto/token). Sin fuente pública en producción el umbral no es medible.

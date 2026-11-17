@@ -1,0 +1,6 @@
+Caso: CP-FA4-004
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Handshake TLS con minVersion/maxVersion = TLSv1.3 -> protocolo negociado: TLSv1.3

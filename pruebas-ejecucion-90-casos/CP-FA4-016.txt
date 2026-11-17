@@ -1,0 +1,6 @@
+Caso: CP-FA4-016
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Estado devuelto: confirmada (intento de inyección estado=completada, rol=administrador ignorado).

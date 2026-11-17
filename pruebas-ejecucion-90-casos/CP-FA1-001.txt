@@ -1,0 +1,7 @@
+Caso: CP-FA1-001
+Fecha: 2026-11-17T14:13:53.133Z
+Resultado: PASS
+
+Detalle:
+Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$h05h8++dq…
+Longitud: 97
