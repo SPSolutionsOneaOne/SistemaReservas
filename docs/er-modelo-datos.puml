@@ -107,7 +107,11 @@ SALA     ||--o{ RESERVA  : "FK reservas.id_sala → salas.id_sala\nON DELETE CAS
 USUARIO  ||..o{ RESERVA  : "FK lógico RUT (cross-DB)"
 USUARIO  ||..o{ PENAL    : "FK lógico RUT"
 USUARIO  ||..o{ BITACORA : "FK lógico RUT"
-SALA     ||--o{ ARCHIVOS : "QR fijo por sala (1:1)"
-RESERVA  ||--o{ ARCHIVOS : ".ics por reserva confirmada"
+SALA     ||--o| ARCHIVOS : "QR fijo por sala (PNG/SVG) 1:1"
+RESERVA  ||--o| ARCHIVOS : ".ics por reserva confirmada 1:1"
+USUARIO  ||..o{ INTENTOS : "relación lógica: clave = SHA-256(IP o cuenta)\nsin FK — dato anonimizado, no RUT"
+CACHE    .. LS           : "mismo dispositivo (navegador)"
+ARCHIVOS .. CACHE        : "la PWA cachea assets y QR"
+ARCHIVOS .. LS           : "preferencia rs-theme (sin sesión)"
 
 @enduml
