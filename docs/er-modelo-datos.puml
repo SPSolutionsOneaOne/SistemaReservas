@@ -1,21 +1,28 @@
 @startuml Modelo Entidad-Relacion - Sistema de Reservas
 ' ============================================================
-' INACAP — Modelo Entidad-Relación (DER) — versión final legible
-' 2.1.4.8 integridad referencial (PK/FK/UK)
-' 2.1.4.9 estructuradas + no estructuradas con ejemplos
-' Prefijos: DBI. = DB-Institucional | DBR. = DB-Reservas | NE. = no estructurado
+' INACAP — Modelo Entidad-RL (DER) — versión industrial
+' Sólo entidades persistentes con PK real en PostgreSQL.
+' Los stores del navegador (Cache Storage, localStorage) y los
+' artefactos QR/.ics NO son entidades de BD: se documentan en
+' el diagrama de despliegue y en el documento técnico (cap. 3).
+' Prefijos: DBI. = DB-Institucional | DBR. = DB-Reservas
 ' ============================================================
 
 skinparam defaultFontName Arial
 skinparam roundCorner 4
 skinparam shadowing false
 skinparam linetype polyline
-skinparam nodesep 60
-skinparam ranksep 60
+skinparam nodesep 70
+skinparam ranksep 65
 skinparam entity {
   BackgroundColor #FFFFFF
   BorderColor #2B7A9E
   FontColor #1F2937
+  FontSize 10
+}
+skinparam note {
+  BackgroundColor #FFF8E1
+  BorderColor #F0B429
   FontSize 9
 }
 
@@ -23,95 +30,88 @@ entity "DBI.usuarios_institucion" as USUARIO {
   * id : uuid <<PK>>
   * rut : varchar(12) <<UK>>
   correo_institucional : varchar(150) <<UK>>
-  password_hash : text "Argon2id"
-  rol : varchar(30) "alumno|docente|encargado|admin"
+  password_hash : text
+  rol : varchar(30)
+  carrera_o_departamento : varchar
   estado_activo : boolean
   nombre_completo : varchar <<GENERATED>>
+  creado_en : timestamptz
 }
 
 entity "DBR.tipos_sala" as TIPO {
   * id : text <<PK>>
   nombre : text <<UK>>
-  prefijo : text <<UK>> "LAB/SAL/AUD/CON/BIB"
+  prefijo : text <<UK>>
   aforo_sugerido : integer
   color : text
   orden : integer
+  creado_en : timestamptz
 }
 
 entity "DBR.salas" as SALA {
   * id_sala : varchar(20) <<PK>>
-  nombre_descriptivo : varchar
+  nombre_descriptivo : varchar <<UK>>
   tipo : text <<FK>>
   aforo : integer
   piso : integer
   estado_habilitacion : varchar
   qr_token : uuid <<UK>>
   codigo_manual : varchar(6) <<UK>>
-  artefactos : "QR PNG/SVG + .ics (NE.)"
+  creado_en : timestamptz
 }
 
 entity "DBR.reservas" as RESERVA {
   * id_reserva : uuid <<PK>>
   codigo_reserva : varchar(20) <<UK>>
   id_sala : varchar(20) <<FK>>
-  usuario_rut : varchar(12) <<FK lógico>>
+  usuario_rut : varchar(12)
   fecha : date
-  bloque_horario : integer "0-17"
+  bloque_horario : integer
   cantidad_asistentes : integer
   proposito : varchar(100)
   estado : varchar
   asistencia_registrada_en : timestamptz
-  uq1 : "UNIQUE(sala,fecha,bloque) WHERE confirmada/completada"
-  uq2 : "UNIQUE(usuario,fecha,bloque) WHERE estado <> cancelada"
+  creado_en : timestamptz
 }
 
 entity "DBR.historial_penalizaciones" as PENAL {
   * id : uuid <<PK>>
-  usuario_rut : varchar(12) <<FK lógico>>
-  ausencias_acumuladas : integer "RN05 >= 3"
-  bloqueado_hasta : timestamptz "7 días"
+  usuario_rut : varchar(12)
+  ausencias_acumuladas : integer
+  bloqueado_hasta : timestamptz
+  ultima_actualizacion : timestamptz
 }
 
 entity "DBR.bitacora_administrativa" as BITACORA {
   * id : uuid <<PK>>
-  encargado_rut : varchar(12) <<FK lógico>>
+  encargado_rut : varchar(12)
   accion : text
-  rut_estudiante_afectado : varchar(12) <<FK lógico>>
+  rut_estudiante_afectado : varchar(12)
   creado_en : timestamptz
 }
 
 entity "DBR.intentos_login" as INTENTOS {
-  * clave : text <<PK>> "SHA-256 IP/cuenta"
-  intentos : integer "MAX 5"
-  bloqueado_hasta : timestamptz "15 min"
-}
-
-entity "NE.Cache Storage (Service Worker)" as CACHE {
-  * clave : text <<PK>> "Request '/' + assets JS/CSS/PNG"
-  valor : Response/Blob "offline-first PWA"
-}
-
-entity "NE.localStorage" as LS {
-  * clave : text <<PK>> "rs-theme"
-  valor : text "light|dark — sin sesión"
-}
-
-entity "NE.Artefactos QR / .ics" as ARCHIVOS {
-  * nombre : text <<PK>> "QR-LAB-01.png, reserva.ics"
-  contenido : blob/text "generado en cliente (QRCode / ICS)"
+  * clave : varchar <<PK>>
+  intentos : integer
+  bloqueado_hasta : timestamptz
+  actualizado_en : timestamptz
 }
 
 ' ---- Integridad referencial ----
-TIPO     ||--o{ SALA     : "FK salas.tipo → tipos_sala.id\nCASCADE / RESTRICT"
-SALA     ||--o{ RESERVA  : "FK reservas.id_sala → salas.id_sala\nON DELETE CASCADE"
-USUARIO  ||..o{ RESERVA  : "FK lógico RUT (cross-DB)"
-USUARIO  ||..o{ PENAL    : "FK lógico RUT"
-USUARIO  ||..o{ BITACORA : "FK lógico RUT"
-SALA     ||--o| ARCHIVOS : "QR fijo por sala (PNG/SVG) 1:1"
-RESERVA  ||--o| ARCHIVOS : ".ics por reserva confirmada 1:1"
-USUARIO  ||..o{ INTENTOS : "relación lógica: clave = SHA-256(IP o cuenta)\nsin FK — dato anonimizado, no RUT"
-CACHE    .. LS           : "mismo dispositivo (navegador)"
-ARCHIVOS .. CACHE        : "la PWA cachea assets y QR"
-ARCHIVOS .. LS           : "preferencia rs-theme (sin sesión)"
+TIPO    ||--o{ SALA     : "FK salas.tipo → tipos_sala.id\nON UPDATE CASCADE · ON DELETE RESTRICT"
+SALA    ||--o{ RESERVA  : "FK reservas.id_sala → salas.id_sala\nON DELETE CASCADE"
+USUARIO ||..o{ RESERVA  : "FK lógica por RUT (cross-DB)"
+USUARIO ||..o{ PENAL    : "FK lógica por RUT"
+USUARIO ||..o{ BITACORA : "FK lógica (encargado y estudiante)"
+USUARIO ||..o{ INTENTOS : "relación lógica: clave = SHA-256(IP o cuenta)\nsin FK — no guarda RUT ni correo"
+
+note right of RESERVA
+  Índices únicos parciales:
+  - (id_sala, fecha, bloque_horario)
+    WHERE estado IN ('confirmada','completada')
+  - (usuario_rut, fecha, bloque_horario)
+    WHERE estado <> 'cancelada'
+  Borrado lógico: 'cancelada' (no DELETE).
+end note
 
 @enduml
