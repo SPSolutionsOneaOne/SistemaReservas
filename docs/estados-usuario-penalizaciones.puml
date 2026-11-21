@@ -1,0 +1,53 @@
+@startuml Estados - Usuario (Penalizaciones)
+' ============================================================
+' Maquina de estados: Usuario frente al motor de penalización
+' Ref: RN05 · reservas/bloqueos · historial_penalizaciones
+' Reglas reales del código (procesarAusencia / resetearAusencias / procesarInasistencias)
+' ============================================================
+
+skinparam defaultFontName Arial
+skinparam roundCorner 4
+skinparam shadowing false
+
+skinparam state {
+  BackgroundColor #FEFEFE
+  BorderColor #2B7A9E
+  FontColor #1F2937
+}
+
+[*] --> Activo : alta en el padrón\no sin ausencias acumuladas
+
+state Activo {
+  Activo : ausencias_acumuladas = 0..2
+  Activo : bloqueado_hasta = NULL (o vencido)
+}
+
+state Bloqueado {
+  Bloqueado : ausencias_acumuladas >= 3
+  Bloqueado : bloqueado_hasta = hoy + 7 días
+}
+
+Activo --> Activo : check-in válido\nausencias_acumuladas = 0\nbloqueado_hasta = NULL
+Activo --> Activo : ausencia sin check-in\nausencias_acumuladas +1 (aún no llega a 3)
+Activo --> Bloqueado : ausencia sin check-in cuando\nausencias_acumuladas = 2 → pasar a 3\nbloqueado_hasta = now() + 7 días (RN05)
+Bloqueado --> Bloqueado : otra ausencia\nausencias_acumuladas +1 (se extiende/re-aplica bloqueo)
+Bloqueado --> Activo : vence bloqueado_hasta\n(comparación temporal, sin evento de barrido)\nel contador NO se autolimpia
+Bloqueado --> Activo : check-in válido (resetearAusencias)\nausencias_acumuladas = 0\nbloqueado_hasta = NULL
+
+Bloqueado : Crear reserva → HTTP 403 (crearReservaConValidacion)
+Bloqueado : Panel 'validar estudiante' → aviso de bloqueo
+
+note right of Bloqueado
+  El bloqueo no es borrado ni suspensión de cuenta:
+  sólo impide reservar y avisa en validación.
+  Ventana de gracia del check-in: ±10 min del bloque.
+end note
+
+note bottom of Activo
+  "3 inasistencias consecutivas" = 3 ausencias sin check-in
+  intermedio (el check-in reinicia el contador).
+  Staff (encargado / administrador) no acumula ausencias
+  por inasistencia de terceros: exento (procesarInasistencias).
+end note
+
+@enduml

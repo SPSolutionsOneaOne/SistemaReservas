@@ -1,0 +1,85 @@
+@startuml Secuencia - CU-12 (QR y tarjeta de sala)
+' ============================================================
+' Secuencia: Administrador - CU-12 «Sistema de gestión de sala»
+' Imagen de referencia: CasoDeUso_CU-12.png (CU-10 incluido como flujo de QR)
+' Refleja: renderQrSalas → openQrModal → PNG/SVG/Imprimir = incluye internos
+' Refs: RF-FUN-06..09 · RBAC administrador (middleware) · /api/salas/qr
+' ============================================================
+
+skinparam defaultFontName Arial
+skinparam roundCorner 4
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 230
+
+actor Administrador as A
+participant "UI — Módulo QR\n(React/Next.js PWA)" as UI
+participant "Edge Middleware Next.js\n(verif. JWT HS256 · rol)" as MW
+participant "API Route Handler\nGET/POST /api/salas/qr" as API
+participant "supabase-js\n(service_role server-side)" as SUP
+database "DB-Reservas\n(salas)" as DB
+
+== Incluir: Listar tarjetas QR por sala ==
+
+A -> UI : Selecciona pestaña «QR de Salas»
+UI -> UI : adminTab='qr' + currentUser.rol === 'administrador'
+UI -> MW : GET /api/salas/qr
+MW -> MW : verifySession(institucion_session)\n(rol ≠ administrador → 403; sin sesión → 401)
+MW -> API : invoca Route Handler (sesión válida)
+API -> SUP : select salas activas + id_sala + qr_token + codigo_manual
+SUP -> DB : SELECT id_sala, nombre_descriptivo, tipo, aforo,\n       piso, estado_habilitacion, qr_token, codigo_manual
+DB --> SUP : filas
+SUP --> API : datos
+API --> UI : 200 OK [ {...salas} ]  (sin exponer RUT ni datos personales)
+UI -> A : Tarjetas QR por sala (grid, sigla, aforo, Piso, estado)
+
+== Incluir: Descargar PNG/SVG e imprimir ==
+
+A -> UI : Pulsa «Generar QR» en tarjeta de una sala
+UI -> MW : GET /api/salas/qr?id_sala=LAB-01
+MW -> MW : verifySession + rol administrador (401/403)
+MW -> API : invoca Route Handler
+API -> SUP : SELECT ... WHERE id_sala = 'LAB-01'
+SUP -> DB : SELECT sala por id_sala
+DB --> SUP : fila con qr_token + codigo_manual
+SUP --> API : datos
+API --> UI : 200 OK { sala, qr_token, codigo_manual }
+UI -> UI : QRCode.toString('RESERVA-SALAS|' + qr_token, type='svg')\nmuestra modal con QR + código manual 6 dígitos
+A -> UI : Elegir PNG / SVG / Imprimir
+
+alt PNG
+  UI -> UI : QRCode.toDataURL(...) → <a download='QR-LAB-01.png'>
+  UI -> A : Archivo QR-LAB-01.png descargado
+else SVG
+  UI -> UI : Blob(svg) → URL.createObjectURL → <a download='QR-LAB-01.svg'>
+  UI -> A : Archivo QR-LAB-01.svg descargado
+else Imprimir / actualizar impresión
+  UI -> UI : renderiza PrintArea en DOM (display:none en pantalla)
+  UI -> UI : agrega listener 'afterprint' → limpia printSala
+  UI -> A : window.print() → tarjeta grande con QR + código manual
+  A -> UI : Presionar «Imprimir» o «Guardar PDF»
+end
+
+== Alternativas ==
+
+alt : rol no es administrador
+  MW --> UI : 403 Acceso denegado
+  UI --> A : Toast «Solo el Administrador puede ver los QR»
+end
+
+alt : sin sesión
+  MW --> UI : 401 No autenticado
+  UI --> A : Redirige al login
+end
+
+alt : error de red
+  UI --> A : Toast de error; catálogo queda como estaba (no rompe)
+end
+
+note over UI,DB
+  La tarjeta QR de una sala se genera UNA vez
+  (qr_token creado en el alta de la sala).
+  El código manual se deriva del token; cambiarlo requiere nueva sala.
+end note
+
+@enduml

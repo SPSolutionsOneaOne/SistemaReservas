@@ -35,7 +35,7 @@ Las tablas relacionales permiten expresar reglas de integridad junto a los datos
 
 Row Level Security (RLS) se utiliza para controlar qué filas puede consultar o modificar cada rol de la API. Las claves públicas (`anon` o `publishable`) deben operar sujetas a esas políticas. Las claves secretas o `service_role` omiten RLS, por lo que se reservan para código del servidor y nunca deben incluirse en el cliente ni en variables `NEXT_PUBLIC_`. [3] En este sistema, **no existe un cliente Supabase en el navegador**: la interfaz consume rutas API de Next.js y son esas rutas las que consultan ambos proyectos con claves secretas. Por lo tanto, la aplicación no requiere una publishable key y el acceso directo del navegador a PostgreSQL/Supabase queda cerrado. RLS se mantiene como defensa en profundidad para cualquier clave pública que se cree en el futuro; los scripts están en `docs/sql/`.
 
-La consulta institucional privilegiada requiere configurar `SUPABASE_INSTITUCIONAL_SERVICE_ROLE_KEY` como variable privada del entorno. Del mismo modo, las operaciones privilegiadas sobre DB-Reservas usan `SUPABASE_RESERVAS_SERVICE_ROLE_KEY` solo en el servidor. La sesión del usuario se transporta en una cookie `institucion_session` firmada con HMAC-SHA256, con atributos `HttpOnly`, `Secure` (en producción) y `SameSite=Lax`; el rol y el RUT se leen de ese token firmado, nunca de cookies editables por el cliente.
+La consulta institucional privilegiada requiere configurar `SUPABASE_INSTITUCIONAL_SERVICE_ROLE_KEY` como variable privada del entorno. Del mismo modo, las operaciones privilegiadas sobre DB-Reservas usan `SUPABASE_RESERVAS_SERVICE_ROLE_KEY` solo en el servidor. La sesión del usuario se transporta en una cookie `institucion_session` un JWT HS256 estándar (`header.payload.signature`, firmado con HMAC-SHA256), con atributos `HttpOnly`, `Secure` (en producción) y `SameSite=Lax`; el rol y el RUT se leen de ese token firmado, nunca de cookies editables por el cliente.
 
 ## X.3 Estructura y recorrido de red
 
@@ -59,7 +59,7 @@ El recorrido habitual de una operación es:
 
 1. El usuario selecciona una acción en el navegador, por ejemplo, consultar salas o iniciar sesión.
 2. La interfaz envía una solicitud HTTPS a una ruta de la aplicación Next.js. La cookie de sesión firmada viaja automáticamente.
-3. El middleware y la ruta verifican la firma HMAC del token y aplican autorización por rol y por titularidad del recurso.
+3. El middleware y la ruta verifican el JWT HS256 del token (firma, `alg`, `iss`, `aud` y expiración) y aplican autorización por rol y por titularidad del recurso.
 4. La ruta valida los datos recibidos y consulta el proyecto Supabase correspondiente mediante `supabase-js` con clave secreta.
 5. Supabase aplica restricciones de PostgreSQL y devuelve los resultados a la ruta.
 6. Next.js entrega la respuesta al navegador, que actualiza la interfaz.

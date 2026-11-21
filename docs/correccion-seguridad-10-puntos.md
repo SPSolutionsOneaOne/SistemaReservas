@@ -33,14 +33,14 @@ Se corrigieron los diez puntos de seguridad identificados. La aplicación pasó 
 flowchart LR
     U[Usuario] --> B[Navegador]
     B -->|HTTPS + cookie institucion_session| N[Next.js]
-    N -->|Verifica HMAC + rol + titularidad| N
+    N -->|Verifica JWT HS256 + rol + titularidad| N
     N -->|HTTPS / service_role| I[(DB-Institucional)]
     N -->|HTTPS / service_role| R[(DB-Reservas)]
 ```
 
 ### Capas de defensa
 
-1. **Cookie de sesión firmada:** `institucion_session` contiene `{ rut, rol, iat, exp }` firmado con HMAC-SHA256.
+1. **Cookie de sesión firmada:** `institucion_session` contiene un **JWT HS256** (`header.payload.signature`) con `{ rut, rol, iat, exp, iss, aud }` firmado con HMAC-SHA256.
 2. **Middleware fail-closed:** si la ruta está protegida y no hay sesión válida, responde `401`.
 3. **Autorización en la ruta API:** cada endpoint vuelve a validar sesión y rol (defensa en profundidad).
 4. **Autorización por titularidad:** un usuario no administrativo solo opera sobre sus propias reservas.
@@ -75,9 +75,9 @@ flowchart LR
 
 **Solución:**
 - Se reemplazaron por una única cookie `institucion_session`.
-- El valor es un token `base64url(payload).base64url(HMAC-SHA256)`.
+- El valor es un JWT estándar `base64url(header).base64url(payload).base64url(HMAC-SHA256)`, con `header = { alg: "HS256", typ: "JWT" }`.
 - El payload contiene `rut`, `rol`, `iat` y `exp`.
-- `verifySession()` valida firma, formato, expiración, rol permitido y coherencia de fechas.
+- `verifySession()` valida cabecera (`alg=HS256`), firma, `iss`/`aud`, expiración, rol permitido y coherencia de fechas.
 - Las cookies antiguas se eliminan al iniciar y cerrar sesión, y el middleware ya no las lee.
 
 **Archivos:**
@@ -431,7 +431,7 @@ Los datos temporales (usuario, sala y reservas) se eliminaron al finalizar la pr
 | **8.12 Prevención de fuga de datos** | Errores genéricos; sin claves secretas en `NEXT_PUBLIC_`; sin cliente público. |
 | **8.15 Registro de eventos** | `console.error` server-side; bitácora administrativa para reservas a terceros. |
 | **8.16 Actividades de monitoreo** | Rate limiting y respuestas `429`; se recomienda centralizar logs. |
-| **8.24 Uso de criptografía** | HMAC-SHA256 para sesión; Argon2id para contraseñas; HTTPS en producción. |
+| **8.24 Uso de criptografía** | JWT HS256 (firma HMAC-SHA256) para sesión; Argon2id para contraseñas; HTTPS en producción. |
 | **8.28 Codificación segura** | Validación de entrada; autorización server-side; errores controlados. |
 | **5.34 Privacidad y protección de PII** | Minimización de datos; RLS; acceso restringido a DB-Institucional. |
 | **8.9 Gestión de configuración** | Variables de entorno separadas; `.env.local` fuera de Git; `.env.example` documentado. |

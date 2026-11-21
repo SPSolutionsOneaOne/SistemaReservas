@@ -1,0 +1,90 @@
+@startuml Sistema de Reservas - Diagrama de Despliegue
+' ============================================================
+' INACAP Sede La Granja - Vista Fisica (4+1) — estado real 2026-11-19
+' Despliegue post-Vercel (master -> producción, sin staging)
+' ============================================================
+
+skinparam defaultFontName Arial
+skinparam roundCorner 4
+skinparam shadowing false
+skinparam componentStyle uml2
+
+skinparam node {
+  BackgroundColor #FFFFFF
+  BorderColor #2B7A9E
+  FontColor #1F2937
+}
+skinparam artifact {
+  BackgroundColor #F3F4F6
+  BorderColor #2B7A9E
+  FontSize 9
+  FontColor #111111
+}
+skinparam database {
+  BackgroundColor #FFFFFF
+  BorderColor #9E1E1E
+  FontColor #111111
+}
+skinparam cloud {
+  BackgroundColor #FFFDF5
+  BorderColor #2B7A9E
+}
+
+left to right direction
+
+' ============ Dispositivo cliente ============
+node "Dispositivo cliente\n(Móvil / PC / Tablet)" as cliente {
+  artifact "PWA — Reserva de Salas\n(React + Next.js 14 · TS · Tailwind)\nService Worker · jsQR\n\nSesion: cookie httpOnly SameSite=Lax\n8h · RS-Theme en localStorage" as pwa
+}
+
+cloud "Internet\nHTTPS / TLS 1.3" as internet
+
+' ============ Repositorio / CI-CD ============
+node "GitHub\n(repositorio)" as github {
+  artifact "push a master\n-> Vercel build & deploy\nproducción directo" as push
+}
+
+' ============ Vercel ============
+node "Vercel — Serverless\n(Edge global · 100% OPEX)" as vercel {
+
+  artifact "Build estatico (.next + /public)\nHTML/CSS/JS · manifest · icono PWA\nHSTS · X-Content-Type-Options\nReferrer-Policy" as static
+
+  node "Edge Middleware" as middleware {
+    artifact "Verificacion de sesion\ncookie JWT HS256 httpOnly\nRBAC por ruta (401 / 403)" as mw
+  }
+
+  node "Serverless Functions\n(Next.js Route Handlers)" as fn {
+    artifact "API REST /api/*\nsalas · reservas · tipos-sala · bitácora\nocupación · check-in QR/manual" as api
+    artifact "Motor de penalización\nbloqueo tras 3 faltas (7 días)" as motor
+    artifact "NotificadorICS (Observer)\ngenera .ics · SMTP aún no integrado" as notif
+  }
+
+  mw --down-- api
+  static ..> mw : /api/*
+}
+
+' ============ Supabase ============
+node "Supabase (PaaS)" as supabase {
+  database "DB-Institucional\nusuarios_institucion\npadrón · rol · estado_activo\npassword_hash Argon2id" as dbInst
+  database "DB-Reservas\nsalas · tipos_sala · reservas\nhistorial_penalizaciones\nbitacora_administrativa\nintentos_login" as dbRes
+}
+
+' ============ Servicios externos ============
+node "cron-job.org\n(servicio externo)" as cronjob {
+  artifact "Disparo cada 10 min\nPOST /api/cron/ausencias\nBearer CRON_SECRET" as cron
+}
+
+' ============ Conexiones ============
+cliente --> internet : HTTPS — carga PWA
+internet --> static  : GET / (shell + assets)
+cliente  --> mw      : HTTPS /api/* (JSON)
+cronjob  --> api     : HTTPS bearer
+
+fn  --> dbInst : PostgREST HTTPS\npadrón / estado_activo / rol
+fn  --> dbRes  : PostgREST HTTPS\nUNIQUE(sala,fecha,bloque)\nUNIQUE(usuario_rut,fecha,bloque)\nambos WHERE estado <> 'cancelada'
+
+github --> vercel : build + deploy\n(master -> prod, sin staging)
+
+notif ..> api : evento "reserva confirmada"\n(flujo asíncrono, sin SMTP)
+
+@enduml

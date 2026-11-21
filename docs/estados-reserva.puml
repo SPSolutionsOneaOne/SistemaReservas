@@ -1,0 +1,52 @@
+@startuml Estados - Reserva
+' ============================================================
+' Maquina de estados: Reserva (INACAP - Sistema de Reservas)
+' Ref: RF-FUN-02 · RN04 · RN05 · cron /api/cron/ausencias (cada 10 min)
+' Refleja la implementación real: EstadoReserva = confirmada | cancelada | completada | no_asistio
+' ============================================================
+
+skinparam defaultFontName Arial
+skinparam roundCorner 4
+skinparam shadowing false
+
+skinparam state {
+  BackgroundColor #FEFEFE
+  BorderColor #2B7A9E
+  FontColor #1F2937
+}
+
+[*] --> Confirmada : POST /api/reservas\n(reserva creada · HTTP 201)
+
+state Confirmada {
+  Confirmada : estado = 'confirmada'
+  Confirmada : asistencia_registrada_en = NULL
+}
+
+Confirmada --> Completada : check-in QR / código manual válido\n(ventana inicio del bloque ±10 min)\nasistencia_registrada_en = now · estado = 'completada'
+Confirmada --> Cancelada   : titular o encargado / administrador cancela\n(borrado lógico - estado = 'cancelada')\nsi staff cancela tercero: bitácora RF-SEC-04
+Confirmada --> Inasistencia : cron /api/cron/ausencias (cada 10 min)\nsin check-in a T+10 min del inicio del bloque\nestado = 'no_asistio' (sin volver a contar si ya no está 'confirmada')
+
+Completada  --> [*] : fin del bloque (histórico conservado)
+Cancelada   --> [*] : bloque liberado (índice parcial no aplica)
+Inasistencia --> [*] : 1 ausencia acumulada para el titular (RN05)
+
+note right of Cancelada
+  Soft delete: la fila no se elimina físicamente.
+  El bloqueo de sala se libera porque el índice
+  UNIQUE(id_sala, fecha, bloque) excluye 'cancelada'.
+end note
+
+note right of Inasistencia
+  Inasistencia = estado 'no_asistio'.
+  Cuenta 1 ausencia en historial_penalizaciones.
+  Staff (encargado / administrador) exento de penalización.
+  No ocupa el bloque (excluida de UNIQUE).
+end note
+
+note bottom of Confirmada
+  Dentro de la ventana ±10 min: check-in registra
+  asistencia (y reinicia ausencias del titular: RN05).
+  Fuera de ventana: no se acepta check-in.
+end note
+
+@enduml

@@ -1,0 +1,56 @@
+@startuml Estados - Sala (CU-12)
+' ============================================================
+' Maquina de estados: Sala (INACAP — Gestion de sala · CU-12)
+' Refleja la implementación real:
+'   EstadoHabilitacion = 'activo' | 'mantencion' | 'inactivo'
+'   (UNIQUE parcial de sala excluyendo 'cancelada' no aplica aquí)
+' ============================================================
+
+skinparam defaultFontName Arial
+skinparam roundCorner 4
+skinparam shadowing false
+
+skinparam state {
+  BackgroundColor #FEFEFE
+  BorderColor #2B7A9E
+  FontColor #1F2937
+}
+
+[*] --> Activa : POST /api/salas
+'id_sala autogenerado (prefijo tipo: LAB/SAL/AUD/CON/BIB)
+'+ qr_token + codigo_manual de 6 dígitos
+'estado_habilitacion = 'activo'
+
+state Activa {
+  Activa : estado_habilitacion = 'activo'
+  Activa : Reservable por alumnos/docentes
+  Activa : Ocupación por (sala, fecha, bloque) — UNIQUE parcial
+}
+
+Activa --> Mantención : Admin inhabilita (mantenimiento/incidente)
+Activa --> Inactiva   : Admin descataloga la sala
+Mantención --> Activa : Admin reactiva el recinto
+Inactiva --> Activa   : Admin rehabilita el recinto
+Mantención --> Inactiva : Admin descataloga en mantención
+Inactiva --> [*] : descatalogación definitiva (no vuelve a ofrecerse)
+
+Mantención : estado_habilitacion = 'mantencion'
+Mantención : NO aceptan reservas (403/422 en servidor)
+Mantención : checkouts y bitácoras quedan para el admin
+
+Inactiva : estado_habilitacion = 'inactivo'
+Inactiva : NO aceptan reservas ni check-in
+
+note right of Activa
+  Tarjeta QR fija:
+  QR → 'RESERVA-SALAS|<qr_token>'
+  código manual de 6 dígitos derivado del token.
+end note
+
+note right of Mantención
+  Las reservas previas de la sala
+  quedan como confirmadas/cancelables
+  por su titular (no se eliminan).
+end note
+
+@enduml

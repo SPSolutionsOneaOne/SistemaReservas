@@ -110,14 +110,21 @@ function sesionHeaders(cookie) {
   return { 'Content-Type': 'application/json', Cookie: cookie };
 }
 
-/** Firma un token con fecha de expiración en el pasado. */
+/** Construye un JWT HS256 vencido (mismo formato que la app) para pruebas 401. */
 function tokenExpirado(rut, rol) {
   const ahora = Math.floor(Date.now() / 1000);
-  const payload = { rut, rol, iat: ahora - 7200, exp: ahora - 3600 };
-  const b64url = (buf) => buf.toString('base64url');
-  const body = b64url(Buffer.from(JSON.stringify(payload)));
-  const sig = createHmac('sha256', SECRET).update(body).digest();
-  return `${body}.${b64url(sig)}`;
+  const b64url = (buf) => Buffer.from(buf).toString('base64url');
+  const header = b64url(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const payload = b64url(JSON.stringify({
+    rut,
+    rol,
+    iat: ahora - 7200,
+    exp: ahora - 3600,
+    iss: 'sistema-reservas-inacap',
+    aud: 'institucion-app',
+  }));
+  const firma = createHmac('sha256', SECRET).update(`${header}.${payload}`).digest('base64url');
+  return `${header}.${payload}.${firma}`;
 }
 
 const CRON_SECRET = '0a2de5543a60a20cfa70ea7f5f1c981b641019e0ccba10fc';

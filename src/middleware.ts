@@ -4,7 +4,7 @@ import { getSessionFromRequest, Rol } from '@/lib/session';
 
 /**
  * Middleware de control de acceso.
- * - Verifica la firma HMAC de la cookie de sesión.
+ * - Verifica el JWT HS256 de la cookie de sesión.
  * - Falla cerrado: si no hay sesión válida, responde 401.
  * - Aplica RBAC para operaciones administrativas.
  *

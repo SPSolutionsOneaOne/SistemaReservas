@@ -15,7 +15,7 @@ Generado: 2026-11-17T14:13:53.133Z
 - `node` (HTTPS nativo vía fetch global)
 - `@supabase/supabase-js` (vía PostgREST REST sin SDK)
 - `argon2` (hashes/verificación local)
-- `node:crypto` (HMAC, firmas locales en CP-FA1-010 / CP-FA1-017)
+- `node:crypto` (JWT HS256, firmas locales en CP-FA1-010 / CP-FA1-017)
 - Variables de entorno de `.env.local`: URLs de Supabase, service_role keys, SESSION_SECRET
 
 ## Comandos exactos
