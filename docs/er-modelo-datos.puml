@@ -1,190 +1,113 @@
 @startuml Modelo Entidad-Relacion - Sistema de Reservas
 ' ============================================================
-' INACAP — Modelo Entidad-Relación (DER)
-' Rúbrica:
-'  2.1.4.8 Entidades y relaciones óptimas: integridad referencial, PK/FK/UK
-'  2.1.4.9 Bases estructuradas y no estructuradas + ejemplos funcionales
-' Fuente: src/types/database.ts, src/lib/session.ts, docs/migracion-*.sql
+' INACAP — Modelo Entidad-Relación (DER) — versión final legible
+' 2.1.4.8 integridad referencial (PK/FK/UK)
+' 2.1.4.9 estructuradas + no estructuradas con ejemplos
+' Prefijos: DBI. = DB-Institucional | DBR. = DB-Reservas | NE. = no estructurado
 ' ============================================================
 
 skinparam defaultFontName Arial
 skinparam roundCorner 4
 skinparam shadowing false
-left to right direction
-
+skinparam linetype polyline
+skinparam nodesep 60
+skinparam ranksep 60
 skinparam entity {
-  BackgroundColor #F7FCFF
+  BackgroundColor #FFFFFF
   BorderColor #2B7A9E
   FontColor #1F2937
-}
-skinparam package {
-  BackgroundColor #F9FAFB
-  BorderColor #9CA3AF
+  FontSize 9
 }
 
-' ===== BASE ESTRUCTURADA 1: DB-Institucional (Padrón / Auth) =====
-package "DB-Institucional — PostgreSQL (Supabase)\nBASE ESTRUCTURADA 1/2 · Padrón y autenticación" as DBI {
-
-  entity "usuarios_institucion" as USUARIO {
-    * id : uuid <<PK>>
-    --
-    * rut : varchar(12) <<UK>>
-    * primer_nombre : varchar
-    segundo_nombre : varchar
-    * apellido_paterno : varchar
-    apellido_materno : varchar
-    nombre_completo : varchar <<GENERATED>>
-    * correo_institucional : varchar(150) <<UK>>
-    * password_hash : text "Argon2id"
-    * rol : varchar(30) "alumno|docente|encargado|admin"
-    carrera_o_departamento : varchar
-    * estado_activo : boolean
-    creado_en : timestamptz
-  }
+entity "DBI.usuarios_institucion" as USUARIO {
+  * id : uuid <<PK>>
+  * rut : varchar(12) <<UK>>
+  correo_institucional : varchar(150) <<UK>>
+  password_hash : text "Argon2id"
+  rol : varchar(30) "alumno|docente|encargado|admin"
+  estado_activo : boolean
+  nombre_completo : varchar <<GENERATED>>
 }
 
-' ===== BASE ESTRUCTURADA 2: DB-Reservas (Operativa) =====
-package "DB-Reservas — PostgreSQL (Supabase)\nBASE ESTRUCTURADA 2/2 · Operación transaccional" as DBR {
-
-  entity "tipos_sala" as TIPO {
-    * id : text <<PK>>
-    --
-    * nombre : text <<UK>>
-    * prefijo : text <<UK>> "LAB/SAL/AUD/CON/BIB"
-    * aforo_sugerido : integer
-    * color : text
-    * orden : integer
-    creado_en : timestamptz
-  }
-
-  entity "salas" as SALA {
-    * id_sala : varchar(20) <<PK>> "LAB-01"
-    --
-    * nombre_descriptivo : varchar
-    * tipo : text <<FK>>
-    * aforo : integer
-    * piso : integer
-    * estado_habilitacion : varchar "activo|mantencion|inactivo"
-    * qr_token : uuid <<UK>>
-    * codigo_manual : varchar(6) <<UK>>
-    creado_en : timestamptz
-  }
-
-  entity "reservas" as RESERVA {
-    * id_reserva : uuid <<PK>>
-    --
-    * codigo_reserva : varchar(20) <<UK>> "RES-0030"
-    * id_sala : varchar(20) <<FK>>
-    * usuario_rut : varchar(12) <<FK>> "FK lógico cross-DB"
-    * fecha : date
-    * bloque_horario : integer "CHECK 0-17"
-    * cantidad_asistentes : integer
-    * proposito : varchar(100)
-    * estado : varchar "confirmada|completada|cancelada|no_asistio"
-    asistencia_registrada_en : timestamptz
-    creado_en : timestamptz
-  }
-
-  entity "historial_penalizaciones" as PENALIZACION {
-    * id : uuid <<PK>>
-    --
-    * usuario_rut : varchar(12) <<FK>> "FK lógico cross-DB"
-    * ausencias_acumuladas : integer "RN05 ≥ 3 -> bloqueo"
-    bloqueado_hasta : timestamptz "7 días"
-    ultima_actualizacion : timestamptz
-  }
-
-  entity "bitacora_administrativa" as BITACORA {
-    * id : uuid <<PK>>
-    --
-    * encargado_rut : varchar(12) <<FK>>
-    * accion : text
-    * rut_estudiante_afectado : varchar(12) <<FK>>
-    creado_en : timestamptz
-  }
-
-  entity "intentos_login" as INTENTOS {
-    * clave : text <<PK>> "SHA-256 (IP/cuenta)"
-    --
-    * intentos : integer "MAX 5"
-    bloqueado_hasta : timestamptz "15 min"
-    actualizado_en : timestamptz
-  }
+entity "DBR.tipos_sala" as TIPO {
+  * id : text <<PK>>
+  nombre : text <<UK>>
+  prefijo : text <<UK>> "LAB/SAL/AUD/CON/BIB"
+  aforo_sugerido : integer
+  color : text
+  orden : integer
 }
 
-' ===== ALMACENAMIENTO NO ESTRUCTURADO (ejemplos funcionales reales) =====
-package "Almacenamiento NO ESTRUCTURADO\n(navegador + artefactos generados — sin base NoSQL)" as NOEST {
-
-  entity "Cache Storage (Service Worker)" as CACHE {
-    * clave : text <<PK>> "Request URL"
-    --
-    valor : Response/Blob
-    tipo : "precache '/' + assets .js/.css/.png"
-  }
-
-  entity "localStorage" as LS {
-    * clave : text <<PK>> "rs-theme"
-    --
-    valor : text "light|dark — sin datos de sesión"
-  }
-
-  entity "Artefactos QR / .ics" as ARCHIVOS {
-    * nombre : text <<PK>> "QR-LAB-01.png|.svg, reserva.ics"
-    --
-    contenido : blob/text "generado en cliente (jsQR / QRCode / ICS)"
-    origen : "RESERVA-SALAS|<qr_token>"
-  }
+entity "DBR.salas" as SALA {
+  * id_sala : varchar(20) <<PK>>
+  nombre_descriptivo : varchar
+  tipo : text <<FK>>
+  aforo : integer
+  piso : integer
+  estado_habilitacion : varchar
+  qr_token : uuid <<UK>>
+  codigo_manual : varchar(6) <<UK>>
+  artefactos : "QR PNG/SVG + .ics (NE.)"
 }
 
-' ===== INTEGRIDAD REFERENCIAL (PK / FK / UK) =====
-TIPO    ||--o{ SALA        : "FK salas.tipo -> tipos_sala.id\nON UPDATE CASCADE · ON DELETE RESTRICT"
-SALA    ||--o{ RESERVA     : "FK reservas.id_sala -> salas.id_sala\nON DELETE CASCADE"
-USUARIO ||--o{ RESERVA     : "FK LÓGICA por RUT\n(sin FK física cross-DB)"
-USUARIO ||--o{ PENALIZACION : "FK LÓGICA por RUT"
-USUARIO ||--o{ BITACORA    : "FK LÓGICA (encargado_rut)"
-USUARIO ||--o{ BITACORA    : "FK LÓGICA (rut_estudiante_afectado)"
-SALA    ||--o{ ARCHIVOS    : "1 QR fijo por sala"
+entity "DBR.reservas" as RESERVA {
+  * id_reserva : uuid <<PK>>
+  codigo_reserva : varchar(20) <<UK>>
+  id_sala : varchar(20) <<FK>>
+  usuario_rut : varchar(12) <<FK lógico>>
+  fecha : date
+  bloque_horario : integer "0-17"
+  cantidad_asistentes : integer
+  proposito : varchar(100)
+  estado : varchar
+  asistencia_registrada_en : timestamptz
+  uq1 : "UNIQUE(sala,fecha,bloque) WHERE confirmada/completada"
+  uq2 : "UNIQUE(usuario,fecha,bloque) WHERE estado <> cancelada"
+}
 
-' ===== REGLAS DE INTEGRIDAD DE NEGOCIO (índices únicos parciales) =====
-note right of RESERVA
-  INTEGRIDAD DE NEGOCIO (índices parciales):
-  1. UNIQUE(id_sala, fecha, bloque_horario)
-     WHERE estado IN ('confirmada','completada')
-     -> impide doble reserva de una sala (HTTP 409)
-  2. UNIQUE(usuario_rut, fecha, bloque_horario)
-     WHERE estado <> 'cancelada'
-     -> impide 2 salas al mismo usuario en un bloque (HTTP 409)
-  Borrado lógico: cancelar = estado 'cancelada' (no DELETE).
-  No se persisten asistentes: sólo cantidad_asistentes.
-end note
+entity "DBR.historial_penalizaciones" as PENAL {
+  * id : uuid <<PK>>
+  usuario_rut : varchar(12) <<FK lógico>>
+  ausencias_acumuladas : integer "RN05 >= 3"
+  bloqueado_hasta : timestamptz "7 días"
+}
 
-note bottom of USUARIO
-  RUT como identificador vectorial entre BDs:
-  no hay FK física entre DB-Institucional y DB-Reservas.
-  SEGURIDAD: password_hash Argon2id; correo institucional UK;
-  rol restringido por CHECK (RBAC).
-end note
+entity "DBR.bitacora_administrativa" as BITACORA {
+  * id : uuid <<PK>>
+  encargado_rut : varchar(12) <<FK lógico>>
+  accion : text
+  rut_estudiante_afectado : varchar(12) <<FK lógico>>
+  creado_en : timestamptz
+}
 
-note right of PENALIZACION
-  RN05: 3 ausencias sin check-in -> bloqueo 7 días.
-  Check-in válido reinicia ausencias_acumuladas = 0
-  y bloqueado_hasta = NULL (resetearAusencias).
-end note
+entity "DBR.intentos_login" as INTENTOS {
+  * clave : text <<PK>> "SHA-256 IP/cuenta"
+  intentos : integer "MAX 5"
+  bloqueado_hasta : timestamptz "15 min"
+}
 
-note bottom of INTENTOS
-  Rate limiting atómico compartido entre réplicas
-  (RPC login_verificar_bloqueo / registrar_fallo / limpiar_intentos).
-  Clave hasheada SHA-256: nunca IP/RUT en claro.
-end note
+entity "NE.Cache Storage (Service Worker)" as CACHE {
+  * clave : text <<PK>> "Request '/' + assets JS/CSS/PNG"
+  valor : Response/Blob "offline-first PWA"
+}
 
-note bottom of NOEST
-  EJEMPLOS FUNCIONALES (2.1.4.9):
-  - Cache API: '/', JS/CSS/imágenes (offline-first PWA)
-  - localStorage: 'rs-theme' (tema claro/oscuro)
-  - QR PNG/SVG descargables e imprimibles por sala; .ics generado
-    al confirmar reserva (Observer); despacho SMTP aún pendiente.
-  No existe base NoSQL: se documentan estos stores de objeto/clave-valor
-  como almacenamiento no estructurado real del sistema.
-end note
+entity "NE.localStorage" as LS {
+  * clave : text <<PK>> "rs-theme"
+  valor : text "light|dark — sin sesión"
+}
+
+entity "NE.Artefactos QR / .ics" as ARCHIVOS {
+  * nombre : text <<PK>> "QR-LAB-01.png, reserva.ics"
+  contenido : blob/text "generado en cliente (QRCode / ICS)"
+}
+
+' ---- Integridad referencial ----
+TIPO     ||--o{ SALA     : "FK salas.tipo → tipos_sala.id\nCASCADE / RESTRICT"
+SALA     ||--o{ RESERVA  : "FK reservas.id_sala → salas.id_sala\nON DELETE CASCADE"
+USUARIO  ||..o{ RESERVA  : "FK lógico RUT (cross-DB)"
+USUARIO  ||..o{ PENAL    : "FK lógico RUT"
+USUARIO  ||..o{ BITACORA : "FK lógico RUT"
+SALA     ||--o{ ARCHIVOS : "QR fijo por sala (1:1)"
+RESERVA  ||--o{ ARCHIVOS : ".ics por reserva confirmada"
 
 @enduml
