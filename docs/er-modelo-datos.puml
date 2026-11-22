@@ -29,12 +29,16 @@ skinparam note {
 entity "DBI.usuarios_institucion" as USUARIO {
   * id : uuid <<PK>>
   * rut : varchar(12) <<UK>>
+  primer_nombre : varchar
+  segundo_nombre : varchar
+  apellido_paterno : varchar
+  apellido_materno : varchar
+  nombre_completo : text <<GENERATED>>
   correo_institucional : varchar(150) <<UK>>
   password_hash : text
   rol : varchar(30)
   carrera_o_departamento : varchar
   estado_activo : boolean
-  nombre_completo : varchar <<GENERATED>>
   creado_en : timestamptz
 }
 
