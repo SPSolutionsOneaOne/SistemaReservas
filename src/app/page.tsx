@@ -2143,6 +2143,34 @@ export default function ReservaPage() {
                               <span className="state">Por confirmar</span>
                             )}
                           </div>
+                          {r.estado !== 'cancelada' && (
+                            <button
+                              className="btn sm"
+                              type="button"
+                              title="Descargar evento .ics para tu calendario"
+                              onClick={async () => {
+                                try {
+                                  const resp = await fetch(`/api/reservas/ics?id_reserva=${encodeURIComponent(r.id)}`);
+                                  if (!resp.ok) {
+                                    showToast('No se pudo generar el calendario');
+                                    return;
+                                  }
+                                  const blob = await resp.blob();
+                                  const url = URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `reserva-${r.code}.ics`;
+                                  a.click();
+                                  URL.revokeObjectURL(url);
+                                  showToast('Evento descargado — ábrelo para agregarlo a tu calendario');
+                                } catch {
+                                  showToast('No se pudo descargar el evento');
+                                }
+                              }}
+                            >
+                              Agregar a calendario
+                            </button>
+                          )}
                           {r.estado === 'confirmada' && !r.attended && (
                             <div className="row" style={{ gap: 8 }}>
                               <button
