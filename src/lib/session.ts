@@ -8,6 +8,7 @@
 // ============================================================
 
 import { SignJWT, jwtVerify } from 'jose';
+import { randomUUID } from 'crypto';
 import type { NextRequest } from 'next/server';
 
 export type Rol = 'alumno' | 'docente' | 'encargado_administrativo' | 'administrador';
@@ -19,6 +20,7 @@ export interface SessionPayload {
   rol: Rol;
   iat: number;
   exp: number;
+  jti: string;
 }
 
 export const SESSION_COOKIE = 'institucion_session';
@@ -45,7 +47,7 @@ function getSecretKey(): Uint8Array {
 export async function signSession(input: { rut: string; rol: Rol }): Promise<string> {
   const ahora = Math.floor(Date.now() / 1000);
 
-  return new SignJWT({ rut: input.rut, rol: input.rol })
+  return new SignJWT({ rut: input.rut, rol: input.rol, jti: randomUUID() })
     .setProtectedHeader({ alg: JWT_ALG, typ: 'JWT' })
     .setIssuedAt(ahora)
     .setExpirationTime(ahora + SESSION_TTL_SECONDS)
@@ -73,7 +75,8 @@ export async function verifySession(token: string | null | undefined): Promise<S
       typeof payload.rol !== 'string' ||
       !ROLES_VALIDOS.includes(payload.rol as Rol) ||
       typeof payload.iat !== 'number' ||
-      typeof payload.exp !== 'number'
+      typeof payload.exp !== 'number' ||
+      typeof payload.jti !== 'string'
     ) {
       return null;
     }
@@ -90,6 +93,7 @@ export async function verifySession(token: string | null | undefined): Promise<S
       rol: payload.rol as Rol,
       iat: payload.iat,
       exp: payload.exp,
+      jti: payload.jti,
     };
   } catch {
     return null;
@@ -100,8 +104,43 @@ export function getSessionCookie(request: NextRequest): string | undefined {
   return request.cookies.get(SESSION_COOKIE)?.value;
 }
 
+/** Registra el jti del token como revocado (logout real, FA1-015). */
+export async function revocarSesion(token: string | null | undefined): Promise<void> {
+  const payload = await verifySession(token);
+  if (!payload) return;
+  const { createClient } = await import('@supabase/supabase-js');
+  const url = process.env.NEXT_PUBLIC_SUPABASE_RESERVAS_URL;
+  const key = process.env.SUPABASE_RESERVAS_SERVICE_ROLE_KEY;
+  if (!url || !key) return;
+  const supabase = createClient(url, key, { auth: { persistSession: false } });
+  await supabase.from('sesiones_revocadas').upsert(
+    { jti: payload.jti, usuario_rut: payload.rut },
+    { onConflict: 'jti', ignoreDuplicates: true }
+  );
+}
+
+/** Verifica la sesión y que su jti no haya sido revocado en BD. */
 export async function getSessionFromRequest(request: NextRequest): Promise<SessionPayload | null> {
-  return verifySession(getSessionCookie(request));
+  const payload = await verifySession(getSessionCookie(request));
+  if (!payload) return null;
+
+  try {
+    const { createClient } = await import('@supabase/supabase-js');
+    const url = process.env.NEXT_PUBLIC_SUPABASE_RESERVAS_URL;
+    const key = process.env.SUPABASE_RESERVAS_SERVICE_ROLE_KEY;
+    if (url && key) {
+      const supabase = createClient(url, key, { auth: { persistSession: false } });
+      const { data } = await supabase
+        .from('sesiones_revocadas')
+        .select('jti')
+        .eq('jti', payload.jti)
+        .maybeSingle();
+      if (data) return null;
+    }
+  } catch (err) {
+    console.warn('[sesión] No se pudo verificar revocación; se permite la sesión firmada:', err);
+  }
+  return payload;
 }
 
 /** Opciones de cookie seguras para el token JWT de sesión. */

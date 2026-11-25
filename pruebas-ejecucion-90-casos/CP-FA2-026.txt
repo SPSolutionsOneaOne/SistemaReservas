@@ -1,15 +1,7 @@
 Caso: CP-FA2-026
-Fecha: 2026-11-17T11:46:20.000-03:00
+Fecha: 2026-11-25T23:37:04.087Z
 Resultado: PASS
 
 Detalle:
-POST /api/reservas con fecha=2026-11-17, bloque_horario=0
-(ya iniciado) -> HTTP 422.
+Bloque ya iniciado (2026-11-25) -> HTTP 422.
 {"error":"No se puede reservar un bloque que ya ha iniciado"}
-
-Comando:
-node scripts/manual_caso_026.cjs
-
-Conclusión: el servidor rechaza creación de reserva para bloques
-ya iniciados en modo directo (curl/script), no sólo en la UI.
-La validación no es eludeble por manipulación del navegador.

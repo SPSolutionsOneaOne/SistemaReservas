@@ -7,7 +7,8 @@ const {
 
 const out = [];
 const add = (id, status, texto) => out.push({ id, status, texto });
-const fechaHoy = () => new Date().toLocaleDateString('en-CA');
+// Se usa mañana para que los bloques NO estén iniciados (el runner puede correrse de noche).
+const fechaHoy = () => new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'America/Santiago' });
 
 // Combina sala × bloque hasta encontrar un slot libre.
 const SALAS = ['BIB-03', 'BIB-02', 'BIB-01', 'SAL-03', 'SAL-02', 'SAL-01', 'LAB-01', 'LAB-02', 'LAB-03', 'AUD-01', 'CON-01', 'CON-02'];
@@ -52,6 +53,13 @@ module.exports = async function fase2() {
         bloque_horario: bloque, cantidad_asistentes: 1, proposito, asistentes: [],
       }),
     });
+
+  const limpiarReservasDe = async (rut) => {
+    const { body } = await restRes(`reservas?usuario_rut=eq.${encodeURIComponent(rut)}&select=id_reserva`);
+    for (const r of body || []) {
+      await restRes(`reservas?id_reserva=eq.${encodeURIComponent(r.id_reserva)}`, { method: 'DELETE' }).catch(() => {});
+    }
+  };
 
   const limpiarEntidades = async () => {
     for (const u of [alumno1, alumno2, docente, encargado, admin]) {
@@ -175,6 +183,8 @@ module.exports = async function fase2() {
 
     // === CP-FA2-007 — Cancelación ajena
     {
+      await limpiarReservasDe(alumno1.rut);
+      await limpiarReservasDe(alumno2.rut);
       const l1 = await lA1();
       const r = await reservar(l1, 'LAB-03', 2);
       const resA = await r.json().catch(() => ({}));
@@ -191,6 +201,7 @@ module.exports = async function fase2() {
 
     // === CP-FA2-008 — Edición de reserva propia por docente
     {
+      await limpiarReservasDe(docente.rut);
       const l = await lDoc();
       const r = await reservar(l, 'LAB-02', 3, docente.rut, 'Docente E2E');
       const body = await r.json().catch(() => ({}));
@@ -206,6 +217,8 @@ module.exports = async function fase2() {
 
     // === CP-FA2-009 — Edición: destino ocupado
     {
+      await limpiarReservasDe(docente.rut);
+      await limpiarReservasDe(alumno2.rut);
       const l1 = await lDoc();
       const l2 = await lA2();
       const r = await reservar(l1, 'SAL-01', 5, docente.rut, 'Docente solape');
@@ -223,12 +236,13 @@ module.exports = async function fase2() {
 
     // === CP-FA2-010 — Superar aforo
     {
+      await limpiarReservasDe(alumno1.rut);
       const l = await lA1();
       const resp = await fetch(`${BASE}/api/reservas`, {
         method: 'POST',
         headers: sesionHeaders(l.cookie),
         body: JSON.stringify({
-          id_sala: 'BIB-01', usuario_rut: alumno1.rut, fecha: fechaHoy(), bloque_horario: 0,
+          id_sala: 'BIB-01', usuario_rut: alumno1.rut, fecha: fechaHoy(), bloque_horario: 11,
           cantidad_asistentes: 999, proposito: 'Prueba aforo', asistentes: [],
         }),
       });
@@ -408,6 +422,7 @@ module.exports = async function fase2() {
 
     // === CP-FA2-023 — Cancelación propia
     {
+      await limpiarReservasDe(alumno2.rut);
       const l = await lA2();
       const r = await crearReservaSlotLibre(l, fechaHoy(), alumno2.rut, 'Cancelar esta');
       const del = await fetch(`${BASE}/api/reservas?id_reserva=${encodeURIComponent(r.body?.id_reserva || '')}`, {

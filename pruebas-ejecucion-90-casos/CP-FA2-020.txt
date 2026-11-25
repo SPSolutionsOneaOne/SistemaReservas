@@ -1,7 +1,6 @@
 Caso: CP-FA2-020
-Fecha: 2026-11-17T14:13:53.133Z
-Resultado: FAIL
+Fecha: 2026-11-25T23:37:04.087Z
+Resultado: PASS
 
 Detalle:
-La creación con fecha de ayer (2026-11-16) devolvió HTTP 409 en sala  bloque null.
-El sistema no válida que la fecha sea futura — la validación existente sólo confina el día al mes en curso (validarFechaMesEnCurso), por lo que fechas pasadas dentro del mes se aceptan.
+La creación con fecha 2026-11-24 devolvió HTTP 422 en sala BIB-03 bloque 15.

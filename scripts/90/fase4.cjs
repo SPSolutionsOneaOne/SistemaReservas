@@ -103,7 +103,7 @@ module.exports = async function fase4() {
       headers: sesionHeaders(l.cookie),
       body: JSON.stringify({
         id_sala: 'LAB-01', usuario_rut: u.rut,
-        fecha: new Date().toLocaleDateString('en-CA'), bloque_horario: 0,
+        fecha: new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'America/Santiago' }), bloque_horario: 0,
         cantidad_asistentes: 1, proposito: 'Regresión E2E', asistentes: [],
       }),
     });
@@ -153,7 +153,7 @@ module.exports = async function fase4() {
       headers: sesionHeaders(l.cookie),
       body: JSON.stringify({
         id_sala: 'LAB-01', usuario_rut: u.rut,
-        fecha: new Date().toLocaleDateString('en-CA'), bloque_horario: 1,
+        fecha: new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'America/Santiago' }), bloque_horario: 1,
         cantidad_asistentes: 1, proposito: 'MassAssignment E2E',
         asistentes: [],
         estado: 'completada', rol: 'administrador', clave_admin: 'pwned',

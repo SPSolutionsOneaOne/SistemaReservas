@@ -1,7 +1,7 @@
 Caso: CP-FA4-001
-Fecha: 2026-11-17T14:13:53.133Z
+Fecha: 2026-11-25T23:37:04.087Z
 Resultado: PASS
 
 Detalle:
-100/100 GET concurrentes a / -> 200; tiempo total=493ms.
+100/100 GET concurrentes a / -> 200; tiempo total=473ms.
 No es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod.

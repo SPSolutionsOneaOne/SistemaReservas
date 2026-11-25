@@ -3,6 +3,7 @@ import { getSupabaseReservasAdmin } from '@/lib/supabaseReservasAdmin';
 import { resetearAusencias } from '@/controllers/reservasController';
 import { authorize, ROLES_STAFF } from '@/lib/authz';
 import { checkinPermitido } from '@/lib/horarios';
+import { obtenerClaveCliente, limpiarIntentos, registrarFallo, verificarBloqueo } from '@/lib/rateLimit';
 
 /**
  * Acepta 'RESERVA-SALAS|TOKEN' (contenido del QR) o el token suelto.
@@ -22,6 +23,17 @@ export async function POST(request: NextRequest) {
     // propias reservas. El personal administrativo puede hacerlo por terceros.
     const auth = await authorize(request);
     if (!auth.ok) return auth.response;
+
+    // Rate limit específico de check-in: evita fuerza bruta de códigos
+    // QR/manuales (FA3-016). Compartido entre instancias serverless.
+    const claveCheckin = `checkin:${obtenerClaveCliente(request)}`;
+    const estadoBloqueo = await verificarBloqueo(claveCheckin);
+    if (estadoBloqueo.bloqueado) {
+      return NextResponse.json(
+        { error: 'Demasiados intentos de check-in fallidos. Intente más tarde.' },
+        { status: 429, headers: { 'Retry-After': String(estadoBloqueo.retryAfter) } }
+      );
+    }
 
     const body = await request.json();
     const { id_reserva, codigo_reserva, qr_token, codigo_manual } = body;
@@ -57,6 +69,7 @@ export async function POST(request: NextRequest) {
       : await querySala.eq('codigo_manual', manualEntrada as string).maybeSingle();
 
     if (errSalaVal || !salaValidada) {
+      await registrarFallo(claveCheckin);
       return NextResponse.json(
         { error: 'Código QR o código manual no válido: no corresponde a una sala del sistema' },
         { status: 404 }
@@ -139,6 +152,7 @@ export async function POST(request: NextRequest) {
 
     // Regla de Negocio: si asiste a la sala, se resetean las ausencias acumuladas
     await resetearAusencias(reserva.usuario_rut);
+    await limpiarIntentos(claveCheckin);
 
     return NextResponse.json({
       mensaje: 'Check-in realizado exitosamente',

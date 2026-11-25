@@ -72,14 +72,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 3. Todos los usuarios autenticados ven RUT + nombre al validar un
-    //    asistente (RF-USA-06: la identidad se obtiene de la sesión y el
-    //    padrón, sin ingreso manual). Carrera y correo se reservan al
-    //    personal administrativo; nunca se entregan fuera de sesión.
-    const base = { rut: usuario.rut, nombre_completo: usuario.nombre_completo };
+    // 3. Privacidad: un alumno/docente que valida a un tercero sólo recibe
+    //    RUT y estado (sin nombre, correo ni carrera). El personal staff
+    //    recibe además nombre y carrera (RF-USA-06 / RF-SEC-04).
+    const base = { rut: usuario.rut, estado_activo: usuario.estado_activo };
     const enriquecido = ROLES_STAFF.includes(auth.session.rol)
-      ? { ...base, carrera_o_departamento: usuario.carrera_o_departamento, estado_activo: usuario.estado_activo }
-      : { ...base, estado_activo: usuario.estado_activo };
+      ? { ...base, nombre_completo: usuario.nombre_completo, carrera_o_departamento: usuario.carrera_o_departamento }
+      : base;
 
     return NextResponse.json(
       { usuario: enriquecido, bloqueado, mensajeBloqueo },

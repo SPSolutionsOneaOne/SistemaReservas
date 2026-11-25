@@ -56,7 +56,7 @@ module.exports = async function fase1() {
     // === CP-FA1-007 — Crear reserva por alumno
     {
       const l = await loginClean(uid.rut, uid.password);
-      const fecha = new Date().toLocaleDateString('en-CA');
+      const fecha = new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'America/Santiago' }); // bloque futuro
       const reserva = await fetch(`${BASE}/api/reservas`, {
         method: 'POST',
         headers: sesionHeaders(l.cookie),
@@ -73,7 +73,7 @@ module.exports = async function fase1() {
     // === CP-FA1-008 — Concurrencia: dos peticiones idénticas simultáneas
     {
       const l = await loginClean(uid2.rut, uid2.password);
-      const fecha = new Date().toLocaleDateString('en-CA');
+      const fecha = new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'America/Santiago' }); // bloque futuro
       const hop = {
         method: 'POST',
         headers: sesionHeaders(l.cookie),

@@ -16,7 +16,8 @@ module.exports = async function fase3() {
   const lAlu = () => loginClean(alumno.rut, alumno.password);
   const lAluB = () => loginClean(alumnoB.rut, alumnoB.password);
   const lEnc = () => loginClean(encargado.rut, encargado.password);
-  const fechaHoy = () => new Date().toLocaleDateString('en-CA');
+  // Se usa mañana para que los bloques NO estén iniciados (el runner puede correrse de noche).
+const fechaHoy = () => new Date(Date.now() + 86400000).toLocaleDateString('en-CA', { timeZone: 'America/Santiago' });
 
   try {
     // === CP-FA3-001 — Reserva a terceros por encargado
