@@ -2143,6 +2143,9 @@ export default function ReservaPage() {
                               <span className="state">Por confirmar</span>
                             )}
                           </div>
+                          {/* TEMPORALMENTE OCULTO a petición del cliente (2026-11-25).
+                              El endpoint GET /api/reservas/ics sigue disponible.
+                              Para reactivar, descomentar este bloque.
                           {r.estado !== 'cancelada' && (
                             <button
                               className="btn sm"
@@ -2171,6 +2174,7 @@ export default function ReservaPage() {
                               Agregar a calendario
                             </button>
                           )}
+                          */}
                           {r.estado === 'confirmada' && !r.attended && (
                             <div className="row" style={{ gap: 8 }}>
                               <button
