@@ -1,6 +1,6 @@
 Caso: CP-FA2-009
-Fecha: 2026-11-25T23:37:04.087Z
-Resultado: FAIL
+Fecha: 2026-11-25T23:56:04.962Z
+Resultado: PASS
 
 Detalle:
-Mover a bloque ocupado -> HTTP 400
+Mover a bloque ocupado -> HTTP 409

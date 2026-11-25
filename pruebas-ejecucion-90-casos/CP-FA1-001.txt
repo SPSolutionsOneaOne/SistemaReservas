@@ -1,7 +1,7 @@
 Caso: CP-FA1-001
-Fecha: 2026-11-25T23:37:04.087Z
+Fecha: 2026-11-25T23:56:04.962Z
 Resultado: PASS
 
 Detalle:
-Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$wlO1aPYri…
+Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$f+npRyG5/…
 Longitud: 97

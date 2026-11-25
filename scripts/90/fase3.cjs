@@ -155,10 +155,22 @@ const fechaHoy = () => new Date(Date.now() + 86400000).toLocaleDateString('en-CA
         `Código inexistente -> HTTP ${checkin.status}: ${body.error || ''}`);
     }
 
-    // === CP-FA3-016 — Rate limiting en código manual 6 dígitos
+    // === CP-FA3-016 — Rate limiting en check-in (código manual inválido)
     {
-      add('CP-FA3-016', 'FAIL',
-        'No existe rate limiting específico sobre /api/reservas/check-in. 20 intentos consecutivos con códigos inválidos reciben 400 repetidamente, sin 429. La defensa actual depende de la ventana temporal de check-in y de la unicidad del código de reserva.');
+      const l = await lAlu();
+      let ultimo = 0;
+      let cuerpo = '';
+      for (let i = 0; i < 8; i++) {
+        const r = await fetch(`${BASE}/api/reservas/check-in`, {
+          method: 'POST',
+          headers: sesionHeaders(l.cookie),
+          body: JSON.stringify({ id_reserva: '00000000-0000-0000-0000-000000000000', codigo_manual: '000000' }),
+        });
+        ultimo = r.status;
+        if (r.status === 429) { cuerpo = (await r.json().catch(() => ({}))).error || ''; break; }
+      }
+      add('CP-FA3-016', ultimo === 429 ? 'PASS' : 'FAIL',
+        `8 check-in con código inválido -> último HTTP ${ultimo} (esperado 429). ${cuerpo}`);
     }
 
     // === CP-FA3-017 — Cron: inasistencia vencida marcada

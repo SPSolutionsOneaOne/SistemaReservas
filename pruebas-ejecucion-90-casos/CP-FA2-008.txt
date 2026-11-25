@@ -1,6 +1,6 @@
 Caso: CP-FA2-008
-Fecha: 2026-11-25T23:37:04.087Z
-Resultado: FAIL
+Fecha: 2026-11-25T23:56:04.962Z
+Resultado: PASS
 
 Detalle:
-Edición de bloque -> HTTP 400
+Edición de bloque -> HTTP 200

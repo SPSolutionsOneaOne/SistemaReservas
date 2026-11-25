@@ -1,7 +1,7 @@
 Caso: CP-FA2-021
-Fecha: 2026-11-25T23:37:04.087Z
+Fecha: 2026-11-25T23:56:04.962Z
 Resultado: PASS
 
 Detalle:
 Docente reserva segunda sala en el mismo bloque 6 -> HTTP 409.
-El sistema debe rechazar la doble reserva del mismo usuario en el mismo bloque (restricción personal, no sólo sala/fecha/bloque). Mensaje: Conflicto de concurrencia (HTTP 409)
+El sistema debe rechazar la doble reserva del mismo usuario en el mismo bloque (restricción personal, no sólo sala/fecha/bloque). Mensaje: Ya posee una reserva confirmada en este bloque

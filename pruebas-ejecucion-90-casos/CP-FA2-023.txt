@@ -1,6 +1,6 @@
 Caso: CP-FA2-023
-Fecha: 2026-11-25T23:37:04.087Z
-Resultado: FAIL
+Fecha: 2026-11-25T23:56:04.962Z
+Resultado: PASS
 
 Detalle:
-Reserva creada en — bloque — (HTTP 409); cancelar propia -> HTTP 400
+Reserva creada en BIB-03 bloque 15 (HTTP 201); cancelar propia -> HTTP 200

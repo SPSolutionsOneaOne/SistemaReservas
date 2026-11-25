@@ -1,11 +1,11 @@
 {
-  "ts": "2026-11-25T23:37:04.087Z",
+  "ts": "2026-11-25T23:56:04.962Z",
   "total": 91,
   "resultados": [
     {
       "id": "CP-FA1-001",
       "status": "PASS",
-      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$wlO1aPYri…\nLongitud: 97"
+      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$f+npRyG5/…\nLongitud: 97"
     },
     {
       "id": "CP-FA1-002",
@@ -25,7 +25,7 @@
     {
       "id": "CP-FA1-007",
       "status": "PASS",
-      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"999527c1-2b50-40d9-b2fc-0d7f9dabae41\",\"codigo_reserva\":\"RES-0030\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"39228.179-7\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
+      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"14936f9b-18ee-42c3-849e-b1b088c5fc71\",\"codigo_reserva\":\"RES-0030\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"61601.246-0\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
     },
     {
       "id": "CP-FA1-008",
@@ -45,7 +45,7 @@
     {
       "id": "CP-FA1-011",
       "status": "PASS",
-      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 07:29:35 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
+      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 07:53:25 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
     },
     {
       "id": "CP-FA1-013",
@@ -54,13 +54,13 @@
     },
     {
       "id": "CP-FA1-014",
-      "status": "INFO",
-      "texto": "Tiempo inexistente=634ms vs existente=514ms. Δt=120ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
+      "status": "PASS",
+      "texto": "Tiempo inexistente=582ms vs existente=551ms. Δt=31ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
     },
     {
       "id": "CP-FA1-015",
-      "status": "FAIL",
-      "texto": "Tras POST /api/auth/logout, la misma cookie en /api/reservas responde HTTP 200."
+      "status": "PASS",
+      "texto": "Tras POST /api/auth/logout, la misma cookie en /api/reservas responde HTTP 401."
     },
     {
       "id": "CP-FA1-016",
@@ -75,12 +75,12 @@
     {
       "id": "CP-FA1-018",
       "status": "PASS",
-      "texto": "password_hash = texto plano 'Prueba1424#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
+      "texto": "password_hash = texto plano 'Prueba6667#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
     },
     {
       "id": "CP-FA1-019",
-      "status": "FAIL",
-      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"39228.179-7\",\"nombre_completo\":\"Usuario De Prueba Prueb\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
+      "status": "PASS",
+      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"61601.246-0\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
     },
     {
       "id": "CP-FA1-020",
@@ -130,7 +130,7 @@
     {
       "id": "CP-FA2-004",
       "status": "NO_EXEC",
-      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 08:30 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
+      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 08:54 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
     },
     {
       "id": "CP-FA2-005",
@@ -144,33 +144,33 @@
     },
     {
       "id": "CP-FA2-007",
-      "status": "FAIL",
-      "texto": "Alumno B intenta DELETE sobre reserva de Alumno A -> HTTP 404"
+      "status": "PASS",
+      "texto": "Alumno B intenta DELETE sobre reserva de Alumno A -> HTTP 403"
     },
     {
       "id": "CP-FA2-008",
-      "status": "FAIL",
-      "texto": "Edición de bloque -> HTTP 400"
+      "status": "PASS",
+      "texto": "Edición de bloque -> HTTP 200"
     },
     {
       "id": "CP-FA2-009",
-      "status": "FAIL",
-      "texto": "Mover a bloque ocupado -> HTTP 400"
+      "status": "PASS",
+      "texto": "Mover a bloque ocupado -> HTTP 409"
     },
     {
       "id": "CP-FA2-010",
-      "status": "FAIL",
-      "texto": "999 asistentes sobre BIB-01 (aforo 6) -> HTTP 409: Ya posee una reserva confirmada en este bloque"
+      "status": "PASS",
+      "texto": "999 asistentes sobre BIB-01 (aforo 6) -> HTTP 422: Cantidad de asistentes (999) excede el aforo permitido de la sala (6)"
     },
     {
       "id": "CP-FA2-011",
       "status": "INFO",
-      "texto": "Texto crudo almacenado en proposito: \"(no leído)\".\nReact escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React."
+      "texto": "Texto crudo almacenado en proposito: \"<script>alert(\"xss\")</script>\".\nReact escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React."
     },
     {
       "id": "CP-FA2-012",
       "status": "PASS",
-      "texto": "Respuesta ante solape: HTTP 409\n{\"error\":\"Conflicto de concurrencia (HTTP 409)\"}"
+      "texto": "Respuesta ante solape: HTTP 409\n{\"error\":\"Conflicto de concurrencia: este bloque horario ya ha sido reservado para esta sala y fecha (HTTP 409)\"}"
     },
     {
       "id": "CP-FA2-013",
@@ -220,7 +220,7 @@
     {
       "id": "CP-FA2-021",
       "status": "PASS",
-      "texto": "Docente reserva segunda sala en el mismo bloque 6 -> HTTP 409.\nEl sistema debe rechazar la doble reserva del mismo usuario en el mismo bloque (restricción personal, no sólo sala/fecha/bloque). Mensaje: Conflicto de concurrencia (HTTP 409)"
+      "texto": "Docente reserva segunda sala en el mismo bloque 6 -> HTTP 409.\nEl sistema debe rechazar la doble reserva del mismo usuario en el mismo bloque (restricción personal, no sólo sala/fecha/bloque). Mensaje: Ya posee una reserva confirmada en este bloque"
     },
     {
       "id": "CP-FA2-022",
@@ -229,8 +229,8 @@
     },
     {
       "id": "CP-FA2-023",
-      "status": "FAIL",
-      "texto": "Reserva creada en — bloque — (HTTP 409); cancelar propia -> HTTP 400"
+      "status": "PASS",
+      "texto": "Reserva creada en BIB-03 bloque 15 (HTTP 201); cancelar propia -> HTTP 200"
     },
     {
       "id": "CP-FA2-024",
@@ -240,7 +240,7 @@
     {
       "id": "CP-FA2-025",
       "status": "INFO",
-      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 404, HTTP 404.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
+      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 200, HTTP 422.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
     },
     {
       "id": "CP-FA3-001",
@@ -355,7 +355,7 @@
     {
       "id": "CP-FA4-001",
       "status": "PASS",
-      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=473ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
+      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=678ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
     },
     {
       "id": "CP-FA4-002",
@@ -400,7 +400,7 @@
     {
       "id": "CP-FA4-010",
       "status": "PASS",
-      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1218ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
+      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1614ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
     },
     {
       "id": "CP-FA4-011",

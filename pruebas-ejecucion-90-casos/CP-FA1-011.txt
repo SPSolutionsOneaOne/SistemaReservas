@@ -1,7 +1,7 @@
 Caso: CP-FA1-011
-Fecha: 2026-11-25T23:37:04.087Z
+Fecha: 2026-11-25T23:56:04.962Z
 Resultado: PASS
 
 Detalle:
 Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true
-institucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 07:29:35 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax
+institucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 07:53:25 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax

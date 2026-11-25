@@ -1,7 +1,7 @@
 Caso: CP-FA2-011
-Fecha: 2026-11-25T23:37:04.087Z
+Fecha: 2026-11-25T23:56:04.962Z
 Resultado: INFO
 
 Detalle:
-Texto crudo almacenado en proposito: "(no leído)".
+Texto crudo almacenado en proposito: "<script>alert("xss")</script>".
 React escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React.

@@ -1,6 +1,6 @@
 Caso: CP-FA2-010
-Fecha: 2026-11-25T23:37:04.087Z
-Resultado: FAIL
+Fecha: 2026-11-25T23:56:04.962Z
+Resultado: PASS
 
 Detalle:
-999 asistentes sobre BIB-01 (aforo 6) -> HTTP 409: Ya posee una reserva confirmada en este bloque
+999 asistentes sobre BIB-01 (aforo 6) -> HTTP 422: Cantidad de asistentes (999) excede el aforo permitido de la sala (6)

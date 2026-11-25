@@ -1,7 +1,7 @@
 Caso: CP-FA2-012
-Fecha: 2026-11-25T23:37:04.087Z
+Fecha: 2026-11-25T23:56:04.962Z
 Resultado: PASS
 
 Detalle:
 Respuesta ante solape: HTTP 409
-{"error":"Conflicto de concurrencia (HTTP 409)"}
+{"error":"Conflicto de concurrencia: este bloque horario ya ha sido reservado para esta sala y fecha (HTTP 409)"}

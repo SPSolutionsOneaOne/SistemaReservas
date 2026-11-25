@@ -1,6 +1,6 @@
 Caso: CP-FA2-007
-Fecha: 2026-11-25T23:37:04.087Z
-Resultado: FAIL
+Fecha: 2026-11-25T23:56:04.962Z
+Resultado: PASS
 
 Detalle:
-Alumno B intenta DELETE sobre reserva de Alumno A -> HTTP 404
+Alumno B intenta DELETE sobre reserva de Alumno A -> HTTP 403
