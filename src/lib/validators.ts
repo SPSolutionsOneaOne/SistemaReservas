@@ -142,18 +142,27 @@ function hoySantiagoIso(): string {
 }
 
 /**
- * Valida que la fecha ('YYYY-MM-DD') esté entre hoy (America/Santiago)
- * y el fin del mes en curso. Regla del sistema: no se agenda en el
- * pasado ni más allá del mes presente.
+ * Valida que la fecha ('YYYY-MM-DD') esté en la ventana móvil de reserva:
+ * desde hoy (America/Santiago) hasta un mes después del día de hoy.
+ * Ejemplos: 25-nov → 25-dic · 30-nov → 30-dic · 31-dic → 31-ene.
+ * No se agenda en el pasado ni más allá de esa ventana.
  */
-export function validarFechaMesEnCurso(fecha: string): boolean {
+export function validarFechaEnVentana(fecha: string): boolean {
   if (!esFechaValida(fecha)) return false;
 
   const hoyLocal = hoySantiagoIso();
   if (fecha < hoyLocal) return false;
 
-  const [anio, mes] = hoyLocal.split('-').map(Number);
-  const finMes = new Date(Date.UTC(anio, mes, 0)).getUTCDate();
-  const max = `${anio}-${String(mes).padStart(2, '0')}-${String(finMes).padStart(2, '0')}`;
+  const [anio, mes, dia] = hoyLocal.split('-').map(Number);
+  const limite = new Date(Date.UTC(anio, mes - 1, dia));
+  limite.setUTCMonth(limite.getUTCMonth() + 1);
+  const max = [
+    limite.getUTCFullYear(),
+    String(limite.getUTCMonth() + 1).padStart(2, '0'),
+    String(limite.getUTCDate()).padStart(2, '0'),
+  ].join('-');
   return fecha <= max;
 }
+
+/** @deprecated Alias conservado por compatibilidad; usar validarFechaEnVentana. */
+export const validarFechaMesEnCurso = validarFechaEnVentana;

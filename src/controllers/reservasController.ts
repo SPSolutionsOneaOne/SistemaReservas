@@ -24,7 +24,7 @@ import {
   validarBloqueParaFecha,
   diaSemanaDeFecha,
   validarAforo,
-  validarFechaMesEnCurso,
+  validarFechaEnVentana,
   generarCodigoReserva,
   validarCorreoInstitucional,
 } from '@/lib/validators';
@@ -112,7 +112,7 @@ export async function crearReservaConValidacion(
   }
 
   // 2a. El bloque debe existir en ese día (sábado hasta las 14:00; domingo sin servicio)
-  if (validarFechaMesEnCurso(params.fecha)) {
+  if (validarFechaEnVentana(params.fecha)) {
     if (!validarBloqueParaFecha(params.fecha, params.bloque_horario)) {
       const dia = diaSemanaDeFecha(params.fecha);
       return {
@@ -126,11 +126,11 @@ export async function crearReservaConValidacion(
     }
   }
 
-  // 2b. La fecha debe estar dentro del mes en curso
-  if (!validarFechaMesEnCurso(params.fecha)) {
+  // 2b. La fecha debe estar dentro de la ventana móvil (hoy a hoy + 1 mes)
+  if (!validarFechaEnVentana(params.fecha)) {
     return {
       exito: false,
-      error: 'La fecha debe estar dentro del mes en curso',
+      error: 'La fecha debe estar dentro de los próximos 30 días',
       httpCode: 422,
     };
   }
@@ -394,11 +394,11 @@ export async function editarReservaConValidacion(
     return { exito: false, error: 'Bloque horario debe estar entre 0 y 17', httpCode: 400 };
   }
 
-  // 2b. La fecha debe estar dentro del mes en curso
-  if (datos.fecha !== undefined && !validarFechaMesEnCurso(datos.fecha)) {
+  // 2b. La fecha debe estar dentro de la ventana móvil (hoy a hoy + 1 mes)
+  if (datos.fecha !== undefined && !validarFechaEnVentana(datos.fecha)) {
     return {
       exito: false,
-      error: 'La fecha debe estar dentro del mes en curso',
+      error: 'La fecha debe estar dentro de los próximos 30 días',
       httpCode: 422,
     };
   }
@@ -422,7 +422,7 @@ export async function editarReservaConValidacion(
     const bloqueEfectivo = datos.bloque_horario ?? reservaActual.bloque_horario;
     if (
       (datos.fecha !== undefined || datos.bloque_horario !== undefined) &&
-      validarFechaMesEnCurso(fechaEfectiva) &&
+      validarFechaEnVentana(fechaEfectiva) &&
       !validarBloqueParaFecha(fechaEfectiva, bloqueEfectivo)
     ) {
       const dia = diaSemanaDeFecha(fechaEfectiva);

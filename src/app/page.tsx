@@ -327,13 +327,14 @@ export default function ReservaPage() {
   // Expansión del catálogo de salas por tipo (true = desplegado; todo colapsado por defecto)
   const [tiposExpandidos, setTiposExpandidos] = useState<Record<string, true>>({});
 
-  // 7 días disponibles
+  // Ventana móvil: hoy hasta hoy + 1 mes (ej. 30-nov → 30-dic).
   const days = useMemo(() => {
     const list: Date[] = [];
-    const today = new Date();
-    const remainingDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate() + 1;
-    for (let i = 0; i < remainingDays; i++) {
-      list.push(new Date(today.getFullYear(), today.getMonth(), today.getDate() + i));
+    const hoy = new Date();
+    const limite = new Date(hoy.getFullYear(), hoy.getMonth() + 1, hoy.getDate());
+    const total = Math.round((limite.getTime() - hoy.getTime()) / 86400000) + 1;
+    for (let i = 0; i < total; i++) {
+      list.push(new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + i));
     }
     return list;
   }, []);
@@ -971,9 +972,10 @@ export default function ReservaPage() {
 
   const guardarEdicion = async () => {
     if (!editando || editBloque === null) return;
-    const fechaMaxima = toLocalDateStr(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+    const hoy = new Date();
+    const fechaMaxima = toLocalDateStr(new Date(hoy.getFullYear(), hoy.getMonth() + 1, hoy.getDate()));
     if (editFecha > fechaMaxima) {
-      setEditError('Solo se puede agendar dentro del mes en curso.');
+      setEditError('Solo se puede agendar dentro de los próximos 30 días.');
       return;
     }
     const sala = salas.find((s) => s.code === editando.room);
@@ -2759,12 +2761,12 @@ export default function ReservaPage() {
                 className="in"
                 value={editFecha}
                 min={toLocalDateStr(new Date())}
-                max={toLocalDateStr(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))}
+                max={toLocalDateStr(new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate()))}
                 onChange={(e) => setEditFecha(e.target.value)}
               />
             </div>
             <p className="hint" style={{ margin: '2px 0 8px' }}>
-              Solo se puede agendar dentro del mes en curso.
+              Puedes agendar desde hoy hasta un mes después (próximos 30 días).
             </p>
 
             <label className="label" htmlFor="editBloque">

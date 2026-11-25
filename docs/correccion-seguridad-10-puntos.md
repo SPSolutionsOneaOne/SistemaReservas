@@ -636,12 +636,12 @@ Prueba E2E del CRUD en producción (13/13 aprobadas, dos ejecuciones consecutiva
 
 Los datos de prueba se eliminaron tras cada ejecución (0 reservas y 0 usuarios de prueba).
 
-### Solo mes en curso
+### Ventana móvil de un mes (actualizado 2026-11-25)
 
-No se puede agendar más allá del mes presente. El calendario de reserva ya solo genera días hasta fin de mes; la regla ahora también se aplica al modal de edición y al servidor:
+Se puede agendar desde hoy hasta un mes después del día de hoy (25-nov → 25-dic; 30-nov → 30-dic; 31-dic → 31-ene). Esto corrige la limitación anterior de “sólo mes en curso”, que dejaba sin días reservables en los últimos días de cada mes.
 
-- **UI:** el date picker del modal de edición tiene `min` (hoy) y `max` (último día del mes) con el mensaje “Solo se puede agendar dentro del mes en curso”, y `guardarEdicion` valida la fecha antes de enviar.
-- **Servidor:** `validarFechaMesEnCurso()` (`src/lib/validators.ts`) se aplica en `crearReservaConValidacion` y `editarReservaConValidacion`. Devuelve `422` con “La fecha debe estar dentro del mes en curso” si la fecha es inválida, está fuera del mes en curso o en el pasado. Tolera ±1 día entre la hora del servidor y la zona local del usuario para no rechazar días válidos en los bordes del mes.
+- **UI:** el calendario genera los días de la ventana móvil (hoy a hoy + 1 mes). El date picker del modal de edición tiene `min` (hoy) y `max` (hoy + 1 mes) con el mensaje “Puedes agendar desde hoy hasta un mes después (próximos 30 días)”.
+- **Servidor:** `validarFechaEnVentana()` (`src/lib/validators.ts`) se aplica en `crearReservaConValidacion` y `editarReservaConValidacion`. Devuelve `422` con “La fecha debe estar dentro de los próximos 30 días” si la fecha es inválida, está en el pasado o supera la ventana. Se calcula en zona America/Santiago.
 
 Prueba E2E de la regla en producción (6/6 aprobadas, dos ejecuciones consecutivas):
 
