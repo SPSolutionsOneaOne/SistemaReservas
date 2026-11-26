@@ -1,6 +1,25 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
+import { Bricolage_Grotesque, IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
+
+// Fuentes auto-hospedadas por Next.js: se descargan en build y se sirven
+// desde el mismo dominio. Elimina la petición bloqueante a fonts.googleapis.com
+// (Lighthouse móvil: -1770 ms en render-blocking) y elimina la dependencia
+// externa del CSP.
+const bricolage = Bricolage_Grotesque({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-bricolage',
+  weight: ['500', '700'],
+});
+
+const plex = IBM_Plex_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-plex',
+  weight: ['400', '500', '600'],
+});
 
 export const metadata: Metadata = {
   title: 'Reserva de Salas',
@@ -24,15 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
-        />
-      </head>
+    <html lang="es" suppressHydrationWarning className={`${bricolage.variable} ${plex.variable}`}>
       <body>
         {children}
         <Script id="sw-register" strategy="afterInteractive">

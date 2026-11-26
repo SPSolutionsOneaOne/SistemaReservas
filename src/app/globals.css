@@ -21,8 +21,8 @@
   --t-aud: #C2410C;
   --t-conf: #7C3AED;
   --t-bib: #BE185D;
-  --f-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
-  --f-body: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-display: var(--font-bricolage), 'Segoe UI', system-ui, sans-serif;
+  --f-body: var(--font-plex), 'Segoe UI', system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
