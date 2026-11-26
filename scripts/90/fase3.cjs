@@ -68,10 +68,29 @@ const fechaHoy = () => new Date(Date.now() + 86400000).toLocaleDateString('en-CA
         `Observer invocado en crearReservaConValidacion: ${invoca}\nNotificadorEmailObserver.ts: ${observer}\nTabla notificaciones_correo accesible: ${evidencia}`);
     }
 
-    // === CP-FA3-006 — Dashboard administrador
+    // === CP-FA3-006 — Dashboard administrador (RF-USA-05, implementado)
     {
-      add('CP-FA3-006', 'NO_IMPL',
-        'El panel de métricas no está implementado en el MVP (sólo creación/gestión de salas). No existe ruta /dashboard ni endpoints de estadísticas. Funcionalidad pendiente: RF-USA-05.');
+      const anon = await fetch(`${BASE}/api/dashboard`);
+      const lAluDash = await lAlu();
+      const alumnoResp = await fetch(`${BASE}/api/dashboard`, { headers: sesionHeaders(lAluDash.cookie) });
+      const lEncDash = await lEnc();
+      const staffResp = await fetch(`${BASE}/api/dashboard`, { headers: sesionHeaders(lEncDash.cookie) });
+      const staffBody = await staffResp.json().catch(() => ({}));
+      const secciones = ['ocupacion', 'asistencia', 'bloqueosActivos', 'bitacora'];
+      const completas = secciones.every((s) => Object.prototype.hasOwnProperty.call(staffBody, s));
+      const noStore = (staffResp.headers.get('cache-control') || '').includes('no-store');
+      add('CP-FA3-006',
+        anon.status === 401 && alumnoResp.status === 403 &&
+        staffResp.status === 200 && completas && noStore ? 'PASS' : 'FAIL',
+        `Sin sesión: HTTP ${anon.status} (esperado 401) · Alumno: HTTP ${alumnoResp.status} (esperado 403) · ` +
+        `Encargado: HTTP ${staffResp.status}; 4 secciones presentes: ${completas}; Cache-Control no-store: ${noStore}\n` +
+        `Resumen: ${JSON.stringify({
+          porDia: staffBody.ocupacion?.porDia?.length,
+          topSalas: staffBody.ocupacion?.topSalas?.length,
+          pctAsistencia: staffBody.asistencia?.porcentaje,
+          bloqueos: staffBody.bloqueosActivos?.length,
+          bitacora: staffBody.bitacora?.length,
+        })}`);
     }
 
     // === CP-FA3-007 — Detección Offline (banner PWA)
