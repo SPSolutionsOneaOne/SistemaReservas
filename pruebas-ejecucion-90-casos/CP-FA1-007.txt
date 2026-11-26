@@ -1,7 +1,7 @@
 Caso: CP-FA1-007
-Fecha: 2026-11-26T00:06:55.559Z
+Fecha: 2026-11-26T00:12:28.167Z
 Resultado: PASS
 
 Detalle:
 Creación por alumno -> HTTP 201
-{"id_reserva":"60537029-9201-4a11-95a6-5197e77a07dc","codigo_reserva":"RES-0030","id_sala":"LAB-01","usuario_rut":"36702.390-2","fecha":"2026-11-26","bloque_horario":7,"cantidad_as
+{"id_reserva":"b05d5aa9-1552-4299-bc6f-1d1d4437c33d","codigo_reserva":"RES-0030","id_sala":"LAB-01","usuario_rut":"26729.351-1","fecha":"2026-11-26","bloque_horario":7,"cantidad_as

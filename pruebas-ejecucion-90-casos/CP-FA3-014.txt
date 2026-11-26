@@ -1,6 +1,6 @@
 Caso: CP-FA3-014
-Fecha: 2026-11-26T00:06:55.559Z
-Resultado: NO_EXEC
+Fecha: 2026-11-26T00:12:28.167Z
+Resultado: PASS
 
 Detalle:
-No se pudo crear la reserva de prueba: {"error":"Ya posee una reserva confirmada en este bloque"}
+Check-in fuera de ventana (bloque 0) -> HTTP 400: Debe escanear el QR de la sala o ingresar su código manual de 6 dígitos
