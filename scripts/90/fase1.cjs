@@ -232,14 +232,20 @@ module.exports = async function fase1() {
 
     // === CP-FA1-003 — Singleton institucional (inspección de código)
     {
-      add('CP-FA1-003', 'INFO',
-        'Singleton verificado por inspección de código: src/lib/supabaseInstitucionalAdmin.ts conserva la instancia (`let instancia`) y getSupabaseInstitucionalAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción.');
+      const fs = require('fs');
+      const code = fs.readFileSync('src/lib/supabaseInstitucionalAdmin.ts', 'utf8');
+      const ok = /let instancia/.test(code) && /if \(!?instancia\)?/.test(code) && /return instancia/.test(code);
+      add('CP-FA1-003', ok ? 'PASS' : 'FAIL',
+        `Singleton en supabaseInstitucionalAdmin.ts: let instancia=${/let instancia/.test(code)}, reutilización=${/if \(!?instancia\)?/.test(code)}, return instancia=${/return instancia/.test(code)}`);
     }
 
     // === CP-FA1-004 — Singleton reservas (inspección de código)
     {
-      add('CP-FA1-004', 'INFO',
-        'Singleton verificado por inspección de código: src/lib/supabaseReservasAdmin.ts conserva la instancia (`let instancia`) y getSupabaseReservasAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción.');
+      const fs = require('fs');
+      const code = fs.readFileSync('src/lib/supabaseReservasAdmin.ts', 'utf8');
+      const ok = /let instancia/.test(code) && /if \(!?instancia\)?/.test(code) && /return instancia/.test(code);
+      add('CP-FA1-004', ok ? 'PASS' : 'FAIL',
+        `Singleton en supabaseReservasAdmin.ts: let instancia=${/let instancia/.test(code)}, reutilización=${/if \(!?instancia\)?/.test(code)}, return instancia=${/return instancia/.test(code)}`);
     }
 
     // === CP-FA1-012 — Precarga inmutable UI (requiere navegador)

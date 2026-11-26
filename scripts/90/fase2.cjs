@@ -258,9 +258,10 @@ module.exports = async function fase2() {
       const body = await r.json().catch(() => ({}));
       const gpt = await fetch(`${BASE}/api/reservas`, { headers: { Cookie: l.cookie } });
       const lista = await gpt.json().catch(() => ([]));
-      const res = Array.isArray(lista) && lista.find((x) => x.id_reserva === body.id_reserva);
-      add('CP-FA2-011', 'INFO',
-        `Texto crudo almacenado en proposito: "${res?.proposito || '(no leído)'}".\nReact escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React.`);
+      const proposito = Array.isArray(lista) && lista.find((x) => x.id_reserva === body.id_reserva)?.proposito;
+      const saneado = typeof proposito === 'string' && !/<[^>]*>/.test(proposito);
+      add('CP-FA2-011', saneado ? 'PASS' : 'FAIL',
+        `Proposito recibido: "${body.proposito || '(no leído)'}".\nProposito almacenado: "${proposito || '(no leído)'}".\nSaneamiento server-side (sin etiquetas HTML): ${saneado}`);
       await fetch(`${BASE}/api/reservas?id_reserva=${encodeURIComponent(body.id_reserva)}`, { method: 'DELETE', headers: sesionHeaders(l.cookie) });
     }
 

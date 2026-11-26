@@ -27,6 +27,7 @@ import {
   validarFechaEnVentana,
   generarCodigoReserva,
   validarCorreoInstitucional,
+  sanearProposito,
 } from '@/lib/validators';
 import { notificadorGlobal } from '@/services/NotificadorICS';
 import { ahoraSantiago, bloqueIniciado, vencidaGracia } from '@/lib/horarios';
@@ -100,6 +101,9 @@ export async function crearReservaConValidacion(
 ): Promise<{ exito: boolean; reserva?: Reserva; error?: string; httpCode?: number }> {
   const supabaseReservas = getSupabaseReservasAdmin();
   const supabaseInstitucional = getSupabaseInstitucionalAdmin();
+
+  // 0. Saneamiento del propósito: no se almacena markup ejecutable (XSS).
+  params = { ...params, proposito: sanearProposito(params.proposito) };
 
   // 1. Validar RUT del titular
   if (!validarRutChileno(params.usuario_rut)) {
@@ -459,7 +463,7 @@ export async function editarReservaConValidacion(
   if (datos.fecha) updatePayload.fecha = datos.fecha;
   if (datos.bloque_horario !== undefined) updatePayload.bloque_horario = datos.bloque_horario;
   if (datos.cantidad_asistentes !== undefined) updatePayload.cantidad_asistentes = datos.cantidad_asistentes;
-  if (datos.proposito) updatePayload.proposito = datos.proposito;
+  if (datos.proposito) updatePayload.proposito = sanearProposito(datos.proposito);
 
   const { data: actualizada, error: errUpdate } = await supabaseReservas
     .from('reservas')

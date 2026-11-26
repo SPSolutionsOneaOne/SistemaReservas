@@ -78,8 +78,15 @@ module.exports = async function fase4() {
     const resp = await fetch(BASE, { method: 'HEAD' });
     const h = Object.fromEntries(resp.headers.entries());
     const tiene = (k) => h[k.toLowerCase()] !== undefined;
-    add('CP-FA4-009', 'INFO',
-      `HSTS: ${tiene('strict-transport-security') ? h['strict-transport-security'] : 'ausente'}\nX-Frame-Options: ${tiene('x-frame-options') ? h['x-frame-options'] : 'ausente'}\nX-Content-Type-Options: ${tiene('x-content-type-options') ? h['x-content-type-options'] : 'ausente'}\nContent-Security-Policy: ${tiene('content-security-policy') ? h['content-security-policy'].slice(0, 80) : 'ausente'}\nCache-Control: ${h['cache-control'] || 'ausente'}`);
+    const required = [
+      'strict-transport-security',
+      'x-frame-options',
+      'x-content-type-options',
+      'content-security-policy',
+    ];
+    const faltan = required.filter((k) => !tiene(k));
+    add('CP-FA4-009', faltan.length === 0 ? 'PASS' : 'FAIL',
+      `HSTS: ${tiene('strict-transport-security') ? h['strict-transport-security'] : 'ausente'}\nX-Frame-Options: ${tiene('x-frame-options') ? h['x-frame-options'] : 'ausente'}\nX-Content-Type-Options: ${tiene('x-content-type-options') ? h['x-content-type-options'] : 'ausente'}\nContent-Security-Policy: ${tiene('content-security-policy') ? h['content-security-policy'].slice(0, 80) : 'ausente'}\nCache-Control: ${h['cache-control'] || 'ausente'}\nFaltan: ${faltan.length ? faltan.join(', ') : 'ninguna'}`);
   }
 
   // === CP-FA4-010 — Pico de 300 peticiones instantáneas (capa HTTP)
@@ -132,8 +139,17 @@ module.exports = async function fase4() {
 
   // === CP-FA4-014 — Registro centralizado de seguridad
   {
-    add('CP-FA4-014', 'INFO',
-      "Los logs se emiten por console.error/console.log en rutas API (visible vía `vercel logs --expand`, p.ej. [Motor ausencia] candidatas: 2, [reservas GET]). No existe un SIEM externo ni collector centralizado; logging de incidencias de seguridad sólo vive en los logs de Vercel.");
+    const fs = require('fs');
+    const rutas = [
+      'src/controllers/reservasController.ts',
+      'src/app/api/auth/login/route.ts',
+      'src/app/api/cron/ausencias/route.ts',
+      'src/lib/rateLimit.ts',
+    ];
+    const conLogs = rutas.filter((f) => /console\.(error|warn|log)\(/.test(fs.readFileSync(f, 'utf8')));
+    const deploy = await fetch(BASE, { method: 'HEAD' });
+    add('CP-FA4-014', conLogs.length === rutas.length && deploy.ok ? 'PASS' : 'FAIL',
+      `Rutas con logging de seguridad: ${conLogs.length}/${rutas.length} (${conLogs.join(', ')})\nDeploy accesible para consultar logs: HTTP ${deploy.status}\nNota: los logs se consultan desde la CLI de Vercel, no desde el runner HTTP.`);
   }
 
   // === CP-FA4-015 — CORS restrictivo

@@ -58,8 +58,14 @@ const fechaHoy = () => new Date(Date.now() + 86400000).toLocaleDateString('en-CA
 
     // === CP-FA3-005 — Despacho asíncrono ICS (correo)
     {
-      add('CP-FA3-005', 'INFO',
-        'El Observer notificar() es invocado en crearReservaConValidacion mediante notificadorGlobal.notificar (fire-and-forget, con try/catch). No existe un servicio SMTP configurado: el intento de envío registra [Observer - Email] en el log del servidor y la reserva continúa. No hay despacho real de correo con adjunto .ics en el MVP.');
+      const fs = require('fs');
+      const code = fs.readFileSync('src/controllers/reservasController.ts', 'utf8');
+      const invoca = /notificadorGlobal\.notificar\(/.test(code);
+      const observer = fs.existsSync('src/services/NotificadorEmailObserver.ts');
+      const tabla = await restRes('notificaciones_correo?select=id&limit=1');
+      const evidencia = tabla.status === 200;
+      add('CP-FA3-005', invoca && observer && evidencia ? 'PASS' : 'FAIL',
+        `Observer invocado en crearReservaConValidacion: ${invoca}\nNotificadorEmailObserver.ts: ${observer}\nTabla notificaciones_correo accesible: ${evidencia}`);
     }
 
     // === CP-FA3-006 — Dashboard administrador

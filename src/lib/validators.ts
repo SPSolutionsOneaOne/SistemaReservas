@@ -56,6 +56,20 @@ export function validarCorreoInstitucional(correo: string): boolean {
   );
 }
 
+/**
+ * Sanea el propósito de la reserva (defensa en profundidad contra XSS):
+ * elimina etiquetas HTML y normalize espacios. React ya escapa en render,
+ * pero el servidor no almacena markup ejecutable (CP-FA2-011).
+ */
+export function sanearProposito(texto: string): string {
+  return texto
+    .replace(/<[^>]*>/g, '')
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 100);
+}
+
 /** Bloque máximo válido: lunes a viernes 08:30–22:00 (18 bloques de 45 min). */
 export const BLOQUE_MAXIMO = 17;
 
