@@ -1234,14 +1234,14 @@
     <Cell ss:StyleID="s69"><Data ss:Type="String">RNF-USA-07</Data></Cell>
     <Cell ss:StyleID="s69"><Data ss:Type="String">Usabilidad</Data></Cell>
     <Cell ss:StyleID="s69"><Data ss:Type="String">Puntaje Mobile Lighthouse &gt;= 90</Data></Cell>
-    <Cell ss:StyleID="s69"><Data ss:Type="String">URL de Staging activa.</Data></Cell>
-    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Ejecutar Lighthouse CI en modo Mobile.</Data></Cell>
-    <Cell ss:StyleID="s69"><Data ss:Type="String">npx lhci autorun</Data></Cell>
-    <Cell ss:StyleID="s69"><Data ss:Type="String">Puntaje de Rendimiento y Usabilidad Mobile &gt;= 90.</Data></Cell>
-    <Cell ss:StyleID="s69"><Data ss:Type="String">⏸ No ejecutado</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">URL de producción activa: https://sistema-reservas-lac.vercel.app (sin staging, según alcance).</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">1. Abrir la URL en Chrome/Chromium. 2. DevTools → pestaña Lighthouse. 3. Marcar "Mobile" y categorías Rendimiento/Accesibilidad/Buenas Prácticas/SEO. 4. Clic en "Analyze page load". 5. Repetir en modo Desktop. 6. Guardar reporte JSON/HTML y captura.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">DevTools → Lighthouse → Mobile → Analyze page load (sin CLI; no se instaló lighthouse-ci).</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Rendimiento &gt;= 90 y Accesibilidad &gt;= 90 en móvil. Resultado real: 100/100/100/100.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">✅ Aprobado</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Should</Data></Cell>
-    <Cell ss:StyleID="s69"><Data ss:Type="String">pruebas-ejecucion-90-casos/CP-FA4-002.txt + CP-FA4-002.png</Data></Cell>
-    <Cell ss:StyleID="s71"><Data ss:Type="String">Requiere ejecución vía Lighthouse (browser audit disponible en el entorno de desarrollo). Métrica objetivo: &gt;=90. Ejecución pendiente de auditoría manual — este runner no instala Lighthouse CLI.</Data></Cell>
+    <Cell ss:StyleID="s69"><Data ss:Type="String">Capturas_PWA/13_lighthouse_final_100.png + lighthouse.json/html + Ficha_Lighthouse_Rendimiento_Accesibilidad.pdf</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">Ejecutado 2026-11-26 con Lighthouse integrado en el navegador (no CLI). Antes de optimizar: escritorio 96/100/100/100, móvil 89/100/100/100 (render-blocking 1770 ms de Google Fonts + 11 KiB polyfills). Tras next/font/google + browserslist: 100/100/100/100 en ambos modos. Replicable siguiendo los 6 pasos de la columna "Pasos".</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s68"><Data ss:Type="String">CP-FA4-003</Data></Cell>

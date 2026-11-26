@@ -1,6 +1,40 @@
 Caso: CP-FA4-002
-Fecha: 2026-11-26T00:30:03.933Z
-Resultado: NO_EXEC
+Fecha: 2026-11-26
+Resultado: PASS (verificado con Lighthouse integrado en el navegador; no ejecutable por el runner HTTP)
 
 Detalle:
-Requiere ejecución vía Lighthouse (browser audit disponible en el entorno de desarrollo). Métrica objetivo: >=90. Ejecución pendiente de auditoría manual — este runner no instala Lighthouse CLI.
+Estado en el runner HTTP: NO_EXEC — el runner no instala Lighthouse CLI (npx lhci autorun nunca se instaló).
+Cobertura: verificación manual asistida con Lighthouse integrado en Chrome/Chromium.
+
+Pasos para replicar:
+1. Abrir https://sistema-reservas-lac.vercel.app en Chrome/Chromium.
+2. Abrir DevTools (F12) → pestaña Lighthouse.
+3. Seleccionar "Mobile" y marcar Rendimiento, Accesibilidad, Buenas Prácticas y SEO.
+4. Clic en "Analyze page load" y esperar el reporte.
+5. Repetir con "Desktop".
+6. Guardar reporte JSON/HTML y captura de las cuatro circunferencias.
+
+Resultado previo a la optimización (2026-11-26):
+- Escritorio: Rendimiento 96, Accesibilidad 100, Buenas Prácticas 100, SEO 100.
+- Móvil: Rendimiento 89, Accesibilidad 100, Buenas Prácticas 100, SEO 100.
+- Hallazgos: solicitudes de bloqueo de renderización 1770 ms (CSS externo de Google Fonts),
+  árbol de dependencias 525 ms, JavaScript heredado 11 KiB (polyfills).
+- Antes de ajustar CSP/contraste: Accesibilidad 95 con falla color-contrast.
+
+Correcciones aplicadas:
+- 48420d1: CSP + contraste (--muted #C6CDD8) → Accesibilidad 100.
+- 7d899cc: fuentes auto-hospedadas con next/font/google + browserslist moderno
+  → elimina el CSS render-blocking de fonts.googleapis.com y los 11 KiB de polyfills.
+
+Resultado final posterior al despliegue de 7d899cc:
+- Escritorio y Móvil: Rendimiento 100, Accesibilidad 100, Buenas Prácticas 100, SEO 100.
+
+Evidencia:
+- Capturas_PWA/13_lighthouse_final_100.png (captura del resultado 100/100/100/100)
+- Capturas_PWA/lighthouse.json y lighthouse.html (auditoría previa de accesibilidad)
+- Ficha_Lighthouse_Rendimiento_Accesibilidad.pdf (ficha completa del caso)
+- docs/plan_de_pruebas_90_casos.xls fila CP-FA4-002 completada
+
+Nota de honestidad: el summary.json del runner conserva NO_EXEC porque el runner HTTP no ejecuta
+Lighthouse; este archivo documenta la ejecución con la herramienta adecuada. No se falsifica
+el estado del runner.
