@@ -127,7 +127,9 @@ function tokenExpirado(rut, rol) {
   return `${header}.${payload}.${firma}`;
 }
 
-const CRON_SECRET = '0a2de5543a60a20cfa70ea7f5f1c981b641019e0ccba10fc';
+// Secreto real del cron: se lee de .env.local (gitignored); el valor
+// hardcodeado queda sólo como fallback histórico.
+const CRON_SECRET = env.CRON_SECRET || '0a2de5543a60a20cfa70ea7f5f1c981b641019e0ccba10fc';
 
 async function limpiarIntentos() {
   // Borra todas las filas de intentos_login. En pruebas: limpiar el estado de rate limiting.

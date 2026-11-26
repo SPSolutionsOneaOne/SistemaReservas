@@ -1,7 +1,7 @@
 Caso: CP-FA3-019
-Fecha: 2026-11-25T23:56:04.962Z
+Fecha: 2026-11-26T00:06:55.559Z
 Resultado: PASS
 
 Detalle:
 Bloqueo vencido: reserva -> HTTP 201.
-La liberación del bloqueo opera por comparación de fecha al reservar (new Date() < bloqueado_hasta), no requiere cron dedicado. Cron ausencias también ejecutó (HTTP 401).
+La liberación del bloqueo opera por comparación de fecha al reservar (new Date() < bloqueado_hasta), no requiere cron dedicado. Cron ausencias también ejecutó (HTTP 200).

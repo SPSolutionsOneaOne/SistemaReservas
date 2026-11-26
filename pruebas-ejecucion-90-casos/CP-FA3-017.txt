@@ -1,7 +1,7 @@
 Caso: CP-FA3-017
-Fecha: 2026-11-25T23:56:04.962Z
-Resultado: FAIL
+Fecha: 2026-11-26T00:06:55.559Z
+Resultado: PASS
 
 Detalle:
-Cron: {"error":"No autorizado"}
-Estado marcado: confirmada
+Cron: {"ok":true,"procesadas":1,"bloqueados":0,"exentosStaff":0}
+Estado marcado: no_asistio

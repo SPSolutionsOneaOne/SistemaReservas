@@ -1,7 +1,7 @@
 Caso: CP-FA1-014
-Fecha: 2026-11-25T23:56:04.962Z
-Resultado: PASS
+Fecha: 2026-11-26T00:06:55.559Z
+Resultado: INFO
 
 Detalle:
-Tiempo inexistente=582ms vs existente=551ms. Δt=31ms
+Tiempo inexistente=954ms vs existente=663ms. Δt=292ms
 (La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)

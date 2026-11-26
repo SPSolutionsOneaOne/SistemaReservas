@@ -1,7 +1,7 @@
 Caso: CP-FA4-010
-Fecha: 2026-11-25T23:56:04.962Z
+Fecha: 2026-11-26T00:06:55.559Z
 Resultado: PASS
 
 Detalle:
-300/300 GET concurrentes a asset estático -> 200; tiempo=1614ms.
+300/300 GET concurrentes a asset estático -> 200; tiempo=1481ms.
 El pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6.

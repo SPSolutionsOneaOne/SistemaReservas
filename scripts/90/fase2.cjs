@@ -125,19 +125,15 @@ module.exports = async function fase2() {
           }),
         });
       }
-      // El cron externo (cron-job.org) corre cada 10 min con el CRON_SECRET real
-      // de Vercel. El runner NO conoce ese secreto: verifica el EFECTO en la BD,
-      // esperando hasta 3 minutos a que el motor procese las reservas vencidas.
-      let penaliza = null;
-      for (let t = 0; t < 18; t++) {
-        const r = await restRes(`historial_penalizaciones?usuario_rut=eq.${encodeURIComponent(alumno1.rut)}&select=ausencias_acumuladas,bloqueado_hasta`);
-        if (r.body?.[0]) { penaliza = r.body[0]; break; }
-        await new Promise((res) => setTimeout(res, 10000));
-      }
+      // disparar el motor via cron autenticado
+      const cron = await fetch(`${BASE}/api/cron/ausencias`, { headers: { Authorization: `Bearer ${CRON_SECRET}` } });
+      const cronBody = await cron.json().catch(() => ({}));
+      const bloqueo = await restRes(`historial_penalizaciones?usuario_rut=eq.${encodeURIComponent(alumno1.rut)}&select=ausencias_acumuladas,bloqueado_hasta`);
+      const penaliza = bloqueo.body?.[0];
       const reservarResp = await reservar(l, 'LAB-01', 5);
       add('CP-FA2-003',
-        penaliza && Number(penaliza.ausencias_acumuladas) >= 3 && penaliza.bloqueado_hasta && reservarResp.status === 403 ? 'PASS' : 'FAIL',
-        `Motor (cron externo): ${JSON.stringify(penaliza || 'sin procesar en 3 min')}\nReserva (alumno bloqueado): HTTP ${reservarResp.status}`);
+        cron.status === 200 && penaliza && Number(penaliza.ausencias_acumuladas) >= 3 && penaliza.bloqueado_hasta && reservarResp.status === 403 ? 'PASS' : 'FAIL',
+        `Motor: ${JSON.stringify(cronBody)}\nPenalización: ${JSON.stringify(penaliza || 'no creada')}\nReserva (alumno bloqueado): HTTP ${reservarResp.status}`);
       // limpiar la reserva vencida marcada y resetear contador para no arrastrar al resto
       await restRes(`reservas?usuario_rut=eq.${encodeURIComponent(alumno1.rut)}&estado=eq.no_asistio`, { method: 'DELETE' });
       await restRes(`historial_penalizaciones?usuario_rut=eq.${encodeURIComponent(alumno1.rut)}`, { method: 'DELETE' });

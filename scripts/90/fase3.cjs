@@ -119,6 +119,11 @@ const fechaHoy = () => new Date(Date.now() + 86400000).toLocaleDateString('en-CA
     // === CP-FA3-014 — Check-in fuera de ventana temporal
     {
       const l = await lAlu();
+      // Limpiar reservas previas del alumno de prueba (evita solape personal)
+      const previas = await restRes(`reservas?usuario_rut=eq.${encodeURIComponent(alumno.rut)}&select=id_reserva`);
+      for (const r of previas.body || []) {
+        await restRes(`reservas?id_reserva=eq.${encodeURIComponent(r.id_reserva)}`, { method: 'DELETE' }).catch(() => {});
+      }
       const respuesta = await fetch(`${BASE}/api/reservas`, {
         method: 'POST',
         headers: sesionHeaders(l.cookie),

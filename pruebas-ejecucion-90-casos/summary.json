@@ -1,11 +1,11 @@
 {
-  "ts": "2026-11-25T23:56:04.962Z",
+  "ts": "2026-11-26T00:06:55.559Z",
   "total": 91,
   "resultados": [
     {
       "id": "CP-FA1-001",
       "status": "PASS",
-      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$f+npRyG5/…\nLongitud: 97"
+      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$n5Dony8rk…\nLongitud: 97"
     },
     {
       "id": "CP-FA1-002",
@@ -25,12 +25,12 @@
     {
       "id": "CP-FA1-007",
       "status": "PASS",
-      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"14936f9b-18ee-42c3-849e-b1b088c5fc71\",\"codigo_reserva\":\"RES-0030\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"61601.246-0\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
+      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"60537029-9201-4a11-95a6-5197e77a07dc\",\"codigo_reserva\":\"RES-0030\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"36702.390-2\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
     },
     {
       "id": "CP-FA1-008",
       "status": "PASS",
-      "texto": "Dos peticiones concurrentes idénticas -> HTTP 409 y HTTP 201. Esperado 201 + 409."
+      "texto": "Dos peticiones concurrentes idénticas -> HTTP 201 y HTTP 409. Esperado 201 + 409."
     },
     {
       "id": "CP-FA1-009",
@@ -45,7 +45,7 @@
     {
       "id": "CP-FA1-011",
       "status": "PASS",
-      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 07:53:25 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
+      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 08:03:59 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
     },
     {
       "id": "CP-FA1-013",
@@ -54,8 +54,8 @@
     },
     {
       "id": "CP-FA1-014",
-      "status": "PASS",
-      "texto": "Tiempo inexistente=582ms vs existente=551ms. Δt=31ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
+      "status": "INFO",
+      "texto": "Tiempo inexistente=954ms vs existente=663ms. Δt=292ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
     },
     {
       "id": "CP-FA1-015",
@@ -75,12 +75,12 @@
     {
       "id": "CP-FA1-018",
       "status": "PASS",
-      "texto": "password_hash = texto plano 'Prueba6667#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
+      "texto": "password_hash = texto plano 'Prueba4896#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
     },
     {
       "id": "CP-FA1-019",
       "status": "PASS",
-      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"61601.246-0\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
+      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"36702.390-2\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
     },
     {
       "id": "CP-FA1-020",
@@ -124,13 +124,13 @@
     },
     {
       "id": "CP-FA2-003",
-      "status": "FAIL",
-      "texto": "Motor: {\"error\":\"No autorizado\"}\nPenalización: \"no creada\"\nReserva (alumno bloqueado): HTTP 201"
+      "status": "PASS",
+      "texto": "Motor: {\"ok\":true,\"procesadas\":3,\"bloqueados\":1,\"exentosStaff\":0}\nPenalización: {\"ausencias_acumuladas\":3,\"bloqueado_hasta\":\"2026-12-03T00:04:45.119\"}\nReserva (alumno bloqueado): HTTP 403"
     },
     {
       "id": "CP-FA2-004",
       "status": "NO_EXEC",
-      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 08:54 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
+      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 09:04 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
     },
     {
       "id": "CP-FA2-005",
@@ -240,7 +240,7 @@
     {
       "id": "CP-FA2-025",
       "status": "INFO",
-      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 200, HTTP 422.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
+      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 422, HTTP 200.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
     },
     {
       "id": "CP-FA3-001",
@@ -319,23 +319,23 @@
     },
     {
       "id": "CP-FA3-016",
-      "status": "FAIL",
-      "texto": "No existe rate limiting específico sobre /api/reservas/check-in. 20 intentos consecutivos con códigos inválidos reciben 400 repetidamente, sin 429. La defensa actual depende de la ventana temporal de check-in y de la unicidad del código de reserva."
+      "status": "PASS",
+      "texto": "8 check-in con código inválido -> último HTTP 429 (esperado 429). Demasiados intentos de check-in fallidos. Intente más tarde."
     },
     {
       "id": "CP-FA3-017",
-      "status": "FAIL",
-      "texto": "Cron: {\"error\":\"No autorizado\"}\nEstado marcado: confirmada"
+      "status": "PASS",
+      "texto": "Cron: {\"ok\":true,\"procesadas\":1,\"bloqueados\":0,\"exentosStaff\":0}\nEstado marcado: no_asistio"
     },
     {
       "id": "CP-FA3-018",
-      "status": "FAIL",
-      "texto": "Cron marcó — ausencias; bloqueado_hasta=—"
+      "status": "PASS",
+      "texto": "Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T00:06:19.506"
     },
     {
       "id": "CP-FA3-019",
       "status": "PASS",
-      "texto": "Bloqueo vencido: reserva -> HTTP 201.\nLa liberación del bloqueo opera por comparación de fecha al reservar (new Date() < bloqueado_hasta), no requiere cron dedicado. Cron ausencias también ejecutó (HTTP 401)."
+      "texto": "Bloqueo vencido: reserva -> HTTP 201.\nLa liberación del bloqueo opera por comparación de fecha al reservar (new Date() < bloqueado_hasta), no requiere cron dedicado. Cron ausencias también ejecutó (HTTP 200)."
     },
     {
       "id": "CP-FA3-020",
@@ -355,7 +355,7 @@
     {
       "id": "CP-FA4-001",
       "status": "PASS",
-      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=678ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
+      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=570ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
     },
     {
       "id": "CP-FA4-002",
@@ -400,7 +400,7 @@
     {
       "id": "CP-FA4-010",
       "status": "PASS",
-      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1614ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
+      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1481ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
     },
     {
       "id": "CP-FA4-011",

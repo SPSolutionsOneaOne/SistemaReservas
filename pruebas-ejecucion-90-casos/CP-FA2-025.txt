@@ -1,7 +1,7 @@
 Caso: CP-FA2-025
-Fecha: 2026-11-25T23:56:04.962Z
+Fecha: 2026-11-26T00:06:55.559Z
 Resultado: INFO
 
 Detalle:
-Dos DELETE simultáneas sobre la misma reserva -> HTTP 200, HTTP 422.
+Dos DELETE simultáneas sobre la misma reserva -> HTTP 422, HTTP 200.
 Sin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente.
