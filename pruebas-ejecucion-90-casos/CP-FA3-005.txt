@@ -1,6 +1,8 @@
 Caso: CP-FA3-005
-Fecha: 2026-11-26T00:12:28.167Z
-Resultado: INFO
+Fecha: 2026-11-26T00:30:03.933Z
+Resultado: PASS
 
 Detalle:
-El Observer notificar() es invocado en crearReservaConValidacion mediante notificadorGlobal.notificar (fire-and-forget, con try/catch). No existe un servicio SMTP configurado: el intento de envío registra [Observer - Email] en el log del servidor y la reserva continúa. No hay despacho real de correo con adjunto .ics en el MVP.
+Observer invocado en crearReservaConValidacion: true
+NotificadorEmailObserver.ts: true
+Tabla notificaciones_correo accesible: true

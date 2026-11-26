@@ -1,7 +1,8 @@
 Caso: CP-FA2-011
-Fecha: 2026-11-26T00:12:28.167Z
-Resultado: INFO
+Fecha: 2026-11-26T00:30:03.933Z
+Resultado: PASS
 
 Detalle:
-Texto crudo almacenado en proposito: "<script>alert("xss")</script>".
-React escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React.
+Proposito recibido: "alert("xss")".
+Proposito almacenado: "alert("xss")".
+Saneamiento server-side (sin etiquetas HTML): true

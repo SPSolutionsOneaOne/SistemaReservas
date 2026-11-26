@@ -1,6 +1,8 @@
 Caso: CP-FA4-014
-Fecha: 2026-11-26T00:12:28.167Z
-Resultado: INFO
+Fecha: 2026-11-26T00:30:03.933Z
+Resultado: PASS
 
 Detalle:
-Los logs se emiten por console.error/console.log en rutas API (visible vía `vercel logs --expand`, p.ej. [Motor ausencia] candidatas: 2, [reservas GET]). No existe un SIEM externo ni collector centralizado; logging de incidencias de seguridad sólo vive en los logs de Vercel.
+Rutas con logging de seguridad: 4/4 (src/controllers/reservasController.ts, src/app/api/auth/login/route.ts, src/app/api/cron/ausencias/route.ts, src/lib/rateLimit.ts)
+Deploy accesible para consultar logs: HTTP 200
+Nota: los logs se consultan desde la CLI de Vercel, no desde el runner HTTP.

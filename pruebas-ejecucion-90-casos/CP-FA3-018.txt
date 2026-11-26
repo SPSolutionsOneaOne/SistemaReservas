@@ -1,6 +1,6 @@
 Caso: CP-FA3-018
-Fecha: 2026-11-26T00:12:28.167Z
+Fecha: 2026-11-26T00:30:03.933Z
 Resultado: PASS
 
 Detalle:
-Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T00:11:56.056
+Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T00:29:24.628

@@ -1,10 +1,11 @@
 Caso: CP-FA4-009
-Fecha: 2026-11-26T00:12:28.167Z
-Resultado: INFO
+Fecha: 2026-11-26T00:30:03.933Z
+Resultado: PASS
 
 Detalle:
 HSTS: max-age=63072000; includeSubDomains; preload
-X-Frame-Options: ausente
-X-Content-Type-Options: ausente
-Content-Security-Policy: ausente
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src '
 Cache-Control: public, max-age=0, must-revalidate
+Faltan: ninguna

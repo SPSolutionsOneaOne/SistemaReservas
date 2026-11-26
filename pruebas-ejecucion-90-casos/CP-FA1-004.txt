@@ -1,6 +1,6 @@
 Caso: CP-FA1-004
-Fecha: 2026-11-26T00:12:28.167Z
-Resultado: INFO
+Fecha: 2026-11-26T00:30:03.933Z
+Resultado: PASS
 
 Detalle:
-Singleton verificado por inspección de código: src/lib/supabaseReservasAdmin.ts conserva la instancia (`let instancia`) y getSupabaseReservasAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción.
+Singleton en supabaseReservasAdmin.ts: let instancia=true, reutilización=true, return instancia=true

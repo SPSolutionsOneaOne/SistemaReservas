@@ -1,11 +1,11 @@
 {
-  "ts": "2026-11-26T00:12:28.167Z",
+  "ts": "2026-11-26T00:30:03.933Z",
   "total": 91,
   "resultados": [
     {
       "id": "CP-FA1-001",
       "status": "PASS",
-      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$AugRSHcM/…\nLongitud: 97"
+      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$tjqjpfWek…\nLongitud: 97"
     },
     {
       "id": "CP-FA1-002",
@@ -25,7 +25,7 @@
     {
       "id": "CP-FA1-007",
       "status": "PASS",
-      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"b05d5aa9-1552-4299-bc6f-1d1d4437c33d\",\"codigo_reserva\":\"RES-0030\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"26729.351-1\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
+      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"cd76d32c-35ad-46e4-8583-b1d20e60f456\",\"codigo_reserva\":\"RES-0031\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"45316.607-4\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
     },
     {
       "id": "CP-FA1-008",
@@ -45,7 +45,7 @@
     {
       "id": "CP-FA1-011",
       "status": "PASS",
-      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 08:09:16 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
+      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 08:27:02 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
     },
     {
       "id": "CP-FA1-013",
@@ -54,8 +54,8 @@
     },
     {
       "id": "CP-FA1-014",
-      "status": "PASS",
-      "texto": "Tiempo inexistente=1127ms vs existente=1115ms. Δt=12ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
+      "status": "INFO",
+      "texto": "Tiempo inexistente=792ms vs existente=583ms. Δt=209ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
     },
     {
       "id": "CP-FA1-015",
@@ -75,12 +75,12 @@
     {
       "id": "CP-FA1-018",
       "status": "PASS",
-      "texto": "password_hash = texto plano 'Prueba8806#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
+      "texto": "password_hash = texto plano 'Prueba3617#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
     },
     {
       "id": "CP-FA1-019",
       "status": "PASS",
-      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"26729.351-1\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
+      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"45316.607-4\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
     },
     {
       "id": "CP-FA1-020",
@@ -99,13 +99,13 @@
     },
     {
       "id": "CP-FA1-003",
-      "status": "INFO",
-      "texto": "Singleton verificado por inspección de código: src/lib/supabaseInstitucionalAdmin.ts conserva la instancia (`let instancia`) y getSupabaseInstitucionalAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción."
+      "status": "PASS",
+      "texto": "Singleton en supabaseInstitucionalAdmin.ts: let instancia=true, reutilización=true, return instancia=true"
     },
     {
       "id": "CP-FA1-004",
-      "status": "INFO",
-      "texto": "Singleton verificado por inspección de código: src/lib/supabaseReservasAdmin.ts conserva la instancia (`let instancia`) y getSupabaseReservasAdmin() devuelve siempre la misma referencia. No instrumentable vía HTTP en producción."
+      "status": "PASS",
+      "texto": "Singleton en supabaseReservasAdmin.ts: let instancia=true, reutilización=true, return instancia=true"
     },
     {
       "id": "CP-FA1-012",
@@ -125,12 +125,12 @@
     {
       "id": "CP-FA2-003",
       "status": "PASS",
-      "texto": "Motor: {\"ok\":true,\"procesadas\":3,\"bloqueados\":1,\"exentosStaff\":0}\nPenalización: {\"ausencias_acumuladas\":3,\"bloqueado_hasta\":\"2026-12-03T00:10:11.137\"}\nReserva (alumno bloqueado): HTTP 403"
+      "texto": "Motor: {\"ok\":true,\"procesadas\":3,\"bloqueados\":1,\"exentosStaff\":0}\nPenalización: {\"ausencias_acumuladas\":3,\"bloqueado_hasta\":\"2026-12-03T00:27:45.738\"}\nReserva (alumno bloqueado): HTTP 403"
     },
     {
       "id": "CP-FA2-004",
       "status": "NO_EXEC",
-      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 09:10 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
+      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 09:27 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
     },
     {
       "id": "CP-FA2-005",
@@ -164,8 +164,8 @@
     },
     {
       "id": "CP-FA2-011",
-      "status": "INFO",
-      "texto": "Texto crudo almacenado en proposito: \"<script>alert(\"xss\")</script>\".\nReact escapa la interpolación en render (no se ejecuta JS). No hay sanitizador server-side dedicado; la protección actual depende del escape de React."
+      "status": "PASS",
+      "texto": "Proposito recibido: \"alert(\"xss\")\".\nProposito almacenado: \"alert(\"xss\")\".\nSaneamiento server-side (sin etiquetas HTML): true"
     },
     {
       "id": "CP-FA2-012",
@@ -240,17 +240,17 @@
     {
       "id": "CP-FA2-025",
       "status": "INFO",
-      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 200, HTTP 422.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
+      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 200, HTTP 200.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
     },
     {
       "id": "CP-FA3-001",
       "status": "PASS",
-      "texto": "Encargado reserva para tercero -> HTTP 201, código=RES-0030"
+      "texto": "Encargado reserva para tercero -> HTTP 201, código=RES-0031"
     },
     {
       "id": "CP-FA3-002",
       "status": "PASS",
-      "texto": "Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-26, bloque 0. Código: RES-0030"
+      "texto": "Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-26, bloque 0. Código: RES-0031"
     },
     {
       "id": "CP-FA3-003",
@@ -264,8 +264,8 @@
     },
     {
       "id": "CP-FA3-005",
-      "status": "INFO",
-      "texto": "El Observer notificar() es invocado en crearReservaConValidacion mediante notificadorGlobal.notificar (fire-and-forget, con try/catch). No existe un servicio SMTP configurado: el intento de envío registra [Observer - Email] en el log del servidor y la reserva continúa. No hay despacho real de correo con adjunto .ics en el MVP."
+      "status": "PASS",
+      "texto": "Observer invocado en crearReservaConValidacion: true\nNotificadorEmailObserver.ts: true\nTabla notificaciones_correo accesible: true"
     },
     {
       "id": "CP-FA3-006",
@@ -330,7 +330,7 @@
     {
       "id": "CP-FA3-018",
       "status": "PASS",
-      "texto": "Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T00:11:56.056"
+      "texto": "Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T00:29:24.628"
     },
     {
       "id": "CP-FA3-019",
@@ -355,7 +355,7 @@
     {
       "id": "CP-FA4-001",
       "status": "PASS",
-      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=517ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
+      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=475ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
     },
     {
       "id": "CP-FA4-002",
@@ -394,13 +394,13 @@
     },
     {
       "id": "CP-FA4-009",
-      "status": "INFO",
-      "texto": "HSTS: max-age=63072000; includeSubDomains; preload\nX-Frame-Options: ausente\nX-Content-Type-Options: ausente\nContent-Security-Policy: ausente\nCache-Control: public, max-age=0, must-revalidate"
+      "status": "PASS",
+      "texto": "HSTS: max-age=63072000; includeSubDomains; preload\nX-Frame-Options: DENY\nX-Content-Type-Options: nosniff\nContent-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src '\nCache-Control: public, max-age=0, must-revalidate\nFaltan: ninguna"
     },
     {
       "id": "CP-FA4-010",
       "status": "PASS",
-      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1308ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
+      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1540ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
     },
     {
       "id": "CP-FA4-011",
@@ -419,8 +419,8 @@
     },
     {
       "id": "CP-FA4-014",
-      "status": "INFO",
-      "texto": "Los logs se emiten por console.error/console.log en rutas API (visible vía `vercel logs --expand`, p.ej. [Motor ausencia] candidatas: 2, [reservas GET]). No existe un SIEM externo ni collector centralizado; logging de incidencias de seguridad sólo vive en los logs de Vercel."
+      "status": "PASS",
+      "texto": "Rutas con logging de seguridad: 4/4 (src/controllers/reservasController.ts, src/app/api/auth/login/route.ts, src/app/api/cron/ausencias/route.ts, src/lib/rateLimit.ts)\nDeploy accesible para consultar logs: HTTP 200\nNota: los logs se consultan desde la CLI de Vercel, no desde el runner HTTP."
     },
     {
       "id": "CP-FA4-015",

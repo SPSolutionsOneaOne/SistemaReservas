@@ -1,6 +1,6 @@
 Caso: CP-FA3-002
-Fecha: 2026-11-26T00:12:28.167Z
+Fecha: 2026-11-26T00:30:03.933Z
 Resultado: PASS
 
 Detalle:
-Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-26, bloque 0. Código: RES-0030
+Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-26, bloque 0. Código: RES-0031
