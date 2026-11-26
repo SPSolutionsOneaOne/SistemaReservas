@@ -1,6 +1,6 @@
 # Comandos de ejecución — Plan de pruebas 90 casos
 
-Generado: 2026-11-26T00:30:03.933Z
+Generado: 2026-11-26T23:37:09.483Z
 
 ## Entorno
 

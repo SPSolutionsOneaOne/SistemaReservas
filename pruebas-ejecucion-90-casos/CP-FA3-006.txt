@@ -1,6 +1,7 @@
 Caso: CP-FA3-006
-Fecha: 2026-11-26T00:30:03.933Z
-Resultado: NO_IMPL
+Fecha: 2026-11-26T23:37:09.483Z
+Resultado: PASS
 
 Detalle:
-El panel de métricas no está implementado en el MVP (sólo creación/gestión de salas). No existe ruta /dashboard ni endpoints de estadísticas. Funcionalidad pendiente: RF-USA-05.
+Sin sesión: HTTP 401 (esperado 401) · Alumno: HTTP 403 (esperado 403) · Encargado: HTTP 200; 4 secciones presentes: true; Cache-Control no-store: true
+Resumen: {"porDia":0,"topSalas":0,"pctAsistencia":0,"bloqueos":0,"bitacora":10}

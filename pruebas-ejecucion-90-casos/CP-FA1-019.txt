@@ -1,6 +1,6 @@
 Caso: CP-FA1-019
-Fecha: 2026-11-26T00:30:03.933Z
+Fecha: 2026-11-26T23:37:09.483Z
 Resultado: PASS
 
 Detalle:
-Respuesta al rol alumno: {"usuario":{"rut":"45316.607-4","estado_activo":true},"bloqueado":false,"mensajeBloqueo":null}
+Respuesta al rol alumno: {"usuario":{"rut":"78171.519-0","estado_activo":true},"bloqueado":false,"mensajeBloqueo":null}

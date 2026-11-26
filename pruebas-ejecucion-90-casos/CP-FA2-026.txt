@@ -1,7 +1,7 @@
 Caso: CP-FA2-026
-Fecha: 2026-11-26T00:30:03.933Z
+Fecha: 2026-11-26T23:37:09.483Z
 Resultado: PASS
 
 Detalle:
-Bloque ya iniciado (2026-11-25) -> HTTP 422.
+Bloque ya iniciado (2026-11-26) -> HTTP 422.
 {"error":"No se puede reservar un bloque que ya ha iniciado"}

@@ -1,6 +1,6 @@
 Caso: CP-FA2-020
-Fecha: 2026-11-26T00:30:03.933Z
+Fecha: 2026-11-26T23:37:09.483Z
 Resultado: PASS
 
 Detalle:
-La creación con fecha 2026-11-24 devolvió HTTP 422 en sala BIB-03 bloque 15.
+La creación con fecha 2026-11-25 devolvió HTTP 422 en sala BIB-03 bloque 15.

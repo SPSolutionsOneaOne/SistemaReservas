@@ -1,6 +1,6 @@
 Caso: CP-FA2-004
-Fecha: 2026-11-26T00:30:03.933Z
+Fecha: 2026-11-26T23:37:09.483Z
 Resultado: NO_EXEC
 
 Detalle:
-CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 09:27 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real.
+CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 08:34 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real.

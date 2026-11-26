@@ -1,11 +1,11 @@
 {
-  "ts": "2026-11-26T00:30:03.933Z",
+  "ts": "2026-11-26T23:37:09.483Z",
   "total": 91,
   "resultados": [
     {
       "id": "CP-FA1-001",
       "status": "PASS",
-      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$tjqjpfWek…\nLongitud: 97"
+      "texto": "Hash real del usuario de prueba: $argon2id$v=19$m=65536,t=3,p=4$6FtJQGnKA…\nLongitud: 97"
     },
     {
       "id": "CP-FA1-002",
@@ -25,7 +25,7 @@
     {
       "id": "CP-FA1-007",
       "status": "PASS",
-      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"cd76d32c-35ad-46e4-8583-b1d20e60f456\",\"codigo_reserva\":\"RES-0031\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"45316.607-4\",\"fecha\":\"2026-11-26\",\"bloque_horario\":7,\"cantidad_as"
+      "texto": "Creación por alumno -> HTTP 201\n{\"id_reserva\":\"4eb0864c-e830-4798-9f8f-dcb23f3c76c3\",\"codigo_reserva\":\"RES-0031\",\"id_sala\":\"LAB-01\",\"usuario_rut\":\"78171.519-0\",\"fecha\":\"2026-11-27\",\"bloque_horario\":7,\"cantidad_as"
     },
     {
       "id": "CP-FA1-008",
@@ -45,7 +45,7 @@
     {
       "id": "CP-FA1-011",
       "status": "PASS",
-      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Thu, 26 Nov 2026 08:27:02 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
+      "texto": "Set-Cookie incluye HttpOnly, Secure y SameSite=Lax: true\ninstitucion_session=eyJhbGci…; Path=/; Expires=Fri, 27 Nov 2026 07:33:28 GMT; Max-Age=28800; Secure; HttpOnly; SameSite=lax"
     },
     {
       "id": "CP-FA1-013",
@@ -55,7 +55,7 @@
     {
       "id": "CP-FA1-014",
       "status": "INFO",
-      "texto": "Tiempo inexistente=792ms vs existente=583ms. Δt=209ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
+      "texto": "Tiempo inexistente=980ms vs existente=626ms. Δt=354ms\n(La búsqueda de usuario inexistente responde antes de la verificación Argon2id; diferencial visible porque la verificación hash es el costo dominante sólo con usuario real.)"
     },
     {
       "id": "CP-FA1-015",
@@ -75,12 +75,12 @@
     {
       "id": "CP-FA1-018",
       "status": "PASS",
-      "texto": "password_hash = texto plano 'Prueba3617#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
+      "texto": "password_hash = texto plano 'Prueba9951#Min' -> login -> HTTP 401. Esperado 401: verificación exclusivamente Argon2id."
     },
     {
       "id": "CP-FA1-019",
       "status": "PASS",
-      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"45316.607-4\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
+      "texto": "Respuesta al rol alumno: {\"usuario\":{\"rut\":\"78171.519-0\",\"estado_activo\":true},\"bloqueado\":false,\"mensajeBloqueo\":null}"
     },
     {
       "id": "CP-FA1-020",
@@ -125,12 +125,12 @@
     {
       "id": "CP-FA2-003",
       "status": "PASS",
-      "texto": "Motor: {\"ok\":true,\"procesadas\":3,\"bloqueados\":1,\"exentosStaff\":0}\nPenalización: {\"ausencias_acumuladas\":3,\"bloqueado_hasta\":\"2026-12-03T00:27:45.738\"}\nReserva (alumno bloqueado): HTTP 403"
+      "texto": "Motor: {\"ok\":true,\"procesadas\":3,\"bloqueados\":1,\"exentosStaff\":0}\nPenalización: {\"ausencias_acumuladas\":3,\"bloqueado_hasta\":\"2026-12-03T23:34:39.026\"}\nReserva (alumno bloqueado): HTTP 403"
     },
     {
       "id": "CP-FA2-004",
       "status": "NO_EXEC",
-      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 09:27 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
+      "texto": "CP-FA2-004 requiere que el check-in ocurra en los primeros 10 min del bloque. Hora actual (Chile): 08:34 p. m.. Ejecución dependiente de la hora y la confirmación QR — requiere una ventana de 10 minutos exactos y no es determinista. Sólo verificable manualmente en ventana real."
     },
     {
       "id": "CP-FA2-005",
@@ -210,12 +210,12 @@
     {
       "id": "CP-FA2-020",
       "status": "PASS",
-      "texto": "La creación con fecha 2026-11-24 devolvió HTTP 422 en sala BIB-03 bloque 15."
+      "texto": "La creación con fecha 2026-11-25 devolvió HTTP 422 en sala BIB-03 bloque 15."
     },
     {
       "id": "CP-FA2-026",
       "status": "PASS",
-      "texto": "Bloque ya iniciado (2026-11-25) -> HTTP 422.\n{\"error\":\"No se puede reservar un bloque que ya ha iniciado\"}"
+      "texto": "Bloque ya iniciado (2026-11-26) -> HTTP 422.\n{\"error\":\"No se puede reservar un bloque que ya ha iniciado\"}"
     },
     {
       "id": "CP-FA2-021",
@@ -240,7 +240,7 @@
     {
       "id": "CP-FA2-025",
       "status": "INFO",
-      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 200, HTTP 200.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
+      "texto": "Dos DELETE simultáneas sobre la misma reserva -> HTTP 422, HTTP 200.\nSin cabeceras de idempotencia: la segunda operación es sobre recurso inexistente."
     },
     {
       "id": "CP-FA3-001",
@@ -250,7 +250,7 @@
     {
       "id": "CP-FA3-002",
       "status": "PASS",
-      "texto": "Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-26, bloque 0. Código: RES-0031"
+      "texto": "Bitácora del encargado de prueba: Reserva asistida creada para sala SAL-01, fecha 2026-11-27, bloque 0. Código: RES-0031"
     },
     {
       "id": "CP-FA3-003",
@@ -269,8 +269,8 @@
     },
     {
       "id": "CP-FA3-006",
-      "status": "NO_IMPL",
-      "texto": "El panel de métricas no está implementado en el MVP (sólo creación/gestión de salas). No existe ruta /dashboard ni endpoints de estadísticas. Funcionalidad pendiente: RF-USA-05."
+      "status": "PASS",
+      "texto": "Sin sesión: HTTP 401 (esperado 401) · Alumno: HTTP 403 (esperado 403) · Encargado: HTTP 200; 4 secciones presentes: true; Cache-Control no-store: true\nResumen: {\"porDia\":0,\"topSalas\":0,\"pctAsistencia\":0,\"bloqueos\":0,\"bitacora\":10}"
     },
     {
       "id": "CP-FA3-007",
@@ -330,7 +330,7 @@
     {
       "id": "CP-FA3-018",
       "status": "PASS",
-      "texto": "Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T00:29:24.628"
+      "texto": "Cron marcó 3 ausencias; bloqueado_hasta=2026-12-03T23:36:30.33"
     },
     {
       "id": "CP-FA3-019",
@@ -355,7 +355,7 @@
     {
       "id": "CP-FA4-001",
       "status": "PASS",
-      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=475ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
+      "texto": "100/100 GET concurrentes a / -> 200; tiempo total=484ms.\nNo es una prueba de carga transaccional (escrituras), sólo un pico de solicitudes HTTP. Prueba de carga completa (100 usuarios reservando) requiere jmeter/k6 y un entorno de staging, no prod."
     },
     {
       "id": "CP-FA4-002",
@@ -400,7 +400,7 @@
     {
       "id": "CP-FA4-010",
       "status": "PASS",
-      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=1540ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
+      "texto": "300/300 GET concurrentes a asset estático -> 200; tiempo=2646ms.\nEl pico se ejecutó sobre GET anónimos de bajo costo, no sobre transacciones de negocio. Prueba de pico transaccional requiere staging + k6."
     },
     {
       "id": "CP-FA4-011",
@@ -415,7 +415,7 @@
     {
       "id": "CP-FA4-013",
       "status": "PASS",
-      "texto": "404 body contiene indicios de stack trace: false\nHTTP 404; body=<!DOCTYPE html><html lang=\"es\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"…"
+      "texto": "404 body contiene indicios de stack trace: false\nHTTP 404; body=<!DOCTYPE html><html lang=\"es\" class=\"__variable_cb0b0d __variable_987bfa\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width…"
     },
     {
       "id": "CP-FA4-014",

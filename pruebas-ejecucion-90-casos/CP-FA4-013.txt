@@ -1,7 +1,7 @@
 Caso: CP-FA4-013
-Fecha: 2026-11-26T00:30:03.933Z
+Fecha: 2026-11-26T23:37:09.483Z
 Resultado: PASS
 
 Detalle:
 404 body contiene indicios de stack trace: false
-HTTP 404; body=<!DOCTYPE html><html lang="es"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="…
+HTTP 404; body=<!DOCTYPE html><html lang="es" class="__variable_cb0b0d __variable_987bfa"><head><meta charSet="utf-8"/><meta name="viewport" content="width…
