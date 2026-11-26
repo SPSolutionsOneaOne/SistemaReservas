@@ -35,6 +35,34 @@ interface SalaVisual {
   codigoManual?: string;
 }
 
+interface DashboardData {
+  ocupacion: {
+    desde: string;
+    hasta: string;
+    porDia: { fecha: string; total: number }[];
+    topSalas: { id_sala: string; nombre: string; total: number }[];
+    salasActivas: number;
+  };
+  asistencia: {
+    completadas: number;
+    no_asistio: number;
+    porcentaje: number;
+    semaforo: 'verde' | 'amarillo' | 'rojo';
+  };
+  bloqueosActivos: {
+    usuario_rut: string;
+    ausencias_acumuladas: number;
+    bloqueado_hasta: string;
+  }[];
+  bitacora: {
+    id: string;
+    encargado_rut: string;
+    accion: string;
+    rut_estudiante_afectado: string;
+    creado_en: string;
+  }[];
+}
+
 /** Datos completos de un QR físico (solo administrador) */
 interface SalaQR {
   id_sala: string;
@@ -289,7 +317,9 @@ export default function ReservaPage() {
   // Admin - Nueva Sala (SalaFactory)
   const [adminType, setAdminType] = useState<TipoSala>('lab');
   // Tab activo del panel administrativo: 'crear' | 'gestionar' | 'tipos'
-  const [adminTab, setAdminTab] = useState<'crear' | 'gestionar' | 'tipos' | 'qr'>('gestionar');
+  const [adminTab, setAdminTab] = useState<'crear' | 'gestionar' | 'tipos' | 'qr' | 'dashboard'>('gestionar');
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [dashboardCargando, setDashboardCargando] = useState(false);
   const [adminName, setAdminName] = useState('');
   const [adminCap, setAdminCap] = useState(30);
   const [adminFloor, setAdminFloor] = useState(1);
@@ -1265,6 +1295,18 @@ export default function ReservaPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adminTab, currentUser?.rol]);
 
+  useEffect(() => {
+    if (adminTab !== 'dashboard') return;
+    let cancel = false;
+    setDashboardCargando(true);
+    fetch('/api/dashboard')
+      .then(async (res) => (res.ok ? await res.json() : null))
+      .then((data) => { if (!cancel) setDashboard(data); })
+      .catch(() => { if (!cancel) setDashboard(null); })
+      .finally(() => { if (!cancel) setDashboardCargando(false); });
+    return () => { cancel = true; };
+  }, [adminTab]);
+
   // Impresión de la tarjeta QR (área print-only en el DOM)
   useEffect(() => {
     if (!printSala) return;
@@ -1505,6 +1547,7 @@ export default function ReservaPage() {
   const userRol = currentUser?.rol || 'alumno';
   const esAdmin = userRol === 'administrador';
   const esEncargado = userRol === 'encargado_administrativo';
+  const esStaff = esAdmin || esEncargado;
 
   return (
     <main>
@@ -2368,7 +2411,93 @@ export default function ReservaPage() {
                   >
                     Tipos de sala
                   </button>
+                  {esStaff && (
+                    <button
+                      type="button"
+                      role="tab"
+                      id="tab-admin-dashboard"
+                      aria-selected={adminTab === 'dashboard'}
+                      aria-controls="panel-admin-dashboard"
+                      className={adminTab === 'dashboard' ? 'on' : ''}
+                      onClick={() => setAdminTab('dashboard')}
+                    >
+                      Dashboard
+                    </button>
+                  )}
                 </div>
+                {adminTab === 'dashboard' && esStaff && (
+                  <div id="panel-admin-dashboard" role="tabpanel" aria-labelledby="tab-admin-dashboard" className="admin dashboard" style={{ marginTop: 12 }}>
+                    {dashboardCargando && <p className="hint">Cargando indicadores…</p>}
+                    {!dashboardCargando && !dashboard && <p className="hint">No fue posible cargar los indicadores.</p>}
+                    {!dashboardCargando && dashboard && (
+                      <>
+                        <section className="card">
+                          <h2 className="subtitle">Ocupación de la semana</h2>
+                          <p className="hint num">
+                            {dashboard.ocupacion.desde} → {dashboard.ocupacion.hasta} · {dashboard.ocupacion.salasActivas} salas activas
+                          </p>
+                          <div className="dash-bars">
+                            {dashboard.ocupacion.porDia.length ? dashboard.ocupacion.porDia.map((d) => {
+                              const max = Math.max(...dashboard.ocupacion.porDia.map((x) => x.total), 1);
+                              return (
+                                <div key={d.fecha} className="dash-bar-row">
+                                  <span className="num">{d.fecha.slice(5)}</span>
+                                  <div className="dash-bar" style={{ width: `${(d.total / max) * 100}%` }} />
+                                  <b className="num">{d.total}</b>
+                                </div>
+                              );
+                            }) : <p className="hint">Sin reservas en la semana.</p>}
+                          </div>
+                          <p className="hint" style={{ marginTop: 10 }}>Top 5 salas</p>
+                          <ul className="dash-list">
+                            {dashboard.ocupacion.topSalas.map((s) => (
+                              <li key={s.id_sala} className="num">
+                                <span>{s.nombre} ({s.id_sala})</span><b>{s.total}</b>
+                              </li>
+                            ))}
+                          </ul>
+                        </section>
+
+                        <section className="card">
+                          <h2 className="subtitle">Tasa de asistencia real</h2>
+                          <div className={`dash-kpi ${dashboard.asistencia.semaforo}`}>
+                            <strong className="num">{dashboard.asistencia.porcentaje}%</strong>
+                            <span className="hint">completadas {dashboard.asistencia.completadas} · no asistió {dashboard.asistencia.no_asistio}</span>
+                          </div>
+                          <p className="hint">Semáforo: verde ≥ 80% · amarillo 60–80% · rojo &lt; 60%.</p>
+                        </section>
+
+                        <section className="card">
+                          <h2 className="subtitle">Bloqueos activos (RN05)</h2>
+                          {dashboard.bloqueosActivos.length ? (
+                            <ul className="dash-list">
+                              {dashboard.bloqueosActivos.map((b) => (
+                                <li key={b.usuario_rut} className="num">
+                                  <span>{b.usuario_rut} · {b.ausencias_acumuladas} faltas</span>
+                                  <span>hasta {new Date(b.bloqueado_hasta).toLocaleDateString('es-CL')}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : <p className="hint">No hay usuarios bloqueados.</p>}
+                        </section>
+
+                        <section className="card">
+                          <h2 className="subtitle">Actividad de encargados</h2>
+                          {dashboard.bitacora.length ? (
+                            <ul className="dash-list">
+                              {dashboard.bitacora.map((b) => (
+                                <li key={b.id}>
+                                  <span className="num">{new Date(b.creado_en).toLocaleString('es-CL')} · {b.accion}</span>
+                                  <span className="hint num">{b.encargado_rut} → {b.rut_estudiante_afectado}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : <p className="hint">Sin acciones registradas.</p>}
+                        </section>
+                      </>
+                    )}
+                  </div>
+                )}
                 {adminTab === 'crear' && (
                 <div className="admin" id="panel-admin-crear" role="tabpanel" aria-labelledby="tab-admin-crear" style={{ marginTop: 12, gridTemplateColumns: 'minmax(0, 480px)' }}>
                   <section className="card">

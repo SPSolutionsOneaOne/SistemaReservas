@@ -93,5 +93,6 @@ export const config = {
     '/api/reservas',
     '/api/reservas/:path*',
     '/api/usuarios/validar',
+    '/api/dashboard',
   ],
 };
